@@ -23,7 +23,7 @@ function SideBar() {
 
   return (
     <>
-      <div className="d-flex justify-content-between flex-column bg-dark text-white p-3 vh-100">
+      <div className="sidebar d-flex justify-content-between flex-column bg-dark text-white p-3 vh-100">
         <div>
           <h1 className="mt-1">
             <a className="me-2" href="">
@@ -36,7 +36,7 @@ function SideBar() {
             URPM Home Portal
           </h1>
 
-          <hr className="text-fourth mt-4" />
+          <hr className="text-fifth mt-4 new5" />
           <ul className="nav nav-pills flex-column">
             <span className="mb-1 mt-2">
               <strong>Servicios De Solicitud</strong>
@@ -52,7 +52,7 @@ function SideBar() {
                 }
               </li>
             ))}
-            <hr className="text-third mt-4" />
+            <hr className="text-third mt-4 new5" />
             <span className="mb-1 mt-2">
               <strong>Solicitudes Recibidas</strong>
             </span>
@@ -68,7 +68,7 @@ function SideBar() {
               </li>
             ))}
 
-            <hr className="text-third mt-4" />
+            <hr className="text-third mt-4 new5" />
             <span className="mb-1 mt-2">
               <strong>Servicios</strong>
             </span>
@@ -84,7 +84,7 @@ function SideBar() {
               </li>
             ))}
 
-            <hr className="text-third mt-4" />
+            <hr className="text-third mt-4 new5" />
             <span className="mb-1 mt-2">
               <strong>Informes</strong>
             </span>
@@ -100,6 +100,14 @@ function SideBar() {
               </li>
             ))}
           </ul>
+        </div>
+        <div>
+          <hr className="mt-4 new5" />
+          <center>
+            <p className="bi bi-c-circle fst-italic">
+              <i className="ms-2">UPRM COPYRIGHT</i>
+            </p>
+          </center>
         </div>
       </div>
     </>
