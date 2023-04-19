@@ -28,6 +28,24 @@ function Navbar() {
                 <i className="bi bi-person-dash"></i> Log Out
               </a>
             </li>
+            <li className="nav-item mx-1 border rounded border-success">
+              <a
+                className="nav-link active text-white"
+                aria-current="page"
+                href="#"
+              >
+                <i className="bi bi-translate"></i> English
+              </a>
+            </li>
+            <li className="nav-item mx-1 border rounded border-success">
+              <a
+                className="nav-link active text-white"
+                aria-current="page"
+                href="#"
+              >
+                <i className="bi bi-globe2"></i> Spanish
+              </a>
+            </li>
           </ul>
         </div>
       </div>

@@ -12,32 +12,34 @@ function CreateReport() {
       <div className="fs-3 fw-bolder text-decoration-underline">
         <span>Departamento de Edificios y Terrenos</span>
       </div>
-      <div className="container-fluid mt-3 mb-3 p-2">
-        <div className="row mb-3">
-          <div className="col-2 fs-6 me-2 badge bg-primary text-wrap">
-            Fecha y Hora: <TimeAndDate />
-          </div>
-          <div className="col-2 fs-6 badge bg-primary text-wrap">
-            Username and Email are going to be here
-          </div>
-        </div>
-        <div className="row mb-3">
+      <div className="container-fluid mt-3 mb-3 p-0">
+        <div className="row justify-content-start mb-3">
           <div className="col">
-            <div className="mb-3 fs-6 badge bg-success text-wrap">
-              <span>Seccion: </span>
-              <div></div>
+            <div className="me-2 fs-6 badge bg-primary text-wrap">
+              <TimeAndDate />
+            </div>
+            <div className="fs-6 badge bg-primary text-wrap">
+              Jeziel Torres - jeziel.torres1@upr.edu
             </div>
           </div>
         </div>
-      </div>
-
-      <div className="mb-3 col-sm-7">
-        <select className="form-select" aria-label="Default select example">
-          <option selected>Open this select menu</option>
-          <option value="1">One</option>
-          <option value="2">Two</option>
-          <option value="3">Three</option>
-        </select>
+        <div className="row">
+          <div className="col-sm-1">
+            <label
+              htmlFor="selectbox"
+              className="col-form-label fs-6 badge bg-success text-wrap"
+            >
+              Seccion:
+            </label>
+          </div>
+          <div className="col-sm-3">
+            <select className="form-select" id="selectbox">
+              <option value="option1">Option 1</option>
+              <option value="option2">Option 2</option>
+              <option value="option3">Option 3</option>
+            </select>
+          </div>
+        </div>
       </div>
     </div>
   );

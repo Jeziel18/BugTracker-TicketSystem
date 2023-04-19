@@ -8,7 +8,7 @@ function TimeAndDate() {
   const time = currentTime.toLocaleTimeString("en-US");
   return (
     <span>
-      {date} {time}
+      Fecha: {date} Hora: {time}
     </span>
   );
 }
