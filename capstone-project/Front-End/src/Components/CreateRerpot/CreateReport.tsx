@@ -12,56 +12,32 @@ function CreateReport() {
       <div className="fs-3 fw-bolder text-decoration-underline">
         <span>Departamento de Edificios y Terrenos</span>
       </div>
-      <div className="mt-3 wrapper">
-        <div>
-          <span className="mb-3 fs-6 badge bg-primary text-wrap">
+      <div className="container-fluid mt-3 mb-3 p-2">
+        <div className="row mb-3">
+          <div className="col-2 fs-6 me-2 badge bg-primary text-wrap">
             Fecha y Hora: <TimeAndDate />
-          </span>
+          </div>
+          <div className="col-2 fs-6 badge bg-primary text-wrap">
+            Username and Email are going to be here
+          </div>
         </div>
-        <div className="mb-3 fs-6 badge bg-success text-wrap">
-          <span>Seccion: </span>
+        <div className="row mb-3">
+          <div className="col">
+            <div className="mb-3 fs-6 badge bg-success text-wrap">
+              <span>Seccion: </span>
+              <div></div>
+            </div>
+          </div>
         </div>
-        <div className="mb-3 col-sm-7">
-          <select className="form-select" aria-label="Default select example">
-            <option selected>Open this select menu</option>
-            <option value="1">One</option>
-            <option value="2">Two</option>
-            <option value="3">Three</option>
-          </select>
-        </div>
-        <div className="mb-3 fs-6 badge bg-success text-wrap">
-          <span>Servicio: </span>
-        </div>
-        <div className="mb-3 col-sm-7">
-          <select className="form-select" aria-label="Default select example">
-            <option selected>Open this select menu</option>
-            <option value="1">One</option>
-            <option value="2">Two</option>
-            <option value="3">Three</option>
-          </select>
-        </div>
-        <div className="mb-3 fs-6 badge bg-success text-wrap">
-          <span>Prioridad: </span>
-        </div>
-        <div className="mb-3 col-sm-4">
-          <select className="form-select" aria-label="Default select example">
-            <option selected>Open this select menu</option>
-            <option value="1">One</option>
-            <option value="2">Two</option>
-            <option value="3">Three</option>
-          </select>
-        </div>
-        <div className="mb-3 fs-6 badge bg-success text-wrap">
-          <span>Edificio: </span>
-        </div>
-        <div className="mb-3 col-sm-10">
-          <select className="form-select" aria-label="Default select example">
-            <option selected>Open this select menu</option>
-            <option value="1">One</option>
-            <option value="2">Two</option>
-            <option value="3">Three</option>
-          </select>
-        </div>
+      </div>
+
+      <div className="mb-3 col-sm-7">
+        <select className="form-select" aria-label="Default select example">
+          <option selected>Open this select menu</option>
+          <option value="1">One</option>
+          <option value="2">Two</option>
+          <option value="3">Three</option>
+        </select>
       </div>
     </div>
   );
