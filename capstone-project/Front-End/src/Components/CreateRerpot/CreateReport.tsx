@@ -3,6 +3,7 @@ import Select, { SingleValue } from "react-select";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-select/dist/css/bootstrap-select.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
+import * as bootstrap from "bootstrap";
 import "bootstrap-select/dist/js/bootstrap-select";
 import TimeAndDate from "../TimeAndDate/TimeAndDate";
 
@@ -14,7 +15,18 @@ function CreateReport() {
     { value: "apple", label: "Apple" },
     { value: "banana", label: "Banana" },
     { value: "cherry", label: "Cherry" },
+    { value: "bombillas", label: "Cambiar bombillas de un edificio raro" },
   ];
+
+  useEffect(() => {
+    // initialize tooltips
+    var tooltipTriggerList = [].slice.call(
+      document.querySelectorAll('[data-bs-toggle="tooltip"]')
+    );
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+      return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+  }, []);
 
   return (
     <>
@@ -39,17 +51,30 @@ function CreateReport() {
                 htmlFor="selectbox"
                 className="col-form-label fs-6 badge bg-success text-wrap"
               >
-                Seccion:
+                <span className="text-danger me-2">*</span>
+                <span>Seccion:</span>
               </label>
             </div>
-            <div className="col-sm-2">
+
+            <div className="col-sm-3 d-flex align-items-center">
               <Select
                 value={selectedOption}
                 onChange={setSelectedOption}
                 options={options}
                 isClearable
                 isSearchable
+                styles={{
+                  container: (provided) => ({ ...provided, width: 400 }),
+                }}
               />
+              <button
+                type="button"
+                className="ms-4 btn btn-secondary bi bi-question-circle"
+                data-bs-toggle="tooltip"
+                data-bs-placement="top"
+                data-bs-custom-class="custom-tooltip"
+                data-bs-title="Escoga la Seccion con la que tiene que ver el servicio"
+              ></button>
             </div>
           </div>
         </div>
