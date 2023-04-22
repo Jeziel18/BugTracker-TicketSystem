@@ -12,7 +12,21 @@ function App() {
       </div>
       <div className="col overflow-auto">
         <Navbar />
-        <CreateReport />
+        <div>
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<></>}></Route>
+              <Route
+                path="/createReport"
+                element={
+                  <>
+                    <CreateReport />
+                  </>
+                }
+              ></Route>
+            </Routes>
+          </BrowserRouter>
+        </div>
       </div>
     </div>
   );
