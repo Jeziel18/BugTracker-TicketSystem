@@ -42,7 +42,7 @@ function SideBar() {
             </li>
             <li className="nav-item">
               {
-                <a className="text-white" href="/createReport">
+                <a className="text-white" href="/crearReporte">
                   <i className="bi bi-box-arrow-in-right me-3"></i>
                   <span>Someter una solicitud de servicio</span>
                 </a>
@@ -116,7 +116,7 @@ function SideBar() {
 
             <li className="nav-item">
               {
-                <a className="text-white" href="/">
+                <a className="text-white" href="/generarInformes">
                   <i className="bi bi-paperclip me-3"></i>
                   <span>Generar Informes</span>
                 </a>

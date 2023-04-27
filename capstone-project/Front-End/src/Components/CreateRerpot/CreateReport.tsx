@@ -501,7 +501,7 @@ function CreateReport() {
           <div className="row mb-2 mt-3">
             <div className="d-flex justify-content-center">
               <button type="submit" className="btn btn-primary btn-lg">
-                Submit Report
+                Someter Reporte
               </button>
             </div>
           </div>

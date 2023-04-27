@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import SideBar from "./Components/SideBar/SideBar";
 import Navbar from "./Components/Navbar/Navbar";
 import CreateReport from "./Components/CreateRerpot/CreateReport";
+import Statistics from "./Components/Statistics/Statistics";
 
 function App() {
   return (
@@ -17,10 +18,18 @@ function App() {
             <Routes>
               <Route path="/" element={<></>}></Route>
               <Route
-                path="/createReport"
+                path="/crearReporte"
                 element={
                   <>
                     <CreateReport />
+                  </>
+                }
+              ></Route>
+              <Route
+                path="/generarInformes"
+                element={
+                  <>
+                    <Statistics />
                   </>
                 }
               ></Route>
