@@ -15,7 +15,10 @@ function CreateReport() {
   const [servicioSeleccionado, setServicioSeleccionado] =
     useState<SingleValue<{ value: string; label: string } | null>>(null);
 
-  const [edificio, setEdificioo] =
+  const [edificio, setEdificio] =
+    useState<SingleValue<{ value: string; label: string } | null>>(null);
+
+  const [decanato, setDecanato] =
     useState<SingleValue<{ value: string; label: string } | null>>(null);
 
   const Seccion = [
@@ -40,6 +43,12 @@ function CreateReport() {
       label: "Administracion de Empresas",
     },
     { value: "Chardon", label: "Chardon" },
+  ];
+
+  const Decanato = [
+    { value: "Administracion", label: "Decanato de Administracion" },
+    { value: "Estudiantes", label: "Decanato de Estudiantes" },
+    { value: "Asuntos Academicos", label: "Decanato de Asuntos Academicos" },
   ];
 
   useEffect(() => {
@@ -209,7 +218,7 @@ function CreateReport() {
             <div className="col-sm-3 d-flex align-items-center">
               <Select
                 value={edificio}
-                onChange={setEdificioo}
+                onChange={setEdificio}
                 options={Edificio}
                 isClearable
                 isSearchable
@@ -287,6 +296,213 @@ function CreateReport() {
                 data-bs-custom-class="custom-tooltip"
                 data-bs-title="De detalles importantes y especificos del trabajo requerido"
               ></button>
+            </div>
+          </div>
+
+          <hr className="border border-success border-2 opacity-100 mt-3" />
+
+          <div className="row mb-2">
+            <div className="col-sm-1">
+              <label
+                htmlFor="selectbox"
+                className="col-form-label fs-6 badge bg-success text-wrap"
+              >
+                <span className="text-danger me-2">*</span>
+                <span>Decanato:</span>
+              </label>
+            </div>
+            <div className="col-sm-3 d-flex align-items-center">
+              <Select
+                value={decanato}
+                onChange={setDecanato}
+                options={Decanato}
+                isClearable
+                isSearchable
+                styles={{
+                  container: (provided) => ({ ...provided, width: 400 }),
+                }}
+                required // add this attribute
+              />
+              <button
+                type="button"
+                className="ms-4 btn btn-secondary bi bi-question-circle"
+                data-bs-toggle="tooltip"
+                data-bs-placement="right"
+                data-bs-custom-class="custom-tooltip"
+                data-bs-title="Escoga el Decanato en donde usted trabaja"
+              ></button>
+            </div>
+          </div>
+
+          <div className="row mb-2 mt-3">
+            <div className="col-sm-2">
+              <label
+                htmlFor="selectbox"
+                className="col-form-label fs-6 badge bg-success text-wrap"
+              >
+                <span className="text-danger me-2">*</span>
+                <span>Departamento u Oficina:</span>
+              </label>
+            </div>
+            <div className="col-sm-3 d-flex align-items-center">
+              <div className="form-group">
+                <textarea
+                  className="form-control"
+                  id="exampleFormControlTextarea1"
+                  rows={1}
+                  style={{ width: "500px" }}
+                  required
+                ></textarea>
+              </div>
+              <button
+                type="button"
+                className="ms-4 btn btn-secondary bi bi-question-circle"
+                data-bs-toggle="tooltip"
+                data-bs-placement="right"
+                data-bs-custom-class="custom-tooltip"
+                data-bs-title="Indique el Departamento u Oficina en la que usted trabaja"
+              ></button>
+            </div>
+          </div>
+
+          <div className="row mb-2 mt-3">
+            <div className="col-sm-2">
+              <label
+                htmlFor="selectbox"
+                className="col-form-label fs-6 badge bg-success text-wrap"
+              >
+                <span className="text-danger me-2">*</span>
+                <span>Extension o Telefono:</span>
+              </label>
+            </div>
+            <div className="col-sm-2 d-flex align-items-center">
+              <div className="form-group">
+                <textarea
+                  className="form-control"
+                  id="exampleFormControlTextarea1"
+                  rows={1}
+                  style={{ width: "250px" }}
+                  required
+                ></textarea>
+              </div>
+              <button
+                type="button"
+                className="ms-4 btn btn-secondary bi bi-question-circle"
+                data-bs-toggle="tooltip"
+                data-bs-placement="right"
+                data-bs-custom-class="custom-tooltip"
+                data-bs-title="Entre el Numero de Telefono y/o extension para poder contactarle"
+              ></button>
+            </div>
+          </div>
+
+          <hr className="border border-success border-2 opacity-100 mt-4" />
+          <p className="fs-6 fw-bolder text-decoration-underline">
+            <i className="bi bi-info-circle-fill me-2"></i>
+            Si el Trabajo esta relacionado a una actividad, entre los siguientes
+            datos:
+          </p>
+
+          <div className="row mb-2 mt-3">
+            <div className="col-sm-2">
+              <label
+                htmlFor="selectbox"
+                className="col-form-label fs-6 badge bg-success text-wrap"
+              >
+                <span className="text-danger me-2">*</span>
+                <span>Nombre de la Actividad:</span>
+              </label>
+            </div>
+            <div className="col-sm-3 d-flex align-items-center">
+              <div className="form-group">
+                <textarea
+                  className="form-control"
+                  id="exampleFormControlTextarea1"
+                  rows={1}
+                  style={{ width: "600px" }}
+                  required
+                ></textarea>
+              </div>
+              <button
+                type="button"
+                className="ms-4 btn btn-secondary bi bi-question-circle"
+                data-bs-toggle="tooltip"
+                data-bs-placement="right"
+                data-bs-custom-class="custom-tooltip"
+                data-bs-title="Indique el Nombre de la actividad para el cual se haria el trabajo"
+              ></button>
+            </div>
+          </div>
+
+          <div className="row mb-2 mt-3">
+            <div className="col-sm-1">
+              <label
+                htmlFor="selectbox"
+                className="col-form-label fs-6 badge bg-success text-wrap"
+              >
+                <span className="text-danger me-2">*</span>
+                <span>Fecha:</span>
+              </label>
+            </div>
+            <div className="col-sm-3 d-flex align-items-center">
+              <div className="form-group">
+                <textarea
+                  className="form-control"
+                  id="exampleFormControlTextarea1"
+                  rows={1}
+                  style={{ width: "150px" }}
+                  placeholder="MM/DD/YYYY"
+                  required
+                ></textarea>
+              </div>
+              <button
+                type="button"
+                className="ms-4 btn btn-secondary bi bi-question-circle"
+                data-bs-toggle="tooltip"
+                data-bs-placement="right"
+                data-bs-custom-class="custom-tooltip"
+                data-bs-title="Indique Fecha de la actividad"
+              ></button>
+            </div>
+          </div>
+
+          <div className="row mb-2 mt-3">
+            <div className="col-sm-1">
+              <label
+                htmlFor="selectbox"
+                className="col-form-label fs-6 badge bg-success text-wrap"
+              >
+                <span className="text-danger me-2">*</span>
+                <span>Hora de Inicio:</span>
+              </label>
+            </div>
+            <div className="col-sm-3 d-flex align-items-center">
+              <div className="form-group">
+                <textarea
+                  className="form-control"
+                  id="exampleFormControlTextarea1"
+                  rows={1}
+                  style={{ width: "150px" }}
+                  placeholder="HH:MM AM/PM"
+                  required
+                ></textarea>
+              </div>
+              <button
+                type="button"
+                className="ms-4 btn btn-secondary bi bi-question-circle"
+                data-bs-toggle="tooltip"
+                data-bs-placement="right"
+                data-bs-custom-class="custom-tooltip"
+                data-bs-title="Indique Fecha de la actividad"
+              ></button>
+            </div>
+          </div>
+
+          <div className="row mb-2 mt-3">
+            <div className="d-flex justify-content-center">
+              <button type="submit" className="btn btn-primary btn-lg">
+                Submit Report
+              </button>
             </div>
           </div>
         </div>
