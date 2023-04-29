@@ -67,7 +67,7 @@ function CreateReport() {
         <div className="fs-3 fw-bolder text-decoration-underline">
           <span>Departamento de Edificios y Terrenos</span>
         </div>
-        <div className="container-fluid mt-3 mb-3 p-0">
+        <div className="container-fluid mt-1 mb-2 p-0">
           <div className="row justify-content-start mb-3">
             <div className="col">
               <div className="me-2 fs-6 badge bg-primary text-wrap">
@@ -496,13 +496,13 @@ function CreateReport() {
                 data-bs-title="Indique Fecha de la actividad"
               ></button>
             </div>
-          </div>
 
-          <div className="row mb-2 mt-3">
-            <div className="d-flex justify-content-center">
-              <button type="submit" className="btn btn-primary btn-lg">
-                Someter Reporte
-              </button>
+            <div className="col-sm-2">
+              <div className="d-flex justify-content-center">
+                <button type="submit" className="btn btn-primary btn-lg">
+                  Someter Reporte
+                </button>
+              </div>
             </div>
           </div>
         </div>
