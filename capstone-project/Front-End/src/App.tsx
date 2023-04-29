@@ -4,6 +4,7 @@ import SideBar from "./Components/SideBar/SideBar";
 import Navbar from "./Components/Navbar/Navbar";
 import CreateReport from "./Components/CreateRerpot/CreateReport";
 import Statistics from "./Components/Statistics/Statistics";
+import PendientesAEvaluar from "./Components/ReportTables/PendientesAEvaluar";
 
 function App() {
   return (
@@ -30,6 +31,14 @@ function App() {
                 element={
                   <>
                     <Statistics />
+                  </>
+                }
+              ></Route>
+              <Route
+                path="/pendientesAEvaluar"
+                element={
+                  <>
+                    <PendientesAEvaluar />
                   </>
                 }
               ></Route>
