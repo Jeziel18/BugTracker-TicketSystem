@@ -10,10 +10,10 @@ import "./CreateReport.css";
 import SelectWithSearch, { Option } from "../CustomSelect/SelectWithSearch";
 
 function CreateReport() {
-  const [selectedOption, setSelectedOption] = useState<Option | null>(null);
+  const [seccion, setSeccion] = useState<Option | null>(null);
 
   const handleChange = (value: Option | null) => {
-    setSelectedOption(value);
+    setSeccion(value);
   };
 
   const [servicioSeleccionado, setServicioSeleccionado] =
@@ -100,6 +100,7 @@ function CreateReport() {
                 styles={{
                   container: (provided) => ({ ...provided, width: 400 }),
                 }}
+                value={seccion}
               />
               <button
                 type="button"

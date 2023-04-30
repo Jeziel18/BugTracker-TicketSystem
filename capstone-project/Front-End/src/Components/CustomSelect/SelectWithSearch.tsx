@@ -19,13 +19,15 @@ interface Styles {
 
 interface Props {
   options: Option[];
+  value: Option | null; // add the `value` prop here
   onChange: (value: Option | null) => void;
   isClearable?: boolean;
-  styles?: Styles; // include styles prop with type of Styles
+  styles?: Styles;
 }
 
 const SelectWithSearch: React.FC<Props> = ({
   options,
+  value, // add `value` prop to destructured props
   onChange,
   isClearable,
   styles,
@@ -48,7 +50,8 @@ const SelectWithSearch: React.FC<Props> = ({
       isClearable={!!isClearable}
       placeholder="Select"
       noOptionsMessage={() => "No options found"}
-      styles={styles} // use styles prop
+      // styles={styles}
+      value={value} // pass `value` prop to `Select`
     />
   );
 };

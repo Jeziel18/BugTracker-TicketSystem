@@ -3,6 +3,7 @@ import { Table, Pagination, Button } from "react-bootstrap";
 import { InputActionMeta, SingleValue } from "react-select";
 import TimeAndDate from "../TimeAndDate/TimeAndDate";
 import Select from "react-select";
+import SelectWithSearch from "../CustomSelect/SelectWithSearch";
 
 interface Data {
   id: number;
@@ -36,23 +37,24 @@ const PendientesAEvaluar = () => {
   const data: Data[] = [
     {
       id: 1,
-      seccion: "Section A",
-      servicio: "Service 1",
-      prioridad: "High",
-      edificio: "Building 1",
-      numerDeOficina: "Office 1",
-      descripcion: "Description 1",
-      decanato: "Decanate 1",
-      departamento: "Department 1",
+      seccion: "electricidad",
+      servicio: "corto circuito",
+      prioridad: "emergencia",
+      edificio: "Stefani",
+      numerDeOficina: "S-113",
+      descripcion:
+        "El salon hizo un corto circuito en el switch para prender la luz al lado de la puerta principal",
+      decanato: "Administracion",
+      departamento: "Ingenieria electrica y de computadora",
       telefono: "123-456-7890",
-      nombreActividad: "Activity 1",
-      fechaActividad: "2023-05-01",
-      horaActividad: "13:00:00",
+      nombreActividad: "",
+      fechaActividad: "",
+      horaActividad: "",
       status: "Open",
     },
     {
       id: 2,
-      seccion: "Section B",
+      seccion: "plomeria",
       servicio: "Service 2",
       prioridad: "Medium",
       edificio: "Building 2",
@@ -68,7 +70,7 @@ const PendientesAEvaluar = () => {
     },
     {
       id: 3,
-      seccion: "Section C",
+      seccion: "flora",
       servicio: "Service 3",
       prioridad: "Low",
       edificio: "Building 3",
@@ -111,7 +113,7 @@ const PendientesAEvaluar = () => {
     });
   };
 
-  const [seccionSeleccionado, setSeccionSeleccionado] =
+  const [seccion, setSeccion] =
     useState<SingleValue<{ value: string; label: string } | null>>(null);
 
   const [servicioSeleccionado, setServicioSeleccionado] =
@@ -152,6 +154,7 @@ const PendientesAEvaluar = () => {
     { value: "Estudiantes", label: "Decanato de Estudiantes" },
     { value: "Asuntos Academicos", label: "Decanato de Asuntos Academicos" },
   ];
+
   return (
     <>
       <div className="mt-1 mb-2 p-2">
@@ -275,40 +278,19 @@ const PendientesAEvaluar = () => {
                               </div>
 
                               <div className="col-sm-3 d-flex align-items-center">
-                                <Select
-                                  value={{
-                                    value: item.seccion,
-                                    label: item.seccion,
-                                  }}
-                                  onChange={setSeccionSeleccionado}
+                                <SelectWithSearch
                                   options={Seccion}
-                                  isClearable
-                                  isSearchable
+                                  value={
+                                    Seccion.find(
+                                      (option) => option.value === item.seccion
+                                    ) || null
+                                  }
+                                  onChange={setSeccion}
                                   styles={{
-                                    container: (provided: any) => ({
+                                    container: (provided) => ({
                                       ...provided,
                                       width: 400,
                                     }),
-                                  }}
-                                  required // add this attribute
-                                  inputValue={""}
-                                  onInputChange={function (
-                                    newValue: string,
-                                    actionMeta: InputActionMeta
-                                  ): void {
-                                    throw new Error(
-                                      "Function not implemented."
-                                    );
-                                  }}
-                                  onMenuOpen={function (): void {
-                                    throw new Error(
-                                      "Function not implemented."
-                                    );
-                                  }}
-                                  onMenuClose={function (): void {
-                                    throw new Error(
-                                      "Function not implemented."
-                                    );
                                   }}
                                 />
                               </div>
