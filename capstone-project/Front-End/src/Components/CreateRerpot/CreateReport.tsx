@@ -7,10 +7,14 @@ import * as bootstrap from "bootstrap";
 import "bootstrap-select/dist/js/bootstrap-select";
 import TimeAndDate from "../TimeAndDate/TimeAndDate";
 import "./CreateReport.css";
+import SelectWithSearch, { Option } from "../CustomSelect/SelectWithSearch";
 
 function CreateReport() {
-  const [seccionSeleccionado, setSeccionSeleccionado] =
-    useState<SingleValue<{ value: string; label: string } | null>>(null);
+  const [selectedOption, setSelectedOption] = useState<Option | null>(null);
+
+  const handleChange = (value: Option | null) => {
+    setSelectedOption(value);
+  };
 
   const [servicioSeleccionado, setServicioSeleccionado] =
     useState<SingleValue<{ value: string; label: string } | null>>(null);
@@ -90,16 +94,12 @@ function CreateReport() {
             </div>
 
             <div className="col-sm-3 d-flex align-items-center">
-              <Select
-                value={seccionSeleccionado}
-                onChange={setSeccionSeleccionado}
+              <SelectWithSearch
                 options={Seccion}
-                isClearable
-                isSearchable
+                onChange={handleChange}
                 styles={{
                   container: (provided) => ({ ...provided, width: 400 }),
                 }}
-                required // add this attribute
               />
               <button
                 type="button"
@@ -294,7 +294,7 @@ function CreateReport() {
                 data-bs-toggle="tooltip"
                 data-bs-placement="right"
                 data-bs-custom-class="custom-tooltip"
-                data-bs-title="De detalles importantes y especificos del trabajo requerido"
+                data-bs-title="De detalles importantes y especificos del trabajo requerido (Trate de ser lo mas corto y conciso posible)"
               ></button>
             </div>
           </div>

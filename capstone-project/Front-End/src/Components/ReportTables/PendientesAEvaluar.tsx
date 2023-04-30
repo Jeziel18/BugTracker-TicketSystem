@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 import { Table, Pagination, Button } from "react-bootstrap";
+import { InputActionMeta, SingleValue } from "react-select";
+import TimeAndDate from "../TimeAndDate/TimeAndDate";
+import Select from "react-select";
 
 interface Data {
   id: number;
@@ -7,13 +10,20 @@ interface Data {
   servicio: string;
   prioridad: string;
   edificio: string;
+  numerDeOficina: string;
   descripcion: string;
+  decanato: string;
+  departamento: string;
+  telefono: string;
+  nombreActividad: string;
+  fechaActividad: string;
+  horaActividad: string;
   status: string;
 }
 
 const PendientesAEvaluar = () => {
   const [currentPage, setCurrentPage] = useState(1);
-  const [dataPerPage] = useState(15);
+  const [dataPerPage] = useState(3);
   const [filters, setFilters] = useState({
     seccion: "",
     servicio: "",
@@ -30,7 +40,14 @@ const PendientesAEvaluar = () => {
       servicio: "Service 1",
       prioridad: "High",
       edificio: "Building 1",
+      numerDeOficina: "Office 1",
       descripcion: "Description 1",
+      decanato: "Decanate 1",
+      departamento: "Department 1",
+      telefono: "123-456-7890",
+      nombreActividad: "Activity 1",
+      fechaActividad: "2023-05-01",
+      horaActividad: "13:00:00",
       status: "Open",
     },
     {
@@ -39,7 +56,14 @@ const PendientesAEvaluar = () => {
       servicio: "Service 2",
       prioridad: "Medium",
       edificio: "Building 2",
+      numerDeOficina: "Office 2",
       descripcion: "Description 2",
+      decanato: "Decanate 2",
+      departamento: "Department 2",
+      telefono: "234-567-8901",
+      nombreActividad: "Activity 2",
+      fechaActividad: "2023-05-02",
+      horaActividad: "14:00:00",
       status: "In Progress",
     },
     {
@@ -48,11 +72,16 @@ const PendientesAEvaluar = () => {
       servicio: "Service 3",
       prioridad: "Low",
       edificio: "Building 3",
+      numerDeOficina: "Office 3",
       descripcion: "Description 3",
+      decanato: "Decanate 3",
+      departamento: "Department 3",
+      telefono: "345-678-9012",
+      nombreActividad: "Activity 3",
+      fechaActividad: "2023-05-03",
+      horaActividad: "15:00:00",
       status: "Closed",
     },
-    // add 97 more items with random data
-    // ...
   ];
 
   const indexOfLastData = currentPage * dataPerPage;
@@ -82,18 +111,59 @@ const PendientesAEvaluar = () => {
     });
   };
 
+  const [seccionSeleccionado, setSeccionSeleccionado] =
+    useState<SingleValue<{ value: string; label: string } | null>>(null);
+
+  const [servicioSeleccionado, setServicioSeleccionado] =
+    useState<SingleValue<{ value: string; label: string } | null>>(null);
+
+  const [edificio, setEdificio] =
+    useState<SingleValue<{ value: string; label: string } | null>>(null);
+
+  const [decanato, setDecanato] =
+    useState<SingleValue<{ value: string; label: string } | null>>(null);
+
+  const Seccion = [
+    { value: "electricidad", label: "electricidad" },
+    { value: "plomeria", label: "plomeria" },
+    { value: "flora", label: "flora" },
+    { value: "mesas y sillas", label: "mesas y sillas" },
+  ];
+
+  const Servicio = [
+    { value: "luz mala", label: "luz mala" },
+    { value: "receptaculo no sirve", label: "receptaculo no sirve" },
+    { value: "switch no sirve", label: "switch no sirve" },
+    { value: "corto circuito", label: "corto circuito" },
+  ];
+
+  const Edificio = [
+    { value: "Stefani", label: "Stefani" },
+    { value: "Enfermeria", label: "Enfermeria" },
+    {
+      value: "Administracion de Empresas",
+      label: "Administracion de Empresas",
+    },
+    { value: "Chardon", label: "Chardon" },
+  ];
+
+  const Decanato = [
+    { value: "Administracion", label: "Decanato de Administracion" },
+    { value: "Estudiantes", label: "Decanato de Estudiantes" },
+    { value: "Asuntos Academicos", label: "Decanato de Asuntos Academicos" },
+  ];
   return (
     <>
       <div className="mt-1 mb-2 p-2">
         <div className="fs-3 fw-bolder text-decoration-underline">
           <span>Tables de Reportes - Pendientes a Evaluar</span>
         </div>
-        <Table striped bordered hover>
+        <Table striped bordered hover style={{ fontSize: "13px" }}>
           <thead>
             <tr>
               <th>Report ID</th>
               <th>
-                Seccion
+                Seccion:
                 <input
                   type="text"
                   name="seccion"
@@ -102,7 +172,7 @@ const PendientesAEvaluar = () => {
                 />
               </th>
               <th>
-                Servicio
+                Servicio:
                 <input
                   type="text"
                   name="servicio"
@@ -111,7 +181,7 @@ const PendientesAEvaluar = () => {
                 />
               </th>
               <th>
-                Prioridad
+                Prioridad:
                 <input
                   type="text"
                   name="prioridad"
@@ -120,7 +190,7 @@ const PendientesAEvaluar = () => {
                 />
               </th>
               <th>
-                Edificio
+                Edificio:
                 <input
                   type="text"
                   name="edificio"
@@ -129,7 +199,7 @@ const PendientesAEvaluar = () => {
                 />
               </th>
               <th>
-                Descripcion
+                Descripcion:
                 <input
                   type="text"
                   name="descripcion"
@@ -138,7 +208,7 @@ const PendientesAEvaluar = () => {
                 />
               </th>
               <th>
-                Status
+                Status:
                 <input
                   type="text"
                   name="status"
@@ -154,7 +224,7 @@ const PendientesAEvaluar = () => {
                 <td>
                   <button
                     type="button"
-                    className="btn btn-primary"
+                    className="btn btn-link"
                     data-bs-toggle="modal"
                     data-bs-target={`#exampleModal${item.id}`}
                   >
@@ -165,14 +235,14 @@ const PendientesAEvaluar = () => {
                     tabIndex={-1}
                     id={`exampleModal${item.id}`}
                   >
-                    <div className="modal-dialog">
+                    <div className="modal-dialog modal-fullscreen">
                       <div className="modal-content">
                         <div className="modal-header">
                           <h1
                             className="modal-title fs-5"
                             id="staticBackdropLabel"
                           >
-                            {item.edificio}
+                            Reporte - {item.id}
                           </h1>
                           <button
                             type="button"
@@ -182,19 +252,470 @@ const PendientesAEvaluar = () => {
                           ></button>
                         </div>
                         <div className="modal-body">
-                          <p>{item.seccion}</p>
-                        </div>
-                        <div className="modal-footer">
-                          <button
-                            type="button"
-                            className="btn btn-secondary"
-                            data-bs-dismiss="modal"
-                          >
-                            Close
-                          </button>
-                          <button type="button" className="btn btn-primary">
-                            Save changes
-                          </button>
+                          <div className="container-fluid mt-1 mb-2 p-0">
+                            <div className="row justify-content-start mb-3">
+                              <div className="col">
+                                <div className="me-2 fs-6 badge bg-primary text-wrap">
+                                  <TimeAndDate />
+                                </div>
+                                <div className="fs-6 badge bg-primary text-wrap">
+                                  Jeziel Torres - jeziel.torres1@upr.edu
+                                </div>
+                              </div>
+                            </div>
+                            <div className="row mb-2">
+                              <div className="col-sm-1">
+                                <label
+                                  htmlFor="selectbox"
+                                  className="col-form-label fs-6 badge bg-success text-wrap"
+                                >
+                                  <span className="text-danger me-2">*</span>
+                                  <span>Seccion:</span>
+                                </label>
+                              </div>
+
+                              <div className="col-sm-3 d-flex align-items-center">
+                                <Select
+                                  value={{
+                                    value: item.seccion,
+                                    label: item.seccion,
+                                  }}
+                                  onChange={setSeccionSeleccionado}
+                                  options={Seccion}
+                                  isClearable
+                                  isSearchable
+                                  styles={{
+                                    container: (provided: any) => ({
+                                      ...provided,
+                                      width: 400,
+                                    }),
+                                  }}
+                                  required // add this attribute
+                                  inputValue={""}
+                                  onInputChange={function (
+                                    newValue: string,
+                                    actionMeta: InputActionMeta
+                                  ): void {
+                                    throw new Error(
+                                      "Function not implemented."
+                                    );
+                                  }}
+                                  onMenuOpen={function (): void {
+                                    throw new Error(
+                                      "Function not implemented."
+                                    );
+                                  }}
+                                  onMenuClose={function (): void {
+                                    throw new Error(
+                                      "Function not implemented."
+                                    );
+                                  }}
+                                />
+                              </div>
+                            </div>
+
+                            <div className="row mt-3">
+                              <div className="col-sm-1">
+                                <label
+                                  htmlFor="selectbox"
+                                  className="col-form-label fs-6 badge bg-success text-wrap"
+                                >
+                                  <span className="text-danger me-2">*</span>
+                                  <span>Servicio:</span>
+                                </label>
+                              </div>
+
+                              <div className="col-sm-3 d-flex align-items-center">
+                                <Select
+                                  value={{
+                                    value: item.servicio,
+                                    label: item.servicio,
+                                  }}
+                                  onChange={setServicioSeleccionado}
+                                  options={Servicio}
+                                  isClearable
+                                  isSearchable
+                                  styles={{
+                                    container: (provided) => ({
+                                      ...provided,
+                                      width: 400,
+                                    }),
+                                  }}
+                                  required // add this attribute
+                                  inputValue={""}
+                                  onInputChange={function (
+                                    newValue: string,
+                                    actionMeta: InputActionMeta
+                                  ): void {
+                                    throw new Error(
+                                      "Function not implemented."
+                                    );
+                                  }}
+                                  onMenuOpen={function (): void {
+                                    throw new Error(
+                                      "Function not implemented."
+                                    );
+                                  }}
+                                  onMenuClose={function (): void {
+                                    throw new Error(
+                                      "Function not implemented."
+                                    );
+                                  }}
+                                />
+                              </div>
+                            </div>
+
+                            <div className="row mt-3">
+                              <div className="col-sm-1">
+                                <label
+                                  htmlFor="selectbox"
+                                  className="col-form-label fs-6 badge bg-success text-wrap"
+                                >
+                                  <span className="text-danger me-2">*</span>
+                                  <span>Prioridad:</span>
+                                </label>
+                              </div>
+
+                              <div className="col-sm-3 d-flex align-items-center">
+                                <div className="form-check me-1">
+                                  <input
+                                    className="form-check-input"
+                                    type="radio"
+                                    name="flexRadioDefault"
+                                    id="flexRadioDefault1"
+                                    required
+                                  />
+                                  <label
+                                    className="form-check-label"
+                                    htmlFor="flexRadioDefault1"
+                                  >
+                                    Rutina
+                                  </label>
+                                </div>
+                                <div className="form-check ms-2">
+                                  <input
+                                    className="form-check-input"
+                                    type="radio"
+                                    name="flexRadioDefault"
+                                    id="flexRadioDefault2"
+                                    required
+                                  />
+                                  <label
+                                    className="form-check-label"
+                                    htmlFor="flexRadioDefault2"
+                                  >
+                                    Urgente
+                                  </label>
+                                </div>
+                                <div className="form-check ms-2">
+                                  <input
+                                    className="form-check-input"
+                                    type="radio"
+                                    name="flexRadioDefault"
+                                    id="flexRadioDefault3"
+                                    required
+                                  />
+                                  <label
+                                    className="form-check-label"
+                                    htmlFor="flexRadioDefault3"
+                                  >
+                                    Emergencia
+                                  </label>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div className="row mb-2 mt-3">
+                              <div className="col-sm-1">
+                                <label
+                                  htmlFor="selectbox"
+                                  className="col-form-label fs-6 badge bg-success text-wrap"
+                                >
+                                  <span className="text-danger me-2">*</span>
+                                  <span>Edificio:</span>
+                                </label>
+                              </div>
+                              <div className="col-sm-3 d-flex align-items-center">
+                                <Select
+                                  value={{
+                                    value: item.edificio,
+                                    label: item.edificio,
+                                  }}
+                                  onChange={setEdificio}
+                                  options={Edificio}
+                                  isClearable
+                                  isSearchable
+                                  styles={{
+                                    control: (provided) => ({
+                                      ...provided,
+                                      width: 500,
+                                    }),
+                                  }}
+                                  required
+                                  inputValue={""}
+                                  onInputChange={function (
+                                    newValue: string,
+                                    actionMeta: InputActionMeta
+                                  ): void {
+                                    throw new Error(
+                                      "Function not implemented."
+                                    );
+                                  }}
+                                  onMenuOpen={function (): void {
+                                    throw new Error(
+                                      "Function not implemented."
+                                    );
+                                  }}
+                                  onMenuClose={function (): void {
+                                    throw new Error(
+                                      "Function not implemented."
+                                    );
+                                  }}
+                                />
+                              </div>
+                            </div>
+
+                            <div className="row mb-2 mt-3">
+                              <div className="col-sm-3">
+                                <label
+                                  htmlFor="selectbox"
+                                  className="col-form-label fs-6 badge bg-success text-wrap"
+                                >
+                                  <span className="text-danger me-2">*</span>
+                                  <span>
+                                    Numero de Oficina, Cuarto o Salon:
+                                  </span>
+                                </label>
+                              </div>
+                              <div className="col-sm-2 d-flex align-items-center">
+                                <div className="form-group">
+                                  <textarea
+                                    className="form-control"
+                                    id="exampleFormControlTextarea1"
+                                    rows={1}
+                                    required
+                                  ></textarea>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div className="row mb-2 mt-3">
+                              <div className="col-sm-2">
+                                <label
+                                  htmlFor="selectbox"
+                                  className="col-form-label fs-6 badge bg-success text-wrap"
+                                >
+                                  <span className="text-danger me-2">*</span>
+                                  <span>Descripcion Del Trabajo:</span>
+                                </label>
+                              </div>
+                              <div className="col-sm-2 d-flex align-items-center">
+                                <div className="form-group">
+                                  <textarea
+                                    className="form-control"
+                                    id="exampleFormControlTextarea1"
+                                    rows={2}
+                                    style={{ width: "700px" }}
+                                    required
+                                  ></textarea>
+                                </div>
+                              </div>
+                            </div>
+
+                            <hr className="border border-success border-2 opacity-100 mt-3" />
+
+                            <div className="row mb-2">
+                              <div className="col-sm-1">
+                                <label
+                                  htmlFor="selectbox"
+                                  className="col-form-label fs-6 badge bg-success text-wrap"
+                                >
+                                  <span className="text-danger me-2">*</span>
+                                  <span>Decanato:</span>
+                                </label>
+                              </div>
+                              <div className="col-sm-3 d-flex align-items-center">
+                                <Select
+                                  value={{
+                                    value: item.decanato,
+                                    label: item.decanato,
+                                  }}
+                                  onChange={setDecanato}
+                                  options={Decanato}
+                                  isClearable
+                                  isSearchable
+                                  styles={{
+                                    container: (provided) => ({
+                                      ...provided,
+                                      width: 400,
+                                    }),
+                                  }}
+                                  required // add this attribute
+                                  inputValue={""}
+                                  onInputChange={function (
+                                    newValue: string,
+                                    actionMeta: InputActionMeta
+                                  ): void {
+                                    throw new Error(
+                                      "Function not implemented."
+                                    );
+                                  }}
+                                  onMenuOpen={function (): void {
+                                    throw new Error(
+                                      "Function not implemented."
+                                    );
+                                  }}
+                                  onMenuClose={function (): void {
+                                    throw new Error(
+                                      "Function not implemented."
+                                    );
+                                  }}
+                                />
+                              </div>
+                            </div>
+
+                            <div className="row mb-2 mt-3">
+                              <div className="col-sm-2">
+                                <label
+                                  htmlFor="selectbox"
+                                  className="col-form-label fs-6 badge bg-success text-wrap"
+                                >
+                                  <span className="text-danger me-2">*</span>
+                                  <span>Departamento u Oficina:</span>
+                                </label>
+                              </div>
+                              <div className="col-sm-3 d-flex align-items-center">
+                                <div className="form-group">
+                                  <textarea
+                                    className="form-control"
+                                    id="exampleFormControlTextarea1"
+                                    rows={1}
+                                    style={{ width: "500px" }}
+                                    required
+                                  ></textarea>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div className="row mb-2 mt-3">
+                              <div className="col-sm-2">
+                                <label
+                                  htmlFor="selectbox"
+                                  className="col-form-label fs-6 badge bg-success text-wrap"
+                                >
+                                  <span className="text-danger me-2">*</span>
+                                  <span>Extension o Telefono:</span>
+                                </label>
+                              </div>
+                              <div className="col-sm-2 d-flex align-items-center">
+                                <div className="form-group">
+                                  <textarea
+                                    className="form-control"
+                                    id="exampleFormControlTextarea1"
+                                    rows={1}
+                                    style={{ width: "250px" }}
+                                    required
+                                  ></textarea>
+                                </div>
+                              </div>
+                            </div>
+
+                            <hr className="border border-success border-2 opacity-100 mt-4" />
+                            <p className="fs-6 fw-bolder text-decoration-underline">
+                              <i className="bi bi-info-circle-fill me-2"></i>
+                              Si el Trabajo esta relacionado a una actividad,
+                              entre los siguientes datos:
+                            </p>
+
+                            <div className="row mb-2 mt-3">
+                              <div className="col-sm-2">
+                                <label
+                                  htmlFor="selectbox"
+                                  className="col-form-label fs-6 badge bg-success text-wrap"
+                                >
+                                  <span className="text-danger me-2">*</span>
+                                  <span>Nombre de la Actividad:</span>
+                                </label>
+                              </div>
+                              <div className="col-sm-3 d-flex align-items-center">
+                                <div className="form-group">
+                                  <textarea
+                                    className="form-control"
+                                    id="exampleFormControlTextarea1"
+                                    rows={1}
+                                    style={{ width: "600px" }}
+                                    required
+                                  ></textarea>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div className="row mb-2 mt-3">
+                              <div className="col-sm-1">
+                                <label
+                                  htmlFor="selectbox"
+                                  className="col-form-label fs-6 badge bg-success text-wrap"
+                                >
+                                  <span className="text-danger me-2">*</span>
+                                  <span>Fecha:</span>
+                                </label>
+                              </div>
+                              <div className="col-sm-3 d-flex align-items-center">
+                                <div className="form-group">
+                                  <textarea
+                                    className="form-control"
+                                    id="exampleFormControlTextarea1"
+                                    rows={1}
+                                    style={{ width: "150px" }}
+                                    placeholder="MM/DD/YYYY"
+                                    required
+                                  ></textarea>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div className="row mb-2 mt-3">
+                              <div className="col-sm-1">
+                                <label
+                                  htmlFor="selectbox"
+                                  className="col-form-label fs-6 badge bg-success text-wrap"
+                                >
+                                  <span className="text-danger me-2">*</span>
+                                  <span>Hora de Inicio:</span>
+                                </label>
+                              </div>
+                              <div className="col-sm-3 d-flex align-items-center">
+                                <div className="form-group">
+                                  <textarea
+                                    className="form-control"
+                                    id="exampleFormControlTextarea1"
+                                    rows={1}
+                                    style={{ width: "150px" }}
+                                    placeholder="HH:MM AM/PM"
+                                    required
+                                  ></textarea>
+                                </div>
+                              </div>
+
+                              <div className="col-sm-2">
+                                <div className="d-flex justify-content-center">
+                                  <button
+                                    type="button"
+                                    className="btn btn-secondary me-1"
+                                    data-bs-dismiss="modal"
+                                  >
+                                    Close
+                                  </button>
+                                  <button
+                                    type="button"
+                                    className="btn btn-primary ms-1"
+                                  >
+                                    Save changes
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>

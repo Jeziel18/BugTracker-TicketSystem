@@ -101,7 +101,7 @@ function Statistics() {
           <div className="">
             <div className="d-flex justify-content-center">
               <button type="submit" className="btn btn-primary btn-lg">
-                Someter Reporte
+                Generar Estadisticas
               </button>
             </div>
           </div>
