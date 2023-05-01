@@ -26,6 +26,6 @@ class UserDAO:
         rows = cursor.fetchone()
         cursor.close()
         if rows:
-            return self.build_user_dict(rows)
+            return rows
         else:
             return None

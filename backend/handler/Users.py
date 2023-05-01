@@ -4,33 +4,6 @@ from backend.dao.Users import UserDAO
 
 class UserHandler:
 
-    # def __init__(self):
-    #     self.dao = UserDAO()
-
-    # def build_user_dict(self, row):
-    #     return {
-    #         'user_id': row[0],
-    #         'first_name': row[1],
-    #         'last_name': row[2],
-    #         'email': row[3],
-    #         'password': row[4],
-    #         'role_id': row[5],
-    #         'phone_number': row[6],
-    #         'phone_extension': row[7]
-    #     }
-    #
-    # def build_user_attributes(self, user_id, first_name, last_name, email, password, role_id, phone_number,
-    #                           phone_extension):
-    #     return {
-    #         'user_id': user_id,
-    #         'first_name': first_name,
-    #         'last_name': last_name,
-    #         'email': email,
-    #         'password': password,
-    #         'role_id': role_id,
-    #         'phone_number': phone_number,
-    #         'phone_extension': phone_extension
-    #     }
     def build_user_dict(self, row):
         result = {}
         result['user_id'] = row[0],
