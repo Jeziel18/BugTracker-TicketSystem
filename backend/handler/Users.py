@@ -1,4 +1,4 @@
-from flask import jsonify
+from flask import Flask, jsonify, request
 from backend.dao.Users import UserDAO
 
 
@@ -13,7 +13,8 @@ class UserHandler:
         result['password'] = row[4],
         result['role_id'] = row[5],
         result['phone_number'] = row[6],
-        result['phone_extension'] = row[7]
+        if len(row) > 7:
+            result['phone_extension'] = row[7]
         return result
 
 
@@ -29,6 +30,9 @@ class UserHandler:
         result['phone_number'] = phone_number,
         result['phone_extension'] = phone_extension
         return result
+
+    def __init__(self):
+        self.user_dao = UserDAO()
 
     def get_all_users(self):
         dao = UserDAO()
@@ -47,3 +51,53 @@ class UserHandler:
         else:
             user_dict = self.build_user_dict(users)
             return jsonify(user_dict), 200
+
+    def create_user(self, first_name, last_name, email, password, phone_number, phone_extension=None):
+        if not phone_extension:
+            phone_extension = ''
+        dao = UserDAO()
+        user_id = dao.create_user(first_name, last_name, email, password, phone_number, phone_extension)
+        return {'user_id': user_id}
+
+    def update_user(self, user_id, update_data):
+        # Check if user exists
+        user = self.user_dao.get_user_by_id(user_id)
+        if not user:
+            return jsonify(Error="User not found"), 404
+
+        # Get update data from request body
+        update_data = request.get_json()
+        if not update_data:
+            return jsonify(Error="Missing JSON request body"), 400
+
+        # Update user record
+        try:
+            self.user_dao.update_user(user_id, update_data)
+            return jsonify(Message="User updated successfully"), 200
+        except:
+            return jsonify(Error="Failed to update user"), 500
+
+    def get_user_by_role_id(self, role_id):
+        try:
+            role_id = int(role_id)
+        except ValueError:
+            return jsonify(Error="Invalid role ID"), 400
+
+        users = self.user_dao.get_user_by_role_id(role_id)
+        if not users:
+            return jsonify(Error="No users found for the specified role ID"), 404
+
+        user_list = []
+        for user in users:
+            user_list.append({
+                "user_id": user[0],
+                "first_name": user[1],
+                "last_name": user[2],
+                "email": user[3],
+                "password": user[4],
+                "role_id": user[5],
+                "phone_number": user[6],
+                "phone_extension": user[7]
+            })
+
+        return jsonify(Users=user_list), 200

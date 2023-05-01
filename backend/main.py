@@ -72,6 +72,7 @@ def insert_user():
     else:
         return jsonify(Error="Method not allowed."), 405
 
+
 if __name__ == '__main__':
     app.run(debug = 1)
 
