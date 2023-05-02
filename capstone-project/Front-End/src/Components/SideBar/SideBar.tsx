@@ -15,7 +15,7 @@ function SideBar() {
                 width={70}
               />
             </a>
-            URPM Home Portal
+            UPRM Home Portal
           </h1>
 
           <hr className="text-fifth mt-4 new5" />

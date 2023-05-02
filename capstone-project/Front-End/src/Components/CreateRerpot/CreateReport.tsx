@@ -10,11 +10,8 @@ import "./CreateReport.css";
 import SelectWithSearch, { Option } from "../CustomSelect/SelectWithSearch";
 
 function CreateReport() {
-  const [seccion, setSeccion] = useState<Option | null>(null);
-
-  const handleChange = (value: Option | null) => {
-    setSeccion(value);
-  };
+  const [seccion, setSeccion] =
+    useState<SingleValue<{ value: string; label: string } | null>>(null);
 
   const [servicioSeleccionado, setServicioSeleccionado] =
     useState<SingleValue<{ value: string; label: string } | null>>(null);
@@ -94,13 +91,16 @@ function CreateReport() {
             </div>
 
             <div className="col-sm-3 d-flex align-items-center">
-              <SelectWithSearch
+              <Select
+                value={seccion}
+                onChange={setSeccion}
                 options={Seccion}
-                onChange={handleChange}
+                isClearable
+                isSearchable
                 styles={{
                   container: (provided) => ({ ...provided, width: 400 }),
                 }}
-                value={seccion}
+                required // add this attribute
               />
               <button
                 type="button"

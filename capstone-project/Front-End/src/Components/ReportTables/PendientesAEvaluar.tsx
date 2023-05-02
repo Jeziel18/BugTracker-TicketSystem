@@ -3,7 +3,6 @@ import { Table, Pagination, Button } from "react-bootstrap";
 import { InputActionMeta, SingleValue } from "react-select";
 import TimeAndDate from "../TimeAndDate/TimeAndDate";
 import Select from "react-select";
-import SelectWithSearch from "../CustomSelect/SelectWithSearch";
 
 interface Data {
   id: number;
@@ -278,20 +277,22 @@ const PendientesAEvaluar = () => {
                               </div>
 
                               <div className="col-sm-3 d-flex align-items-center">
-                                <SelectWithSearch
-                                  options={Seccion}
-                                  value={
-                                    Seccion.find(
-                                      (option) => option.value === item.seccion
-                                    ) || null
-                                  }
+                                <Select
+                                  defaultValue={{
+                                    value: item.seccion,
+                                    label: item.seccion,
+                                  }}
                                   onChange={setSeccion}
+                                  options={Seccion}
+                                  isClearable
+                                  isSearchable
                                   styles={{
                                     container: (provided) => ({
                                       ...provided,
                                       width: 400,
                                     }),
                                   }}
+                                  required
                                 />
                               </div>
                             </div>
@@ -324,25 +325,6 @@ const PendientesAEvaluar = () => {
                                     }),
                                   }}
                                   required // add this attribute
-                                  inputValue={""}
-                                  onInputChange={function (
-                                    newValue: string,
-                                    actionMeta: InputActionMeta
-                                  ): void {
-                                    throw new Error(
-                                      "Function not implemented."
-                                    );
-                                  }}
-                                  onMenuOpen={function (): void {
-                                    throw new Error(
-                                      "Function not implemented."
-                                    );
-                                  }}
-                                  onMenuClose={function (): void {
-                                    throw new Error(
-                                      "Function not implemented."
-                                    );
-                                  }}
                                 />
                               </div>
                             </div>
@@ -691,6 +673,7 @@ const PendientesAEvaluar = () => {
                                   <button
                                     type="button"
                                     className="btn btn-primary ms-1"
+                                    onClick={() => console.log(seccion)}
                                   >
                                     Save changes
                                   </button>
