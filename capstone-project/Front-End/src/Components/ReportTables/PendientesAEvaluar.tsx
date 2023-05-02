@@ -21,7 +21,13 @@ interface Data {
   status: string;
 }
 
+interface Section {
+  value: string;
+  label: string;
+}
+
 const PendientesAEvaluar = () => {
+  const boolVal = true;
   const [currentPage, setCurrentPage] = useState(1);
   const [dataPerPage] = useState(3);
   const [filters, setFilters] = useState({
@@ -154,6 +160,18 @@ const PendientesAEvaluar = () => {
     { value: "Asuntos Academicos", label: "Decanato de Asuntos Academicos" },
   ];
 
+  function handelSaveReport(
+    section: SingleValue<{ value: string; label: string } | null>,
+    itemSeccion: string
+  ) {
+    if (section === null) {
+      section = { value: itemSeccion, label: itemSeccion };
+      console.log(section);
+    } else {
+      console.log(section);
+    }
+  }
+
   return (
     <>
       <div className="mt-1 mb-2 p-2">
@@ -279,8 +297,8 @@ const PendientesAEvaluar = () => {
                               <div className="col-sm-3 d-flex align-items-center">
                                 <Select
                                   defaultValue={{
-                                    value: item.seccion,
                                     label: item.seccion,
+                                    value: item.seccion,
                                   }}
                                   onChange={setSeccion}
                                   options={Seccion}
@@ -673,7 +691,9 @@ const PendientesAEvaluar = () => {
                                   <button
                                     type="button"
                                     className="btn btn-primary ms-1"
-                                    onClick={() => console.log(seccion)}
+                                    onClick={() =>
+                                      handelSaveReport(seccion, item.seccion)
+                                    }
                                   >
                                     Save changes
                                   </button>
