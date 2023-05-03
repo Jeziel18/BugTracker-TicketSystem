@@ -7,13 +7,12 @@ import * as bootstrap from "bootstrap";
 import "bootstrap-select/dist/js/bootstrap-select";
 import TimeAndDate from "../TimeAndDate/TimeAndDate";
 import "./CreateReport.css";
-import SelectWithSearch, { Option } from "../CustomSelect/SelectWithSearch";
 
 function CreateReport() {
   const [seccion, setSeccion] =
     useState<SingleValue<{ value: string; label: string } | null>>(null);
 
-  const [servicioSeleccionado, setServicioSeleccionado] =
+  const [servicio, setServicio] =
     useState<SingleValue<{ value: string; label: string } | null>>(null);
 
   const [edificio, setEdificio] =
@@ -61,6 +60,14 @@ function CreateReport() {
       return new bootstrap.Tooltip(tooltipTriggerEl);
     });
   }, []);
+
+  const textarea = document.getElementById(
+    "descripcionDelTrabajo"
+  ) as HTMLTextAreaElement | null;
+
+  if (textarea) {
+    var userValue = textarea.value;
+  }
 
   return (
     <>
@@ -126,8 +133,8 @@ function CreateReport() {
 
             <div className="col-sm-3 d-flex align-items-center">
               <Select
-                value={servicioSeleccionado}
-                onChange={setServicioSeleccionado}
+                value={servicio}
+                onChange={setServicio}
                 options={Servicio}
                 isClearable
                 isSearchable
@@ -253,7 +260,7 @@ function CreateReport() {
               <div className="form-group">
                 <textarea
                   className="form-control"
-                  id="exampleFormControlTextarea1"
+                  id="numeroDeOficina"
                   rows={1}
                   required
                 ></textarea>
@@ -283,7 +290,7 @@ function CreateReport() {
               <div className="form-group">
                 <textarea
                   className="form-control"
-                  id="exampleFormControlTextarea1"
+                  id="descripcionDelTrabajo"
                   rows={2}
                   style={{ width: "700px" }}
                   required
@@ -349,7 +356,7 @@ function CreateReport() {
               <div className="form-group">
                 <textarea
                   className="form-control"
-                  id="exampleFormControlTextarea1"
+                  id="departamento"
                   rows={1}
                   style={{ width: "500px" }}
                   required
@@ -380,7 +387,7 @@ function CreateReport() {
               <div className="form-group">
                 <textarea
                   className="form-control"
-                  id="exampleFormControlTextarea1"
+                  id="telefono"
                   rows={1}
                   style={{ width: "250px" }}
                   required
@@ -418,7 +425,7 @@ function CreateReport() {
               <div className="form-group">
                 <textarea
                   className="form-control"
-                  id="exampleFormControlTextarea1"
+                  id="nombreActividad"
                   rows={1}
                   style={{ width: "600px" }}
                   required
@@ -449,7 +456,7 @@ function CreateReport() {
               <div className="form-group">
                 <textarea
                   className="form-control"
-                  id="exampleFormControlTextarea1"
+                  id="fechaActividad"
                   rows={1}
                   style={{ width: "150px" }}
                   placeholder="MM/DD/YYYY"
@@ -481,7 +488,7 @@ function CreateReport() {
               <div className="form-group">
                 <textarea
                   className="form-control"
-                  id="exampleFormControlTextarea1"
+                  id="horaActividad"
                   rows={1}
                   style={{ width: "150px" }}
                   placeholder="HH:MM AM/PM"
@@ -500,7 +507,11 @@ function CreateReport() {
 
             <div className="col-sm-2">
               <div className="d-flex justify-content-center">
-                <button type="submit" className="btn btn-primary btn-lg">
+                <button
+                  type="submit"
+                  className="btn btn-primary btn-lg"
+                  onClick={() => console.log(userValue)}
+                >
                   Someter Reporte
                 </button>
               </div>
