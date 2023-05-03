@@ -1,19 +1,24 @@
 from flask import Flask, jsonify, request
 from backend.dao.Services import ServicesDAO
+
 class ServicesHandler:
     def __init__(self):
         self.services_dao = ServicesDAO()
+
     def build_services_dict(self, row):
         result = {}
-        result['service_id'] = row[0],
-        result['service_name'] = row[1],
+        result['service_id'] = row[0]
+        result['service_name'] = row[1]
+        result['service_category_id'] = row[2]
         return result
 
-    def build_role_attributes(self, service_id, service_name):
+    def build_services_attributes(self, service_id, service_name, service_category_id):
         result = {}
-        result['service_id'] = service_id,
-        result['service_name'] = service_name,
+        result['service_id'] = service_id
+        result['service_name'] = service_name
+        result['service_category_id'] = service_category_id
         return result
+
     def get_all_services(self):
         return self.services_dao.get_all_services()
 
@@ -23,6 +28,7 @@ class ServicesHandler:
             return jsonify(Error="Service not found."), 404
         else:
             return jsonify(self.build_services_dict(service)), 200
+
     def create_service(self, service_name, service_category_id):
         # check if the corresponding service_category_id exists
         if not self.services_dao.get_service_category_by_id(service_category_id):

@@ -1,7 +1,10 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 
+from backend.dao.Service_Category import ServiceCategoryDAO
+from backend.dao.Services import ServicesDAO
 from backend.handler.Roles import RolesHandler
+from backend.handler.Service_Category import ServiceCategoryHandler
 from backend.handler.Services import ServicesHandler
 from backend.handler.Users import UserHandler
 from backend.handler.Building import BuildingHandler
@@ -204,27 +207,66 @@ def get_service_by_id(service_id):
     if request.method == 'GET':
         return ServicesHandler().get_service_by_id(service_id)
 
-# @app.route('/services', methods=['POST'])
-# def create_service():
-#     if request.method == 'POST':
-#         data = request.get_json()
-#         if not data:
-#             return jsonify(Error="Missing JSON request body"), 400
-#         try:
-#             service_name = data['service_name']
-#             service_category_id = data['service_category_id']
-#         except KeyError:
-#             return jsonify(Error="Invalid request parameters"), 400
-#
-#         # Check if the service_category_id exists
-#         if not ServiceCategoryDAO().get_category_by_id(service_category_id):
-#             return jsonify(Error="Service category not found"), 404
-#
-#         service_id = ServicesHandler().create_service(service_name, service_category_id)
-#         return jsonify(service_id), 201
-#     else:
-#         return jsonify(Error="Method not allowed."), 405
+@app.route('/services', methods=['POST'])
+def create_service():
+    if request.method == 'POST':
+        data = request.get_json()
+        if not data:
+            return jsonify(Error="Missing JSON request body"), 400
+        try:
+            service_name = data['service_name']
+            service_category_id = data['service_category_id']
+        except KeyError:
+            return jsonify(Error="Invalid request parameters"), 400
 
+        # Check if the service_category_id exists
+        if not ServiceCategoryDAO().get_service_category_by_id(service_category_id):
+            return jsonify(Error="Service category not found"), 404
+
+        service_id = ServicesHandler().create_service(service_name, service_category_id)
+        return jsonify(service_id), 201
+    else:
+        return jsonify(Error="Method not allowed."), 405
+
+def validate_service_update_data(update_data):
+    # Check if required fields are present, this method is to validate service_category_id before updating
+    if 'service_name' not in update_data and 'service_category_id' not in update_data:
+        return jsonify(Error="Missing required fields"), 400
+
+    # Check if service_category_id is valid
+    service_category_id = update_data.get('service_category_id')
+    if service_category_id is not None:
+        try:
+            service_category_id = int(service_category_id)
+        except ValueError:
+            return jsonify(Error="Invalid service category ID"), 400
+
+        if not ServiceCategoryDAO().get_service_category_by_id(service_category_id):
+            return jsonify(Error="Service category not found"), 404
+
+    return None
+
+@app.route('/services/<int:service_id>', methods=['PUT'])
+def update_service(service_id):
+    if request.method == 'PUT':
+        data = request.get_json()
+        if not data:
+            return jsonify(Error="Missing JSON request body"), 400
+
+        error_response = validate_service_update_data(data)
+        if error_response:
+            return error_response
+
+        # Check if the service exists
+        service = ServicesHandler().get_service_by_id(service_id)
+        if not service:
+            return jsonify(Error="Service not found"), 404
+
+        ServicesHandler().update_service(service_id, data)
+        return jsonify(Message="Service updated successfully"), 200
+
+    else:
+        return jsonify(Error="Method not allowed."), 405
 
 # @app.route('/services/<int:service_id>', methods=['PUT'])
 # def update_service(service_id):

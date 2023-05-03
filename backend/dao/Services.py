@@ -58,7 +58,7 @@ class ServicesDAO:
 
     def get_service_category_by_id(self, service_category_id):
         cursor = self.conn.cursor()
-        cursor.execute("SELECT * FROM service_categories WHERE service_category_id = %s", (service_category_id,))
+        cursor.execute("SELECT * FROM service_category WHERE service_category_id = %s", (service_category_id,))
         row = cursor.fetchone()
         cursor.close()
         if row:
