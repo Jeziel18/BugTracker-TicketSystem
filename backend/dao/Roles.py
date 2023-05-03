@@ -1,4 +1,5 @@
 from flask import jsonify
+from backend.config.network_config import config
 import mysql.connector
 
 class RolesDAO:
@@ -56,3 +57,10 @@ class RolesDAO:
         self.conn.commit()
 
         return {'role_id': role_id}
+
+    def delete_role(self, role_id):
+        cursor = self.conn.cursor()
+        cursor.execute("DELETE FROM roles WHERE role_id = %s", (role_id,))
+        self.conn.commit()
+        cursor.close()
+        return role_id

@@ -51,3 +51,11 @@ class RolesHandler:
             return jsonify(Message="Role updated successfully"), 200
         except:
             return jsonify(Error="Failed to update role"), 500
+
+    def delete_role(self, role_id):
+        dao = RolesDAO()
+        if not dao.get_role_by_id(role_id):
+            return jsonify(Error="Role not found."), 404
+        else:
+            dao.delete_role(role_id)
+            return jsonify(DeleteStatus="OK"), 200

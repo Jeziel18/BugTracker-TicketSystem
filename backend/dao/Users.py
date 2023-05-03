@@ -60,3 +60,10 @@ class UserDAO:
         cursor.execute(query, (role_id,))
         users = cursor.fetchall()
         return users
+
+    def delete_user(self, user_id):
+        cursor = self.conn.cursor()
+        cursor.execute("DELETE FROM users WHERE user_id = %s", (user_id,))
+        self.conn.commit()
+        cursor.close()
+        return user_id

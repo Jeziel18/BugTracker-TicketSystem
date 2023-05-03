@@ -30,6 +30,7 @@ class BuildingHandler:
             return jsonify(Error="Building not found."), 404
         else:
             return jsonify(self.build_building_dict(building)), 200
+
     def create_building(self, building_name, building_number):
         building_id = self.building_dao.create_building(building_name, building_number)
         return {'building_id': building_id}
@@ -51,3 +52,11 @@ class BuildingHandler:
             return jsonify(Message="Building updated successfully"), 200
         except:
             return jsonify(Error="Failed to update building"), 500
+
+    def delete_building(self, building_id):
+        dao = BuildingDAO()
+        if not dao.get_building_by_id(building_id):
+            return jsonify(Error="Building not found."), 404
+        else:
+            dao.delete_building(building_id)
+            return jsonify(DeleteStatus="OK"), 200

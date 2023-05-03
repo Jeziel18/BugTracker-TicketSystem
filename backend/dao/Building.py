@@ -57,4 +57,11 @@ class BuildingDAO:
 
         return {'building_id': building_id}
 
+    def delete_building(self, building_id):
+        cursor = self.conn.cursor()
+        cursor.execute("DELETE FROM buildings WHERE building_id = %s", (building_id,))
+        self.conn.commit()
+        cursor.close()
+        return building_id
+
 

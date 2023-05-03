@@ -101,3 +101,11 @@ class UserHandler:
             })
 
         return jsonify(Users=user_list), 200
+
+    def delete_user(self, user_id):
+        dao = UserDAO()
+        if not dao.get_user_by_id(user_id):
+            return jsonify(Error="User not found."), 404
+        else:
+            dao.delete_user(user_id)
+            return jsonify(DeleteStatus="OK"), 200

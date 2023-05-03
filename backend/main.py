@@ -10,7 +10,7 @@ import mysql.connector
 app = Flask(__name__)
 CORS(app)
 
-
+#User routes and methods
 @app.route('/users', methods=['GET'])
 def get_all_users():
     if request.method == 'GET':
@@ -18,19 +18,22 @@ def get_all_users():
     else:
         return jsonify(Error="Method not allowed."), 405
 
-@app.route('/users/role/<int:role_id>', methods=['GET'])
+@app.route('/users/role/<int:role_id>', methods=['GET', 'DELETE'])
 def get_user_by_role_id(role_id):
     if request.method == 'GET':
         return UserHandler().get_user_by_role_id(role_id)
     else:
         return jsonify(Error="Method not allowed."), 405
 
-@app.route('/users/<int:user_id>', methods=['GET', 'POST'])
+@app.route('/users/<int:user_id>', methods=['GET', 'PUT', 'DELETE'])
 def get_or_update_user_by_id(user_id):
     if request.method == 'GET':
         return UserHandler().get_user_by_id(user_id)
 
-    elif request.method == 'POST':
+    elif request.method == 'DELETE':
+        return UserHandler().delete_user(user_id)
+
+    elif request.method == 'PUT':
         data = request.get_json()
         if not data:
             return jsonify(Error="Missing JSON request body"), 400
@@ -52,7 +55,6 @@ def get_or_update_user_by_id(user_id):
             return jsonify(Error="User not found or no changes made"), 404
     else:
         return jsonify(Error="Method not allowed."), 405
-
 
 @app.route('/new-user', methods=['POST'])
 def insert_user():
@@ -76,16 +78,23 @@ def insert_user():
     else:
         return jsonify(Error="Method not allowed."), 405
 
+#buildings routes and methods
 @app.route('/buildings', methods=['GET'])
 def get_all_buildings():
     if request.method == 'GET':
         return BuildingHandler().get_all_buildings()
     else:
         return jsonify(Error="Method not allowed."), 405
-@app.route('/buildings/<int:building_id>', methods=['GET'])
+
+@app.route('/buildings/<int:building_id>', methods=['GET', 'DELETE'])
 def get_building_by_id(building_id):
     if request.method == 'GET':
         return BuildingHandler().get_building_by_id(building_id)
+    elif request.method == 'DELETE':
+        return BuildingHandler().delete_building(building_id)
+    else:
+        return jsonify(Error="Method not allowed."), 405
+
 @app.route('/buildings', methods=['POST'])
 def insert_building():
     if request.method == 'POST':
@@ -101,6 +110,7 @@ def insert_building():
         return jsonify(result), 201
     else:
         return jsonify(Error="Method not allowed."), 405
+
 @app.route('/buildings/<int:building_id>', methods=['PUT'])
 def update_building(building_id):
     if request.method == 'PUT':
@@ -125,6 +135,7 @@ def update_building(building_id):
     else:
         return jsonify(Error="Method not allowed."), 405
 
+#roles routes and methods
 @app.route('/roles', methods=['GET'])
 def get_all_roles():
     if request.method == 'GET':
@@ -132,10 +143,14 @@ def get_all_roles():
     else:
         return jsonify(Error="Method not allowed."), 405
 
-@app.route('/roles/<int:role_id>', methods=['GET'])
+@app.route('/roles/<int:role_id>', methods=['GET', 'DELETE'])
 def get_role_by_id(role_id):
     if request.method == 'GET':
         return RolesHandler().get_role_by_id(role_id)
+    elif request.method == 'DELETE':
+        return RolesHandler().delete_role(role_id)
+    else:
+        return jsonify(Error="Method not allowed."), 405
 
 @app.route('/roles', methods=['POST'])
 def insert_role():
@@ -175,13 +190,14 @@ def update_role(role_id):
             return jsonify(Error="Role not found or no changes made"), 404
     else:
         return jsonify(Error="Method not allowed."), 405
+
+#services routes and methods
 @app.route('/services', methods=['GET'])
 def get_all_services():
     if request.method == 'GET':
         return ServicesHandler().get_all_services()
     else:
         return jsonify(Error="Method not allowed."), 405
-
 
 @app.route('/services/<int:service_id>', methods=['GET'])
 def get_service_by_id(service_id):
@@ -214,6 +230,7 @@ def get_service_by_id(service_id):
 # def update_service(service_id):
 #     if request.method == 'PUT':
 #         data = request.get_json()
+#         print("data:", data)
 #         if not data:
 #             return jsonify(Error="Missing JSON request body"), 400
 #         try:
@@ -221,6 +238,7 @@ def get_service_by_id(service_id):
 #             for key, value in data.items():
 #                 if key in ['service_name', 'service_category_id']:
 #                     update_data[key] = value
+#             print("update_data:", update_data)
 #             if not update_data:
 #                 return jsonify(Error="Invalid request parameters"), 400
 #         except KeyError:
@@ -228,12 +246,14 @@ def get_service_by_id(service_id):
 #
 #         # Check if the service exists
 #         service = ServicesHandler().get_service_by_id(service_id)
-#         if not service:
+#         if service is None:
 #             return jsonify(Error="Service not found"), 404
+#         print("service:", service)
 #
 #         # Check if the service_category_id exists
-#         service_category_id = update_data.get('service_category_id', service['service_category_id'])
-#         if not ServiceCategoryDAO().get_category_by_id(service_category_id):
+#         service_category_id = int(update_data.get('service_category_id', service['service_category_id']))
+#         print("service_category_id:", service_category_id)
+#         if not ServiceCategoryDAO().get_service_category_by_id(service_category_id):
 #             return jsonify(Error="Service category not found"), 404
 #
 #         ServicesHandler().update_service(service_id, update_data)
@@ -241,6 +261,68 @@ def get_service_by_id(service_id):
 #     else:
 #         return jsonify(Error="Method not allowed."), 405
 
+#service category routes and methods
+@app.route('/service_categories', methods=['GET'])
+def get_all_service_categories():
+    if request.method == 'GET':
+        return ServiceCategoryHandler().get_all_service_categories()
+    else:
+        return jsonify(Error="Method not allowed."), 405
+
+@app.route('/service_categories/<int:service_category_id>', methods=['GET', 'DELETE'])
+def get_service_category_by_id(service_category_id):
+    if request.method == 'GET':
+        return ServiceCategoryHandler().get_service_category_by_id(service_category_id)
+    elif request.method == 'DELETE':
+        return ServiceCategoryHandler().delete_service_category(service_category_id)
+    else:
+        return jsonify(Error="Method not allowed."), 405
+
+@app.route('/service_categories', methods=['POST'])
+def create_service_category():
+    if request.method == 'POST':
+        data = request.get_json()
+        if not data:
+            return jsonify(Error="Missing JSON request body"), 400
+        try:
+            category_name = data['category_name']
+        except KeyError:
+            return jsonify(Error="Invalid request parameters"), 400
+        result = ServiceCategoryHandler().create_service_category(category_name)
+        return jsonify(result), 201
+    else:
+        return jsonify(Error="Method not allowed."), 405
+
+@app.route('/service_categories/<int:service_category_id>', methods=['PUT'])
+def update_service_category(service_category_id):
+    if request.method == 'PUT':
+        data = request.get_json()
+        if not data:
+            return jsonify(Error="Missing JSON request body"), 400
+        try:
+            update_data = {}
+            for key, value in data.items():
+                if key in ['category_name']:
+                    update_data[key] = value
+            if not update_data:
+                return jsonify(Error="Invalid request parameters"), 400
+        except KeyError:
+            return jsonify(Error="Invalid request parameters"), 400
+
+        result = ServiceCategoryHandler().update_service_category(service_category_id, update_data)
+        if result:
+            return jsonify(Message="Service category updated successfully"), 200
+        else:
+            return jsonify(Error="Service category not found or no changes made"), 404
+    else:
+        return jsonify(Error="Method not allowed."), 405
+
+
+@app.route('/supervisors', methods=['GET'])
+def get_all_supervisors():
+    if request.method == 'GET':
+        return
+
+
 if __name__ == '__main__':
     app.run(debug = 1)
-
