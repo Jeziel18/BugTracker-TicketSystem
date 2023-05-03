@@ -1,5 +1,7 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS
+
+from backend.handler.Roles import RolesHandler
 from backend.handler.Users import UserHandler
 from backend.handler.Building import BuildingHandler
 import mysql.connector
@@ -72,6 +74,7 @@ def insert_user():
         return jsonify(User=result), 201
     else:
         return jsonify(Error="Method not allowed."), 405
+
 @app.route('/buildings', methods=['GET'])
 def get_all_buildings():
     if request.method == 'GET':
@@ -118,6 +121,57 @@ def update_building(building_id):
             return jsonify(Message="Building updated successfully"), 200
         else:
             return jsonify(Error="Building not found or no changes made"), 404
+    else:
+        return jsonify(Error="Method not allowed."), 405
+
+@app.route('/roles', methods=['GET'])
+def get_all_roles():
+    if request.method == 'GET':
+        return RolesHandler().get_all_roles()
+    else:
+        return jsonify(Error="Method not allowed."), 405
+
+@app.route('/roles/<int:role_id>', methods=['GET'])
+def get_role_by_id(role_id):
+    if request.method == 'GET':
+        return RolesHandler().get_role_by_id(role_id)
+
+@app.route('/roles', methods=['POST'])
+def insert_role():
+    if request.method == 'POST':
+        data = request.get_json()
+        if not data:
+            return jsonify(Error="Missing JSON request body"), 400
+        try:
+            role_name = data['role_name']
+        except KeyError:
+            return jsonify(Error="Invalid request parameters"), 400
+        result = RolesHandler().create_role(role_name)
+        return jsonify(result), 201
+    else:
+        return jsonify(Error="Method not allowed."), 405
+
+@app.route('/roles/<int:role_id>', methods=['PUT'])
+def update_role(role_id):
+    if request.method == 'PUT':
+        data = request.get_json()
+        if not data:
+            return jsonify(Error="Missing JSON request body"), 400
+        try:
+            update_data = {}
+            for key, value in data.items():
+                if key in ['role_name']:
+                    update_data[key] = value
+            if not update_data:
+                return jsonify(Error="Invalid request parameters"), 400
+        except KeyError:
+            return jsonify(Error="Invalid request parameters"), 400
+
+        result = RolesHandler().update_role(role_id, update_data)
+        if result:
+            return jsonify(Message="Role updated successfully"), 200
+        else:
+            return jsonify(Error="Role not found or no changes made"), 404
     else:
         return jsonify(Error="Method not allowed."), 405
 
