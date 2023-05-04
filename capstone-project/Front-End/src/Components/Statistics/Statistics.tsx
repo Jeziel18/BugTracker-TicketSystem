@@ -100,7 +100,14 @@ function Statistics() {
         <div className="row mt-5">
           <div className="">
             <div className="d-flex justify-content-center">
-              <button type="submit" className="btn btn-primary btn-lg">
+              <button
+                type="submit"
+                className="btn btn-primary btn-lg"
+                onClick={() => {
+                  console.log(selectedYears);
+                  console.log(selectedMonths);
+                }}
+              >
                 Generar Estadisticas
               </button>
             </div>

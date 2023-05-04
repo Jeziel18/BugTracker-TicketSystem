@@ -21,6 +21,9 @@ function CreateReport() {
   const [decanato, setDecanato] =
     useState<SingleValue<{ value: string; label: string } | null>>(null);
 
+  const [prioridad, setPrioridad] =
+    useState<SingleValue<{ value: string; label: string } | null>>(null);
+
   const Seccion = [
     { value: "electricidad", label: "electricidad" },
     { value: "plomeria", label: "plomeria" },
@@ -40,6 +43,12 @@ function CreateReport() {
   const ServicioFlora = [{ value: "arbol caido", label: "arbol caido" }];
 
   const ServicioMesasYSillas = [{ value: "silla rota", label: "silla rota" }];
+
+  const Prioridad = [
+    { value: "Rutina  ", label: "Rutina" },
+    { value: "Urgente", label: "Urgente" },
+    { value: "Emergencia", label: "Emergencia" },
+  ];
 
   const Edificio = [
     { value: "Stefani", label: "Stefani" },
@@ -82,10 +91,68 @@ function CreateReport() {
     }
   }
 
-  const [numeroOficina, setInputValue] = useState<string>("");
+  const [numeroOficina, setNumeroOficina] = useState<string>("");
 
-  function handleInputChange(event: React.ChangeEvent<HTMLTextAreaElement>) {
-    setInputValue(event.target.value);
+  function handleNumeroOficinaChange(
+    event: React.ChangeEvent<HTMLTextAreaElement>
+  ) {
+    setNumeroOficina(event.target.value);
+  }
+
+  const [descripcion, setDescripcion] = useState<string>("");
+
+  function handleDescripcionChange(
+    event: React.ChangeEvent<HTMLTextAreaElement>
+  ) {
+    setDescripcion(event.target.value);
+  }
+
+  const [departamento, setDepartamento] = useState<string>("");
+
+  function handleDepartamentoChange(
+    event: React.ChangeEvent<HTMLTextAreaElement>
+  ) {
+    setDepartamento(event.target.value);
+  }
+
+  const [telefono, setTelefono] = useState<string>("");
+
+  function handleTelefonoChange(event: React.ChangeEvent<HTMLTextAreaElement>) {
+    setTelefono(event.target.value);
+  }
+
+  const [nombreActividad, setNombreActividad] = useState<string>("");
+
+  function handleNombreActividadChange(
+    event: React.ChangeEvent<HTMLTextAreaElement>
+  ) {
+    setNombreActividad(event.target.value);
+  }
+
+  function handleSumbitReport(
+    section: SingleValue<{ value: string; label: string } | null>,
+    servcie: SingleValue<{ value: string; label: string } | null>,
+    priority: SingleValue<{ value: string; label: string } | null>,
+    building: SingleValue<{ value: string; label: string } | null>,
+    officeNumber: string,
+    jobDescription: string,
+    deanery: SingleValue<{ value: string; label: string } | null>,
+    department: string,
+    phone: string,
+    activityName: string
+  ) {
+    console.log(
+      section,
+      servcie,
+      priority,
+      building,
+      officeNumber,
+      jobDescription,
+      deanery,
+      department,
+      phone,
+      activityName
+    );
   }
 
   return (
@@ -185,42 +252,17 @@ function CreateReport() {
             </div>
 
             <div className="col-sm-3 d-flex align-items-center">
-              <div className="form-check me-1">
-                <input
-                  className="form-check-input"
-                  type="radio"
-                  name="flexRadioDefault"
-                  id="flexRadioDefault1"
-                  required
-                />
-                <label className="form-check-label" htmlFor="flexRadioDefault1">
-                  Rutina
-                </label>
-              </div>
-              <div className="form-check ms-2">
-                <input
-                  className="form-check-input"
-                  type="radio"
-                  name="flexRadioDefault"
-                  id="flexRadioDefault2"
-                  required
-                />
-                <label className="form-check-label" htmlFor="flexRadioDefault2">
-                  Urgente
-                </label>
-              </div>
-              <div className="form-check ms-2">
-                <input
-                  className="form-check-input"
-                  type="radio"
-                  name="flexRadioDefault"
-                  id="flexRadioDefault3"
-                  required
-                />
-                <label className="form-check-label" htmlFor="flexRadioDefault3">
-                  Emergencia
-                </label>
-              </div>
+              <Select
+                value={prioridad}
+                onChange={setPrioridad}
+                options={Prioridad}
+                isClearable
+                isSearchable
+                styles={{
+                  container: (provided) => ({ ...provided, width: 400 }),
+                }}
+                required // add this attribute
+              />
               <button
                 type="button"
                 className="ms-4 btn btn-secondary bi bi-question-circle"
@@ -283,7 +325,7 @@ function CreateReport() {
                 rows={1}
                 required
                 value={numeroOficina}
-                onChange={handleInputChange}
+                onChange={handleNumeroOficinaChange}
               ></textarea>
               <button
                 type="button"
@@ -310,10 +352,13 @@ function CreateReport() {
               <div className="form-group">
                 <textarea
                   className="form-control"
-                  id="descripcionDelTrabajo"
+                  id="descripcionTrabajo"
+                  name="descripcionTrabajo"
                   rows={2}
-                  style={{ width: "700px" }}
                   required
+                  value={descripcion}
+                  onChange={handleDescripcionChange}
+                  style={{ width: "700px" }}
                 ></textarea>
               </div>
               <button
@@ -377,7 +422,10 @@ function CreateReport() {
                 <textarea
                   className="form-control"
                   id="departamento"
+                  name="departamento"
                   rows={1}
+                  value={departamento}
+                  onChange={handleDepartamentoChange}
                   style={{ width: "500px" }}
                   required
                 ></textarea>
@@ -408,7 +456,10 @@ function CreateReport() {
                 <textarea
                   className="form-control"
                   id="telefono"
+                  name="telefono"
                   rows={1}
+                  value={telefono}
+                  onChange={handleTelefonoChange}
                   style={{ width: "250px" }}
                   required
                 ></textarea>
@@ -446,7 +497,10 @@ function CreateReport() {
                 <textarea
                   className="form-control"
                   id="nombreActividad"
+                  name="nombreActividad"
                   rows={1}
+                  value={nombreActividad}
+                  onChange={handleNombreActividadChange}
                   style={{ width: "600px" }}
                   required
                 ></textarea>
@@ -530,7 +584,20 @@ function CreateReport() {
                 <button
                   type="submit"
                   className="btn btn-primary btn-lg"
-                  onClick={() => console.log(numeroOficina)}
+                  onClick={() => {
+                    handleSumbitReport(
+                      seccion,
+                      servicio,
+                      prioridad,
+                      edificio,
+                      numeroOficina,
+                      descripcion,
+                      decanato,
+                      departamento,
+                      telefono,
+                      nombreActividad
+                    );
+                  }}
                 >
                   Someter Reporte
                 </button>
