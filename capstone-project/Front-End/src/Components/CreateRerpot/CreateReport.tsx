@@ -28,12 +28,18 @@ function CreateReport() {
     { value: "mesas y sillas", label: "mesas y sillas" },
   ];
 
-  const Servicio = [
+  const ServicioElectricidad = [
     { value: "luz mala", label: "luz mala" },
     { value: "receptaculo no sirve", label: "receptaculo no sirve" },
     { value: "switch no sirve", label: "switch no sirve" },
     { value: "corto circuito", label: "corto circuito" },
   ];
+
+  const ServicioPlomeria = [{ value: "tubo roto", label: "tubo roto" }];
+
+  const ServicioFlora = [{ value: "arbol caido", label: "arbol caido" }];
+
+  const ServicioMesasYSillas = [{ value: "silla rota", label: "silla rota" }];
 
   const Edificio = [
     { value: "Stefani", label: "Stefani" },
@@ -61,12 +67,25 @@ function CreateReport() {
     });
   }, []);
 
-  const textarea = document.getElementById(
-    "descripcionDelTrabajo"
-  ) as HTMLTextAreaElement | null;
+  function serviceOptions(
+    section: SingleValue<{ value: string; label: string } | null>
+  ) {
+    switch (section?.value) {
+      case "electricidad":
+        return ServicioElectricidad;
+      case "plomeria":
+        return ServicioPlomeria;
+      case "flora":
+        return ServicioFlora;
+      case "mesas y sillas":
+        return ServicioMesasYSillas;
+    }
+  }
 
-  if (textarea) {
-    var userValue = textarea.value;
+  const [numeroOficina, setInputValue] = useState<string>("");
+
+  function handleInputChange(event: React.ChangeEvent<HTMLTextAreaElement>) {
+    setInputValue(event.target.value);
   }
 
   return (
@@ -135,7 +154,7 @@ function CreateReport() {
               <Select
                 value={servicio}
                 onChange={setServicio}
-                options={Servicio}
+                options={serviceOptions(seccion)}
                 isClearable
                 isSearchable
                 styles={{
@@ -257,14 +276,15 @@ function CreateReport() {
               </label>
             </div>
             <div className="col-sm-2 d-flex align-items-center">
-              <div className="form-group">
-                <textarea
-                  className="form-control"
-                  id="numeroDeOficina"
-                  rows={1}
-                  required
-                ></textarea>
-              </div>
+              <textarea
+                className="form-control"
+                id="numeroDeOficina"
+                name="numeroDeOficina"
+                rows={1}
+                required
+                value={numeroOficina}
+                onChange={handleInputChange}
+              ></textarea>
               <button
                 type="button"
                 className="ms-4 btn btn-secondary bi bi-question-circle"
@@ -510,7 +530,7 @@ function CreateReport() {
                 <button
                   type="submit"
                   className="btn btn-primary btn-lg"
-                  onClick={() => console.log(userValue)}
+                  onClick={() => console.log(numeroOficina)}
                 >
                   Someter Reporte
                 </button>
