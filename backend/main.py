@@ -2,6 +2,7 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS
 
 from backend.dao.SCS import SCSDao
+from backend.dao.Tickets import TicketsDAO
 from backend.dao.Users import UserDAO
 from backend.dao.Service_Category import ServiceCategoryDAO
 from backend.dao.Services import ServicesDAO
@@ -9,6 +10,7 @@ from backend.handler.Roles import RolesHandler
 from backend.handler.SCS import SCSHandler
 from backend.handler.Service_Category import ServiceCategoryHandler
 from backend.handler.Services import ServicesHandler
+from backend.handler.Tickets import TicketsHandler
 from backend.handler.Users import UserHandler
 from backend.handler.Building import BuildingHandler
 import mysql.connector
