@@ -1,5 +1,6 @@
 from flask import Flask, jsonify, request
 from backend.dao.Roles import RolesDAO
+from backend.dao.Users import UserDAO
 
 class RolesHandler:
     def __init__(self):
@@ -54,8 +55,27 @@ class RolesHandler:
 
     def delete_role(self, role_id):
         dao = RolesDAO()
+        user = UserDAO()
+
+        check = user.get_user_by_role_id(role_id)
+        if check:
+            new_role = 3
+            for x in check:
+                print(x)
+                # x[5] = new_role
+                replace = dao.find_user_id(role_id)
+                print(replace)
+                user.update_user(replace, new_role)
+
         if not dao.get_role_by_id(role_id):
             return jsonify(Error="Role not found."), 404
         else:
             dao.delete_role(role_id)
             return jsonify(DeleteStatus="OK"), 200
+
+    def find_user_id(self, role_id):
+        dao = RolesDAO()
+        if not dao.find_user_id(role_id):
+            return None
+        else:
+            return dao.find_user_id(role_id)

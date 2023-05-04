@@ -434,5 +434,23 @@ def update_scs(scs_id):
         except:
             return jsonify(Error="Failed to update service category supervisor"), 500
 
+@app.route('/tickets', methods=['GET'])
+def get_all_tickets():
+    if request.method == 'GET':
+        return TicketsHandler().get_all_tickets()
+    else:
+        return jsonify(Error="Method not allowed."), 405
+
+@app.route('/tickets/<int:ticket_id>', methods=['GET'])
+def get_ticket_by_id(ticket_id):
+    if request.method == 'GET':
+        ticket = TicketsHandler().get_ticket_by_id(ticket_id)
+        if ticket:
+            return ticket
+        else:
+            return jsonify(Error="Ticket not found"), 404
+    else:
+        return jsonify(Error="Method not allowed."), 405
+
 if __name__ == '__main__':
     app.run(debug = 1)
