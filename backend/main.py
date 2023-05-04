@@ -1,9 +1,12 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 
+from backend.dao.SCS import SCSDao
+from backend.dao.Users import UserDAO
 from backend.dao.Service_Category import ServiceCategoryDAO
 from backend.dao.Services import ServicesDAO
 from backend.handler.Roles import RolesHandler
+from backend.handler.SCS import SCSHandler
 from backend.handler.Service_Category import ServiceCategoryHandler
 from backend.handler.Services import ServicesHandler
 from backend.handler.Users import UserHandler
@@ -361,10 +364,73 @@ def update_service_category(service_category_id):
 
 
 @app.route('/supervisors', methods=['GET'])
-def get_all_supervisors():
+def get_all_scs():
     if request.method == 'GET':
-        return
+        return SCSHandler().get_all_supervisors()
+    else:
+        return jsonify(Error="Method not allowed."), 405
 
+@app.route('/supervisors/<int:scs_id>', methods=['GET'])
+def get_scs_by_id(scs_id):
+    dao = SCSDao()
+    scs = dao.get_scs_by_id(scs_id)
+    if not scs:
+        return jsonify(Error="Service category supervisor not found"), 404
+    else:
+        return jsonify(scs), 200
+
+    #Checks the user_id's roles before attempting to create_scs
+def check_user_is_supervisor(user_id):
+    dao = UserDAO()
+    user = dao.get_user_by_id(user_id)
+    if not user:
+        return False
+    return user['role_id'] == 2
+
+
+@app.route('/supervisors', methods=['POST'])
+def create_scs():
+    if request.method == 'POST':
+        # Create SCS record
+        dao = SCSDao()
+        service_category_id = request.json.get('service_category_id')
+        if not service_category_id:
+            return jsonify(Error="Missing service_category_id"), 400
+
+        user_id = request.json.get('user_id')
+        if not user_id:
+            return jsonify(Error="Missing user_id"), 400
+
+        # Check if user has supervisor role
+        user = UserDAO().get_user_by_id(user_id)
+        if not user:
+            return jsonify(Error="User not found"), 404
+        if user[5] != 2:
+            return jsonify(Error="User does not have supervisor role"), 403
+
+        scs_id = dao.create_scs(service_category_id, user_id)
+        return jsonify({'scs_id': scs_id}), 201
+
+@app.route('/supervisors/<int:scs_id>', methods=['PUT'])
+def update_scs(scs_id):
+    if request.method == 'PUT':
+        # Check if SCS exists
+        dao = SCSDao()
+        scs = dao.get_scs_by_id(scs_id)
+        if not scs:
+            return jsonify(Error="Service category supervisor not found"), 404
+
+        # Get update data from request body
+        update_data = request.get_json()
+        if not update_data:
+            return jsonify(Error="Missing JSON request body"), 400
+
+        # Update SCS record
+        try:
+            dao.update_scs(scs_id, update_data)
+            return jsonify(Message="Service category supervisor updated successfully"), 200
+        except:
+            return jsonify(Error="Failed to update service category supervisor"), 500
 
 if __name__ == '__main__':
     app.run(debug = 1)
