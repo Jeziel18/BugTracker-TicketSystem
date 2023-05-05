@@ -21,11 +21,6 @@ interface Data {
   status: string;
 }
 
-interface Section {
-  value: string;
-  label: string;
-}
-
 const PendientesAEvaluar = () => {
   const boolVal = true;
   const [currentPage, setCurrentPage] = useState(1);

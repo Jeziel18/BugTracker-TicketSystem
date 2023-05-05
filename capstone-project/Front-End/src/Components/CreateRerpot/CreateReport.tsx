@@ -7,6 +7,7 @@ import * as bootstrap from "bootstrap";
 import "bootstrap-select/dist/js/bootstrap-select";
 import TimeAndDate from "../TimeAndDate/TimeAndDate";
 import "./CreateReport.css";
+import { error } from "jquery";
 
 function CreateReport() {
   const [seccion, setSeccion] =
@@ -129,6 +130,24 @@ function CreateReport() {
     setNombreActividad(event.target.value);
   }
 
+  const [fechaActividad, setFechaActividad] = useState<string>("");
+
+  function handleFechaActividadChange(
+    event: React.ChangeEvent<HTMLTextAreaElement>
+  ) {
+    setFechaActividad(event.target.value);
+  }
+
+  const [horaActividad, setHoraActividad] = useState<string>("");
+
+  function handleHoraActividadChange(
+    event: React.ChangeEvent<HTMLTextAreaElement>
+  ) {
+    setHoraActividad(event.target.value);
+  }
+
+  const [reportError, setReportError] = useState("");
+
   function handleSumbitReport(
     section: SingleValue<{ value: string; label: string } | null>,
     servcie: SingleValue<{ value: string; label: string } | null>,
@@ -138,21 +157,51 @@ function CreateReport() {
     jobDescription: string,
     deanery: SingleValue<{ value: string; label: string } | null>,
     department: string,
-    phone: string,
-    activityName: string
+    phone: string
   ) {
-    console.log(
-      section,
-      servcie,
-      priority,
-      building,
-      officeNumber,
-      jobDescription,
-      deanery,
-      department,
-      phone,
-      activityName
-    );
+    let errorString = "Verifique los siguientes campos: ";
+    if (
+      !section?.value ||
+      !servcie?.value ||
+      !priority?.value ||
+      !building?.value ||
+      !officeNumber ||
+      !jobDescription ||
+      !deanery?.value ||
+      !department ||
+      !phone
+    ) {
+      if (section === null) {
+        errorString += "Seccion-";
+      }
+      if (servcie === null) {
+        errorString += "Servicio-";
+      }
+      if (priority === null) {
+        errorString += "Prioridad-";
+      }
+      if (building === null) {
+        errorString += "Edificio-";
+      }
+      if (officeNumber === "") {
+        errorString += "Numero de Oficina-";
+      }
+      if (jobDescription == "") {
+        errorString += "Descripcion del Trabajo-";
+      }
+      if (deanery === null) {
+        errorString += "Decanato-";
+      }
+      if (department == "") {
+        errorString += "Departamento-";
+      }
+      if (phone == "") {
+        errorString += "Telefono-";
+      }
+      setReportError(errorString);
+    } else {
+      setReportError("");
+    }
   }
 
   return (
@@ -185,6 +234,7 @@ function CreateReport() {
 
             <div className="col-sm-3 d-flex align-items-center">
               <Select
+                className=""
                 value={seccion}
                 onChange={setSeccion}
                 options={Seccion}
@@ -193,7 +243,7 @@ function CreateReport() {
                 styles={{
                   container: (provided) => ({ ...provided, width: 400 }),
                 }}
-                required // add this attribute
+                required={true}
               />
               <button
                 type="button"
@@ -479,7 +529,7 @@ function CreateReport() {
           <p className="fs-6 fw-bolder text-decoration-underline">
             <i className="bi bi-info-circle-fill me-2"></i>
             Si el Trabajo esta relacionado a una actividad, entre los siguientes
-            datos:
+            datos (Esta seccion no es obligatoria):
           </p>
 
           <div className="row mb-2 mt-3">
@@ -488,7 +538,6 @@ function CreateReport() {
                 htmlFor="selectbox"
                 className="col-form-label fs-6 badge bg-success text-wrap"
               >
-                <span className="text-danger me-2">*</span>
                 <span>Nombre de la Actividad:</span>
               </label>
             </div>
@@ -522,7 +571,6 @@ function CreateReport() {
                 htmlFor="selectbox"
                 className="col-form-label fs-6 badge bg-success text-wrap"
               >
-                <span className="text-danger me-2">*</span>
                 <span>Fecha:</span>
               </label>
             </div>
@@ -531,7 +579,10 @@ function CreateReport() {
                 <textarea
                   className="form-control"
                   id="fechaActividad"
+                  name="fechaActividad"
                   rows={1}
+                  value={fechaActividad}
+                  onChange={handleFechaActividadChange}
                   style={{ width: "150px" }}
                   placeholder="MM/DD/YYYY"
                   required
@@ -554,7 +605,6 @@ function CreateReport() {
                 htmlFor="selectbox"
                 className="col-form-label fs-6 badge bg-success text-wrap"
               >
-                <span className="text-danger me-2">*</span>
                 <span>Hora de Inicio:</span>
               </label>
             </div>
@@ -563,7 +613,10 @@ function CreateReport() {
                 <textarea
                   className="form-control"
                   id="horaActividad"
+                  name="horaActividad"
                   rows={1}
+                  value={horaActividad}
+                  onChange={handleHoraActividadChange}
                   style={{ width: "150px" }}
                   placeholder="HH:MM AM/PM"
                   required
@@ -594,14 +647,16 @@ function CreateReport() {
                       descripcion,
                       decanato,
                       departamento,
-                      telefono,
-                      nombreActividad
+                      telefono
                     );
                   }}
                 >
                   Someter Reporte
                 </button>
               </div>
+            </div>
+            <div className="fs-6 col-sm-5 badge bg-danger text-wrap">
+              {reportError}
             </div>
           </div>
         </div>
