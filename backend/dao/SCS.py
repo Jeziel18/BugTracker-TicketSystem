@@ -67,5 +67,15 @@ class SCSDao:
         cursor.execute(query, (scs_id,))
         self.conn.commit()
         return scs_id
+    def get_service_category_supervisor(self, user_id, service_category_id):
+        cursor = self.conn.cursor()
+        cursor.execute("SELECT * FROM service_category_supervisor WHERE user_id = %s AND service_category_id = %s", (user_id, service_category_id,))
+        row = cursor.fetchone()
+        cursor.close()
+        if row:
+            return row
+        else:
+            return None
+
 
 

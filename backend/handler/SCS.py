@@ -82,3 +82,12 @@ class SCSHandler:
         else:
             dao.delete_scs(scs_id)
             return jsonify(Message="Service category supervisor deleted successfully"), 200
+
+    def get_service_category_supervisor(self, user_id, service_category_id):
+        dao = SCSDao()
+        supervisor = dao.get_service_category_supervisor(user_id, service_category_id)
+        if not supervisor:
+            return jsonify(Error="Service category supervisor not found."), 404
+        else:
+            supervisor_dict = self.build_scs_dict(supervisor)
+            return jsonify(supervisor_dict), 200

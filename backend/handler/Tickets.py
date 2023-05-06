@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, session
 from backend.dao.Tickets import TicketsDAO
 from datetime import datetime, time, date
 
@@ -87,4 +87,25 @@ class TicketsHandler:
             return jsonify(Ticket=result), 201
         else:
             return jsonify(Error="Failed to create ticket."), 400
+
+    def update_ticket(self, ticket_id, update_data):
+        # Check if ticket exists
+        ticket = self.Tickets_DAO.get_ticket_by_id(ticket_id)
+        if not ticket:
+            return jsonify(Error="Ticket not found"), 404
+
+        # Get update data from request body
+        update_data = request.get_json()
+        if not update_data:
+            return jsonify(Error="Missing JSON request body"), 400
+
+        # Update ticket record
+        try:
+            self.Tickets_DAO.update_ticket(ticket_id, update_data)
+            return jsonify(Message="Ticket updated successfully"), 200
+        except:
+            return jsonify(Error="Failed to update ticket"), 500
+
+
+
 

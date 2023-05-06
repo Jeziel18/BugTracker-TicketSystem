@@ -1,5 +1,4 @@
 from datetime import datetime
-
 from flask import jsonify
 import mysql.connector
 
@@ -44,5 +43,26 @@ class TicketsDAO:
         ticket_id = cursor.fetchone()[0]
         self.conn.commit()
         return ticket_id
+
+    def update_ticket(self, ticket_id, update_data):
+        cursor = self.conn.cursor()
+        # Build SET clause for SQL query based on updated data
+        set_clause = ""
+        update_values = []
+        for key, value in update_data.items():
+            if key == 'user_id':
+                continue  # user_id cannot be updated
+            set_clause += f"{key} = %s, "
+            update_values.append(value)
+        set_clause = set_clause[:-2]
+
+        # Execute SQL query to update ticket record
+        query = f"UPDATE tickets SET {set_clause}, ticket_update_date = %s WHERE ticket_id = %s;"
+        update_values.extend([datetime.now(), ticket_id])
+        cursor.execute(query, tuple(update_values))
+        self.conn.commit()
+
+
+
 
 

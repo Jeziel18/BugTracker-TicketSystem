@@ -274,43 +274,6 @@ def update_service(service_id):
 
     else:
         return jsonify(Error="Method not allowed."), 405
-
-# @app.route('/services/<int:service_id>', methods=['PUT'])
-# def update_service(service_id):
-#     if request.method == 'PUT':
-#         data = request.get_json()
-#         print("data:", data)
-#         if not data:
-#             return jsonify(Error="Missing JSON request body"), 400
-#         try:
-#             update_data = {}
-#             for key, value in data.items():
-#                 if key in ['service_name', 'service_category_id']:
-#                     update_data[key] = value
-#             print("update_data:", update_data)
-#             if not update_data:
-#                 return jsonify(Error="Invalid request parameters"), 400
-#         except KeyError:
-#             return jsonify(Error="Invalid request parameters"), 400
-#
-#         # Check if the service exists
-#         service = ServicesHandler().get_service_by_id(service_id)
-#         if service is None:
-#             return jsonify(Error="Service not found"), 404
-#         print("service:", service)
-#
-#         # Check if the service_category_id exists
-#         service_category_id = int(update_data.get('service_category_id', service['service_category_id']))
-#         print("service_category_id:", service_category_id)
-#         if not ServiceCategoryDAO().get_service_category_by_id(service_category_id):
-#             return jsonify(Error="Service category not found"), 404
-#
-#         ServicesHandler().update_service(service_id, update_data)
-#         return jsonify(Message="Service updated successfully"), 200
-#     else:
-#         return jsonify(Error="Method not allowed."), 405
-
-#service category routes and methods
 @app.route('/service_categories', methods=['GET'])
 def get_all_service_categories():
     if request.method == 'GET':
@@ -435,6 +398,10 @@ def update_scs(scs_id):
             return jsonify(Message="Service category supervisor updated successfully"), 200
         except:
             return jsonify(Error="Failed to update service category supervisor"), 500
+@app.route('/service_category_supervisor/<int:user_id>/<int:service_category_id>', methods=['GET'])
+def get_service_category_supervisor(user_id, service_category_id):
+    handler = SCSHandler()
+    return handler.get_service_category_supervisor(user_id, service_category_id)
 
 @app.route('/tickets', methods=['GET'])
 def get_all_tickets():
@@ -495,6 +462,29 @@ def create_ticket():
             return jsonify({"Ticket": result}), 201
         else:
             return jsonify(Error="Failed to create ticket."), 400
+    else:
+        return jsonify(Error="Method not allowed."), 405
+
+@app.route('/tickets/<int:ticket_id>', methods=['PUT'])
+def update_ticket(ticket_id):
+    if request.method == 'PUT':
+        data = request.get_json()
+        if not data:
+            return jsonify(Error="Missing JSON request body"), 400
+
+        update_data = {}
+        for key, value in data.items():
+            if key != 'user_id':
+                update_data[key] = value
+
+        if not update_data:
+            return jsonify(Error="Invalid request parameters"), 400
+
+        result = TicketsHandler().update_ticket(ticket_id, update_data)
+        if result:
+            return jsonify(Message="Ticket updated successfully"), 200
+        else:
+            return jsonify(Error="Ticket not found or no changes made"), 404
     else:
         return jsonify(Error="Method not allowed."), 405
 
