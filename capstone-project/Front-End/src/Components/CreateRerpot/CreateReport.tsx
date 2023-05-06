@@ -10,21 +10,9 @@ import "./CreateReport.css";
 import { error } from "jquery";
 
 function CreateReport() {
-  const [seccion, setSeccion] =
-    useState<SingleValue<{ value: string; label: string } | null>>(null);
-
-  const [servicio, setServicio] =
-    useState<SingleValue<{ value: string; label: string } | null>>(null);
-
-  const [edificio, setEdificio] =
-    useState<SingleValue<{ value: string; label: string } | null>>(null);
-
-  const [decanato, setDecanato] =
-    useState<SingleValue<{ value: string; label: string } | null>>(null);
-
-  const [prioridad, setPrioridad] =
-    useState<SingleValue<{ value: string; label: string } | null>>(null);
-
+  //------------------------------------------------------------------------------------
+  //   This part of the code has the dummy data to test the Create Report page.
+  //------------------------------------------------------------------------------------
   const Seccion = [
     { value: "electricidad", label: "electricidad" },
     { value: "plomeria", label: "plomeria" },
@@ -62,11 +50,90 @@ function CreateReport() {
   ];
 
   const Decanato = [
-    { value: "Administracion", label: "Decanato de Administracion" },
-    { value: "Estudiantes", label: "Decanato de Estudiantes" },
-    { value: "Asuntos Academicos", label: "Decanato de Asuntos Academicos" },
+    {
+      value: "Decanato de Administracion",
+      label: "Decanato de Administracion",
+    },
+    { value: "Decanato de Estudiantes", label: "Decanato de Estudiantes" },
+    {
+      value: "Decanato de Asuntos Academicos",
+      label: "Decanato de Asuntos Academicos",
+    },
   ];
 
+  //------------------------------------------------------------------------------------
+  //    This part of the code has all the useState value to change state in the
+  //                          select and input boxes.
+  //------------------------------------------------------------------------------------
+  const [seccion, setSeccion] =
+    useState<SingleValue<{ value: string; label: string } | null>>(null);
+
+  const [servicio, setServicio] =
+    useState<SingleValue<{ value: string; label: string } | null>>(null);
+
+  const [edificio, setEdificio] =
+    useState<SingleValue<{ value: string; label: string } | null>>(null);
+
+  const [decanato, setDecanato] =
+    useState<SingleValue<{ value: string; label: string } | null>>(null);
+
+  const [prioridad, setPrioridad] =
+    useState<SingleValue<{ value: string; label: string } | null>>(null);
+
+  //------------------------------------------------------------------------------------
+  //   This part of the code has all useStates and hanldes for the input text boxes.
+  //                   This get the values that the user inputs.
+  //------------------------------------------------------------------------------------
+  const [numeroOficina, setNumeroOficina] = useState<string>("");
+  function handleNumeroOficinaChange(
+    event: React.ChangeEvent<HTMLTextAreaElement>
+  ) {
+    setNumeroOficina(event.target.value);
+  }
+
+  const [descripcion, setDescripcion] = useState<string>("");
+  function handleDescripcionChange(
+    event: React.ChangeEvent<HTMLTextAreaElement>
+  ) {
+    setDescripcion(event.target.value);
+  }
+
+  const [departamento, setDepartamento] = useState<string>("");
+  function handleDepartamentoChange(
+    event: React.ChangeEvent<HTMLTextAreaElement>
+  ) {
+    setDepartamento(event.target.value);
+  }
+
+  const [telefono, setTelefono] = useState<string>("");
+  function handleTelefonoChange(event: React.ChangeEvent<HTMLTextAreaElement>) {
+    setTelefono(event.target.value);
+  }
+
+  const [nombreActividad, setNombreActividad] = useState<string>("");
+  function handleNombreActividadChange(
+    event: React.ChangeEvent<HTMLTextAreaElement>
+  ) {
+    setNombreActividad(event.target.value);
+  }
+
+  const [fechaActividad, setFechaActividad] = useState<string>("");
+  function handleFechaActividadChange(
+    event: React.ChangeEvent<HTMLTextAreaElement>
+  ) {
+    setFechaActividad(event.target.value);
+  }
+
+  const [horaActividad, setHoraActividad] = useState<string>("");
+  function handleHoraActividadChange(
+    event: React.ChangeEvent<HTMLTextAreaElement>
+  ) {
+    setHoraActividad(event.target.value);
+  }
+
+  //------------------------------------------------------------------------------------
+  //    This useEffect make the tooltip for the extra information on the boxes.
+  //------------------------------------------------------------------------------------
   useEffect(() => {
     // initialize tooltips
     var tooltipTriggerList = [].slice.call(
@@ -77,6 +144,9 @@ function CreateReport() {
     });
   }, []);
 
+  //------------------------------------------------------------------------------------
+  //   This function make the "Servicio" select dependant of the "Seccion" select.
+  //------------------------------------------------------------------------------------
   function serviceOptions(
     section: SingleValue<{ value: string; label: string } | null>
   ) {
@@ -92,77 +162,33 @@ function CreateReport() {
     }
   }
 
-  const [numeroOficina, setNumeroOficina] = useState<string>("");
-
-  function handleNumeroOficinaChange(
-    event: React.ChangeEvent<HTMLTextAreaElement>
-  ) {
-    setNumeroOficina(event.target.value);
-  }
-
-  const [descripcion, setDescripcion] = useState<string>("");
-
-  function handleDescripcionChange(
-    event: React.ChangeEvent<HTMLTextAreaElement>
-  ) {
-    setDescripcion(event.target.value);
-  }
-
-  const [departamento, setDepartamento] = useState<string>("");
-
-  function handleDepartamentoChange(
-    event: React.ChangeEvent<HTMLTextAreaElement>
-  ) {
-    setDepartamento(event.target.value);
-  }
-
-  const [telefono, setTelefono] = useState<string>("");
-
-  function handleTelefonoChange(event: React.ChangeEvent<HTMLTextAreaElement>) {
-    setTelefono(event.target.value);
-  }
-
-  const [nombreActividad, setNombreActividad] = useState<string>("");
-
-  function handleNombreActividadChange(
-    event: React.ChangeEvent<HTMLTextAreaElement>
-  ) {
-    setNombreActividad(event.target.value);
-  }
-
-  const [fechaActividad, setFechaActividad] = useState<string>("");
-
-  function handleFechaActividadChange(
-    event: React.ChangeEvent<HTMLTextAreaElement>
-  ) {
-    setFechaActividad(event.target.value);
-  }
-
-  const [horaActividad, setHoraActividad] = useState<string>("");
-
-  function handleHoraActividadChange(
-    event: React.ChangeEvent<HTMLTextAreaElement>
-  ) {
-    setHoraActividad(event.target.value);
-  }
-
+  //------------------------------------------------------------------------------------
+  // This cont variable set the useState for the validation of the boxes.
+  //------------------------------------------------------------------------------------
   const [reportError, setReportError] = useState("");
 
+  //------------------------------------------------------------------------------------
+  //       This function handle the sumbit event when the button is click.
+  //          It also create the error string if there is an empty box.
+  //------------------------------------------------------------------------------------
   function handleSumbitReport(
     section: SingleValue<{ value: string; label: string } | null>,
-    servcie: SingleValue<{ value: string; label: string } | null>,
+    service: SingleValue<{ value: string; label: string } | null>,
     priority: SingleValue<{ value: string; label: string } | null>,
     building: SingleValue<{ value: string; label: string } | null>,
     officeNumber: string,
     jobDescription: string,
     deanery: SingleValue<{ value: string; label: string } | null>,
     department: string,
-    phone: string
+    phone: string,
+    activityName: string,
+    activityDate: string,
+    activityTime: string
   ) {
     let errorString = "Verifique los siguientes campos: ";
     if (
       !section?.value ||
-      !servcie?.value ||
+      !service?.value ||
       !priority?.value ||
       !building?.value ||
       !officeNumber ||
@@ -174,7 +200,7 @@ function CreateReport() {
       if (section === null) {
         errorString += "Seccion-";
       }
-      if (servcie === null) {
+      if (service === null) {
         errorString += "Servicio-";
       }
       if (priority === null) {
@@ -201,9 +227,26 @@ function CreateReport() {
       setReportError(errorString);
     } else {
       setReportError("");
+      console.log(
+        section,
+        service,
+        priority,
+        building,
+        officeNumber,
+        jobDescription,
+        deanery,
+        department,
+        phone,
+        activityName,
+        activityDate,
+        activityTime
+      );
     }
   }
 
+  //------------------------------------------------------------------------------------
+  //        This return displays and render all the frontend for the user.
+  //------------------------------------------------------------------------------------
   return (
     <>
       <div className="mt-1 mb-2 p-2">
@@ -217,7 +260,7 @@ function CreateReport() {
                 <TimeAndDate />
               </div>
               <div className="fs-6 badge bg-primary text-wrap">
-                Jeziel Torres - jeziel.torres1@upr.edu
+                When user name and email is recived from the db, insert here
               </div>
             </div>
           </div>
@@ -243,7 +286,6 @@ function CreateReport() {
                 styles={{
                   container: (provided) => ({ ...provided, width: 400 }),
                 }}
-                required={true}
               />
               <button
                 type="button"
@@ -277,7 +319,6 @@ function CreateReport() {
                 styles={{
                   container: (provided) => ({ ...provided, width: 400 }),
                 }}
-                required // add this attribute
               />
               <button
                 type="button"
@@ -309,9 +350,8 @@ function CreateReport() {
                 isClearable
                 isSearchable
                 styles={{
-                  container: (provided) => ({ ...provided, width: 400 }),
+                  container: (provided) => ({ ...provided, width: 300 }),
                 }}
-                required // add this attribute
               />
               <button
                 type="button"
@@ -344,7 +384,6 @@ function CreateReport() {
                 styles={{
                   control: (provided) => ({ ...provided, width: 500 }),
                 }}
-                required
               />
               <button
                 type="button"
@@ -373,7 +412,6 @@ function CreateReport() {
                 id="numeroDeOficina"
                 name="numeroDeOficina"
                 rows={1}
-                required
                 value={numeroOficina}
                 onChange={handleNumeroOficinaChange}
               ></textarea>
@@ -405,7 +443,6 @@ function CreateReport() {
                   id="descripcionTrabajo"
                   name="descripcionTrabajo"
                   rows={2}
-                  required
                   value={descripcion}
                   onChange={handleDescripcionChange}
                   style={{ width: "700px" }}
@@ -444,7 +481,6 @@ function CreateReport() {
                 styles={{
                   container: (provided) => ({ ...provided, width: 400 }),
                 }}
-                required // add this attribute
               />
               <button
                 type="button"
@@ -477,7 +513,6 @@ function CreateReport() {
                   value={departamento}
                   onChange={handleDepartamentoChange}
                   style={{ width: "500px" }}
-                  required
                 ></textarea>
               </div>
               <button
@@ -511,7 +546,6 @@ function CreateReport() {
                   value={telefono}
                   onChange={handleTelefonoChange}
                   style={{ width: "250px" }}
-                  required
                 ></textarea>
               </div>
               <button
@@ -551,7 +585,6 @@ function CreateReport() {
                   value={nombreActividad}
                   onChange={handleNombreActividadChange}
                   style={{ width: "600px" }}
-                  required
                 ></textarea>
               </div>
               <button
@@ -585,7 +618,6 @@ function CreateReport() {
                   onChange={handleFechaActividadChange}
                   style={{ width: "150px" }}
                   placeholder="MM/DD/YYYY"
-                  required
                 ></textarea>
               </div>
               <button
@@ -619,7 +651,6 @@ function CreateReport() {
                   onChange={handleHoraActividadChange}
                   style={{ width: "150px" }}
                   placeholder="HH:MM AM/PM"
-                  required
                 ></textarea>
               </div>
               <button
@@ -647,7 +678,10 @@ function CreateReport() {
                       descripcion,
                       decanato,
                       departamento,
-                      telefono
+                      telefono,
+                      nombreActividad,
+                      fechaActividad,
+                      horaActividad
                     );
                   }}
                 >

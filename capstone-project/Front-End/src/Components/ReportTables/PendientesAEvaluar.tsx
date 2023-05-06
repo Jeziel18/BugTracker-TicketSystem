@@ -22,7 +22,6 @@ interface Data {
 }
 
 const PendientesAEvaluar = () => {
-  const boolVal = true;
   const [currentPage, setCurrentPage] = useState(1);
   const [dataPerPage] = useState(3);
   const [filters, setFilters] = useState({
@@ -116,7 +115,7 @@ const PendientesAEvaluar = () => {
   const [seccion, setSeccion] =
     useState<SingleValue<{ value: string; label: string } | null>>(null);
 
-  const [servicioSeleccionado, setServicioSeleccionado] =
+  const [servicio, setServicio] =
     useState<SingleValue<{ value: string; label: string } | null>>(null);
 
   const [edificio, setEdificio] =
@@ -125,6 +124,56 @@ const PendientesAEvaluar = () => {
   const [decanato, setDecanato] =
     useState<SingleValue<{ value: string; label: string } | null>>(null);
 
+  const [prioridad, setPrioridad] =
+    useState<SingleValue<{ value: string; label: string } | null>>(null);
+
+  const [numeroOficina, setNumeroOficina] = useState<string>("");
+  function handleNumeroOficinaChange(
+    event: React.ChangeEvent<HTMLTextAreaElement>
+  ) {
+    setNumeroOficina(event.target.value);
+  }
+
+  const [descripcion, setDescripcion] = useState<string>("");
+  function handleDescripcionChange(
+    event: React.ChangeEvent<HTMLTextAreaElement>
+  ) {
+    setDescripcion(event.target.value);
+  }
+
+  const [departamento, setDepartamento] = useState<string>("");
+  function handleDepartamentoChange(
+    event: React.ChangeEvent<HTMLTextAreaElement>
+  ) {
+    setDepartamento(event.target.value);
+  }
+
+  const [telefono, setTelefono] = useState<string>("");
+  function handleTelefonoChange(event: React.ChangeEvent<HTMLTextAreaElement>) {
+    setTelefono(event.target.value);
+  }
+
+  const [nombreActividad, setNombreActividad] = useState<string>("");
+  function handleNombreActividadChange(
+    event: React.ChangeEvent<HTMLTextAreaElement>
+  ) {
+    setNombreActividad(event.target.value);
+  }
+
+  const [fechaActividad, setFechaActividad] = useState<string>("");
+  function handleFechaActividadChange(
+    event: React.ChangeEvent<HTMLTextAreaElement>
+  ) {
+    setFechaActividad(event.target.value);
+  }
+
+  const [horaActividad, setHoraActividad] = useState<string>("");
+  function handleHoraActividadChange(
+    event: React.ChangeEvent<HTMLTextAreaElement>
+  ) {
+    setHoraActividad(event.target.value);
+  }
+
   const Seccion = [
     { value: "electricidad", label: "electricidad" },
     { value: "plomeria", label: "plomeria" },
@@ -132,11 +181,23 @@ const PendientesAEvaluar = () => {
     { value: "mesas y sillas", label: "mesas y sillas" },
   ];
 
-  const Servicio = [
+  const ServicioElectricidad = [
     { value: "luz mala", label: "luz mala" },
     { value: "receptaculo no sirve", label: "receptaculo no sirve" },
     { value: "switch no sirve", label: "switch no sirve" },
     { value: "corto circuito", label: "corto circuito" },
+  ];
+
+  const ServicioPlomeria = [{ value: "tubo roto", label: "tubo roto" }];
+
+  const ServicioFlora = [{ value: "arbol caido", label: "arbol caido" }];
+
+  const ServicioMesasYSillas = [{ value: "silla rota", label: "silla rota" }];
+
+  const Prioridad = [
+    { value: "Rutina  ", label: "Rutina" },
+    { value: "Urgente", label: "Urgente" },
+    { value: "Emergencia", label: "Emergencia" },
   ];
 
   const Edificio = [
@@ -150,21 +211,88 @@ const PendientesAEvaluar = () => {
   ];
 
   const Decanato = [
-    { value: "Administracion", label: "Decanato de Administracion" },
-    { value: "Estudiantes", label: "Decanato de Estudiantes" },
-    { value: "Asuntos Academicos", label: "Decanato de Asuntos Academicos" },
+    {
+      value: "Decanato de Administracion",
+      label: "Decanato de Administracion",
+    },
+    { value: "Decanato de Estudiantes", label: "Decanato de Estudiantes" },
+    {
+      value: "Decanato de Asuntos Academicos",
+      label: "Decanato de Asuntos Academicos",
+    },
   ];
+
+  function serviceOptions(
+    section: SingleValue<{ value: string; label: string } | null>
+  ) {
+    switch (section?.value) {
+      case "electricidad":
+        return ServicioElectricidad;
+      case "plomeria":
+        return ServicioPlomeria;
+      case "flora":
+        return ServicioFlora;
+      case "mesas y sillas":
+        return ServicioMesasYSillas;
+    }
+  }
+
+  function handelReportInfo(
+    section: string,
+    service: string,
+    priority: string,
+    building: string,
+    officeNumber: string,
+    description: string,
+    deanery: string,
+    department: string,
+    phone: string,
+    activityName: string,
+    activityDate: string,
+    activityTime: string
+  ) {
+    setSeccion({ value: section, label: section });
+    setServicio({ value: service, label: service });
+    setPrioridad({ value: priority, label: priority });
+    setEdificio({ value: building, label: building });
+    setNumeroOficina(officeNumber);
+    setDescripcion(description);
+    setDecanato({ value: deanery, label: deanery });
+    setDepartamento(department);
+    setTelefono(phone);
+    setNombreActividad(activityName);
+    setFechaActividad(activityDate);
+    setHoraActividad(activityTime);
+  }
 
   function handelSaveReport(
     section: SingleValue<{ value: string; label: string } | null>,
-    itemSeccion: string
+    service: SingleValue<{ value: string; label: string } | null>,
+    priority: SingleValue<{ value: string; label: string } | null>,
+    building: SingleValue<{ value: string; label: string } | null>,
+    officeNumber: string,
+    jobDescription: string,
+    deanery: SingleValue<{ value: string; label: string } | null>,
+    department: string,
+    phone: string,
+    activityName: string,
+    activityDate: string,
+    activityTime: string
   ) {
-    if (section === null) {
-      section = { value: itemSeccion, label: itemSeccion };
-      console.log(section);
-    } else {
-      console.log(section);
-    }
+    console.log(
+      section,
+      service,
+      priority,
+      building,
+      officeNumber,
+      jobDescription,
+      deanery,
+      department,
+      phone,
+      activityName,
+      activityDate,
+      activityTime
+    );
   }
 
   return (
@@ -242,6 +370,22 @@ const PendientesAEvaluar = () => {
                     className="btn btn-link"
                     data-bs-toggle="modal"
                     data-bs-target={`#exampleModal${item.id}`}
+                    onClick={() => {
+                      handelReportInfo(
+                        item.seccion,
+                        item.servicio,
+                        item.prioridad,
+                        item.edificio,
+                        item.numerDeOficina,
+                        item.descripcion,
+                        item.decanato,
+                        item.departamento,
+                        item.telefono,
+                        item.nombreActividad,
+                        item.fechaActividad,
+                        item.horaActividad
+                      );
+                    }}
                   >
                     {item.id}
                   </button>
@@ -291,10 +435,7 @@ const PendientesAEvaluar = () => {
 
                               <div className="col-sm-3 d-flex align-items-center">
                                 <Select
-                                  defaultValue={{
-                                    label: item.seccion,
-                                    value: item.seccion,
-                                  }}
+                                  value={seccion}
                                   onChange={setSeccion}
                                   options={Seccion}
                                   isClearable
@@ -305,7 +446,6 @@ const PendientesAEvaluar = () => {
                                       width: 400,
                                     }),
                                   }}
-                                  required
                                 />
                               </div>
                             </div>
@@ -323,12 +463,9 @@ const PendientesAEvaluar = () => {
 
                               <div className="col-sm-3 d-flex align-items-center">
                                 <Select
-                                  value={{
-                                    value: item.servicio,
-                                    label: item.servicio,
-                                  }}
-                                  onChange={setServicioSeleccionado}
-                                  options={Servicio}
+                                  value={servicio}
+                                  onChange={setServicio}
+                                  options={serviceOptions(seccion)}
                                   isClearable
                                   isSearchable
                                   styles={{
@@ -337,7 +474,6 @@ const PendientesAEvaluar = () => {
                                       width: 400,
                                     }),
                                   }}
-                                  required // add this attribute
                                 />
                               </div>
                             </div>
@@ -354,51 +490,19 @@ const PendientesAEvaluar = () => {
                               </div>
 
                               <div className="col-sm-3 d-flex align-items-center">
-                                <div className="form-check me-1">
-                                  <input
-                                    className="form-check-input"
-                                    type="radio"
-                                    name="flexRadioDefault"
-                                    id="flexRadioDefault1"
-                                    required
-                                  />
-                                  <label
-                                    className="form-check-label"
-                                    htmlFor="flexRadioDefault1"
-                                  >
-                                    Rutina
-                                  </label>
-                                </div>
-                                <div className="form-check ms-2">
-                                  <input
-                                    className="form-check-input"
-                                    type="radio"
-                                    name="flexRadioDefault"
-                                    id="flexRadioDefault2"
-                                    required
-                                  />
-                                  <label
-                                    className="form-check-label"
-                                    htmlFor="flexRadioDefault2"
-                                  >
-                                    Urgente
-                                  </label>
-                                </div>
-                                <div className="form-check ms-2">
-                                  <input
-                                    className="form-check-input"
-                                    type="radio"
-                                    name="flexRadioDefault"
-                                    id="flexRadioDefault3"
-                                    required
-                                  />
-                                  <label
-                                    className="form-check-label"
-                                    htmlFor="flexRadioDefault3"
-                                  >
-                                    Emergencia
-                                  </label>
-                                </div>
+                                <Select
+                                  value={prioridad}
+                                  onChange={setPrioridad}
+                                  options={Prioridad}
+                                  isClearable
+                                  isSearchable
+                                  styles={{
+                                    container: (provided) => ({
+                                      ...provided,
+                                      width: 400,
+                                    }),
+                                  }}
+                                />
                               </div>
                             </div>
 
@@ -414,39 +518,16 @@ const PendientesAEvaluar = () => {
                               </div>
                               <div className="col-sm-3 d-flex align-items-center">
                                 <Select
-                                  value={{
-                                    value: item.edificio,
-                                    label: item.edificio,
-                                  }}
+                                  value={edificio}
                                   onChange={setEdificio}
                                   options={Edificio}
                                   isClearable
                                   isSearchable
                                   styles={{
-                                    control: (provided) => ({
+                                    container: (provided) => ({
                                       ...provided,
                                       width: 500,
                                     }),
-                                  }}
-                                  required
-                                  inputValue={""}
-                                  onInputChange={function (
-                                    newValue: string,
-                                    actionMeta: InputActionMeta
-                                  ): void {
-                                    throw new Error(
-                                      "Function not implemented."
-                                    );
-                                  }}
-                                  onMenuOpen={function (): void {
-                                    throw new Error(
-                                      "Function not implemented."
-                                    );
-                                  }}
-                                  onMenuClose={function (): void {
-                                    throw new Error(
-                                      "Function not implemented."
-                                    );
                                   }}
                                 />
                               </div>
@@ -468,9 +549,11 @@ const PendientesAEvaluar = () => {
                                 <div className="form-group">
                                   <textarea
                                     className="form-control"
-                                    id="exampleFormControlTextarea1"
+                                    id="numeroDeOficina"
+                                    name="numeroDeOficina"
                                     rows={1}
-                                    required
+                                    value={numeroOficina}
+                                    onChange={handleNumeroOficinaChange}
                                   ></textarea>
                                 </div>
                               </div>
@@ -490,10 +573,12 @@ const PendientesAEvaluar = () => {
                                 <div className="form-group">
                                   <textarea
                                     className="form-control"
-                                    id="exampleFormControlTextarea1"
+                                    id="descripcionTrabajo"
+                                    name="descripcionTrabajo"
                                     rows={2}
+                                    value={descripcion}
+                                    onChange={handleDescripcionChange}
                                     style={{ width: "700px" }}
-                                    required
                                   ></textarea>
                                 </div>
                               </div>
@@ -513,10 +598,7 @@ const PendientesAEvaluar = () => {
                               </div>
                               <div className="col-sm-3 d-flex align-items-center">
                                 <Select
-                                  value={{
-                                    value: item.decanato,
-                                    label: item.decanato,
-                                  }}
+                                  value={decanato}
                                   onChange={setDecanato}
                                   options={Decanato}
                                   isClearable
@@ -526,26 +608,6 @@ const PendientesAEvaluar = () => {
                                       ...provided,
                                       width: 400,
                                     }),
-                                  }}
-                                  required // add this attribute
-                                  inputValue={""}
-                                  onInputChange={function (
-                                    newValue: string,
-                                    actionMeta: InputActionMeta
-                                  ): void {
-                                    throw new Error(
-                                      "Function not implemented."
-                                    );
-                                  }}
-                                  onMenuOpen={function (): void {
-                                    throw new Error(
-                                      "Function not implemented."
-                                    );
-                                  }}
-                                  onMenuClose={function (): void {
-                                    throw new Error(
-                                      "Function not implemented."
-                                    );
                                   }}
                                 />
                               </div>
@@ -565,10 +627,12 @@ const PendientesAEvaluar = () => {
                                 <div className="form-group">
                                   <textarea
                                     className="form-control"
-                                    id="exampleFormControlTextarea1"
+                                    id="departamento"
+                                    name="departamento"
                                     rows={1}
+                                    value={departamento}
+                                    onChange={handleDepartamentoChange}
                                     style={{ width: "500px" }}
-                                    required
                                   ></textarea>
                                 </div>
                               </div>
@@ -588,10 +652,12 @@ const PendientesAEvaluar = () => {
                                 <div className="form-group">
                                   <textarea
                                     className="form-control"
-                                    id="exampleFormControlTextarea1"
+                                    id="telefono"
+                                    name="telefono"
                                     rows={1}
+                                    value={telefono}
+                                    onChange={handleTelefonoChange}
                                     style={{ width: "250px" }}
-                                    required
                                   ></textarea>
                                 </div>
                               </div>
@@ -618,10 +684,12 @@ const PendientesAEvaluar = () => {
                                 <div className="form-group">
                                   <textarea
                                     className="form-control"
-                                    id="exampleFormControlTextarea1"
+                                    id="nombreActividad"
+                                    name="nombreActividad"
                                     rows={1}
+                                    value={nombreActividad}
+                                    onChange={handleNombreActividadChange}
                                     style={{ width: "600px" }}
-                                    required
                                   ></textarea>
                                 </div>
                               </div>
@@ -641,11 +709,13 @@ const PendientesAEvaluar = () => {
                                 <div className="form-group">
                                   <textarea
                                     className="form-control"
-                                    id="exampleFormControlTextarea1"
+                                    id="fechaActividad"
+                                    name="fechaActividad"
                                     rows={1}
+                                    value={fechaActividad}
+                                    onChange={handleFechaActividadChange}
                                     style={{ width: "150px" }}
                                     placeholder="MM/DD/YYYY"
-                                    required
                                   ></textarea>
                                 </div>
                               </div>
@@ -665,11 +735,13 @@ const PendientesAEvaluar = () => {
                                 <div className="form-group">
                                   <textarea
                                     className="form-control"
-                                    id="exampleFormControlTextarea1"
+                                    id="horaActividad"
+                                    name="horaActividad"
                                     rows={1}
+                                    value={horaActividad}
+                                    onChange={handleHoraActividadChange}
                                     style={{ width: "150px" }}
                                     placeholder="HH:MM AM/PM"
-                                    required
                                   ></textarea>
                                 </div>
                               </div>
@@ -687,7 +759,20 @@ const PendientesAEvaluar = () => {
                                     type="button"
                                     className="btn btn-primary ms-1"
                                     onClick={() =>
-                                      handelSaveReport(seccion, item.seccion)
+                                      handelSaveReport(
+                                        seccion,
+                                        servicio,
+                                        prioridad,
+                                        edificio,
+                                        numeroOficina,
+                                        descripcion,
+                                        decanato,
+                                        departamento,
+                                        telefono,
+                                        nombreActividad,
+                                        fechaActividad,
+                                        horaActividad
+                                      )
                                     }
                                   >
                                     Save changes
