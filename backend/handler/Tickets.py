@@ -1,5 +1,6 @@
 from flask import Flask, jsonify, request
 from backend.dao.Tickets import TicketsDAO
+from datetime import datetime, time, date
 
 class TicketsHandler:
     def __init__(self):
@@ -26,27 +27,32 @@ class TicketsHandler:
         result['ticket_status'] = row[17]
         return result
 
-    def build_tickets_attributes(self, ticket_id, user_id, service_category_id, service_id, ticket_priority, building_id, office_number, job_description, dean, department, ticket_phone_number, ticket_activity_name, ticket_activity_date, ticket_activity_time, ticket_assigned_to, ticket_creation_date, ticket_update_date, ticket_status):
-        result = {}
-        result['ticket_id'] = ticket_id,
-        result['user_id'] = user_id,
-        result['service_category_id'] = service_category_id,
-        result['service_id'] = service_id,
-        result['ticket_priority'] = ticket_priority,
-        result['building_id'] = building_id,
-        result['office_number'] = office_number,
-        result['job_description'] = job_description,
-        result['dean'] = dean,
-        result['department'] = department,
-        result['ticket_phone_number'] = ticket_phone_number,
-        result['ticket_activity_name'] = ticket_activity_name,
-        result['ticket_activity_date'] = ticket_activity_date,
-        result['ticket_activity_time'] = ticket_activity_time,
-        result['ticket_assigned_to'] = ticket_assigned_to,
-        result['ticket_creation_date'] = ticket_creation_date,
-        result['ticket_update_date'] = ticket_update_date,
-        result['ticket_status'] = ticket_status
-        return result
+    def build_tickets_attributes(self, ticket_id, user_id, service_category_id, service_id, ticket_priority,
+                                 building_id,
+                                 office_number, job_description, dean, department, ticket_phone_number,
+                                 ticket_activity_name, ticket_activity_date, ticket_activity_time, ticket_assigned_to,
+                                 ticket_creation_date, ticket_update_date, ticket_status):
+        ticket = {
+            "ticket_id": ticket_id,
+            "user_id": user_id,
+            "service_category_id": service_category_id,
+            "service_id": service_id,
+            "ticket_priority": ticket_priority,
+            "building_id": building_id,
+            "office_number": office_number,
+            "job_description": job_description,
+            "dean": dean,
+            "department": department,
+            "ticket_phone_number": ticket_phone_number,
+            "ticket_activity_name": ticket_activity_name,
+            "ticket_activity_date": ticket_activity_date,
+            "ticket_activity_time": ticket_activity_time,
+            "ticket_assigned_to": ticket_assigned_to,
+            "ticket_creation_date": ticket_creation_date,
+            "ticket_update_date": ticket_update_date,
+            "ticket_status": ticket_status
+        }
+        return ticket
 
     def get_all_tickets(self):
         tickets = self.Tickets_DAO.get_all_tickets()
@@ -63,3 +69,22 @@ class TicketsHandler:
         else:
             result = self.build_tickets_dict(ticket)
             return jsonify(result), 200
+    def create_ticket(self, user_id, service_category_id, service_id, ticket_priority, building_id, office_number,
+                      job_description, dean, department, ticket_phone_number, ticket_activity_name=None,
+                      ticket_activity_date=None, ticket_activity_time=None, ticket_assigned_to=None):
+        dao = TicketsDAO()
+        ticket_id = dao.create_ticket(user_id, service_category_id, service_id, ticket_priority, building_id,
+                                      office_number, job_description, dean, department, ticket_phone_number,
+                                      ticket_activity_name, ticket_activity_date, ticket_activity_time,
+                                      ticket_assigned_to)
+        if ticket_id:
+            # Build the attributes for the response
+            result = self.build_tickets_attributes(ticket_id, user_id, service_category_id, service_id, ticket_priority,
+                                                   building_id, office_number, job_description, dean, department,
+                                                   ticket_phone_number, ticket_activity_name, ticket_activity_date,
+                                                   ticket_activity_time, ticket_assigned_to, datetime.now(), None,
+                                                   "open")
+            return jsonify(Ticket=result), 201
+        else:
+            return jsonify(Error="Failed to create ticket."), 400
+

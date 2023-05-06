@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 
@@ -65,7 +67,7 @@ def get_or_update_user_by_id(user_id):
         return jsonify(Error="Method not allowed."), 405
 
 @app.route('/new-user', methods=['POST'])
-def insert_user():
+def create_user():
     if request.method == 'POST':
         data = request.get_json()
         if not data:
@@ -449,6 +451,50 @@ def get_ticket_by_id(ticket_id):
             return ticket
         else:
             return jsonify(Error="Ticket not found"), 404
+    else:
+        return jsonify(Error="Method not allowed."), 405
+
+@app.route('/new-ticket', methods=['POST'])
+def create_ticket():
+    if request.method == 'POST':
+        data = request.get_json()
+        if not data:
+            return jsonify(Error="Missing JSON request body"), 400
+        try:
+            user_id = data['user_id']
+            service_category_id = data['service_category_id']
+            service_id = data['service_id']
+            ticket_priority = data['ticket_priority']
+            building_id = data['building_id']
+            office_number = data['office_number']
+            job_description = data['job_description']
+            dean = data['dean']
+            department = data['department']
+            ticket_phone_number = data['ticket_phone_number']
+            ticket_activity_name = data.get('ticket_activity_name', None) # Optional field
+            ticket_activity_date = data.get('ticket_activity_date', None) # Optional field
+            ticket_activity_time = data.get('ticket_activity_time', None) # Optional field
+            ticket_assigned_to = data.get('ticket_assigned_to', None) # Optional field
+        except KeyError:
+            return jsonify(Error="Invalid request parameters"), 400
+
+        # Call the create_ticket method in the TicketsHandler class
+        dao = TicketsDAO()
+        ticket_id = dao.create_ticket(user_id, service_category_id, service_id, ticket_priority, building_id,
+                                      office_number, job_description, dean, department, ticket_phone_number,
+                                      ticket_activity_name, ticket_activity_date, ticket_activity_time,
+                                      ticket_assigned_to)
+        if ticket_id:
+            # Build the attributes for the response
+            handler = TicketsHandler()
+            result = handler.build_tickets_attributes(ticket_id, user_id, service_category_id, service_id, ticket_priority,
+                                                       building_id, office_number, job_description, dean, department,
+                                                       ticket_phone_number, ticket_activity_name, ticket_activity_date,
+                                                       ticket_activity_time, ticket_assigned_to, datetime.now(), None,
+                                                       "open")
+            return jsonify({"Ticket": result}), 201
+        else:
+            return jsonify(Error="Failed to create ticket."), 400
     else:
         return jsonify(Error="Method not allowed."), 405
 
