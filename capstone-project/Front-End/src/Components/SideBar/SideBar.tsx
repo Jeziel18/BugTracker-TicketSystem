@@ -8,7 +8,7 @@ function SideBar() {
       <div className="sidebar d-flex justify-content-between flex-column bg-dark text-white p-3 vh-100">
         <div>
           <h1 className="mt-1">
-            <a className="me-2" href="/">
+            <a className="me-2" href="/home">
               <img
                 src="https://www.uprm.edu/wdt/resources/seal-rum-uprm-1280x1280px.png"
                 alt="logo"
@@ -26,7 +26,7 @@ function SideBar() {
 
             <li className="nav-item">
               {
-                <a className="text-white" href="/">
+                <a className="text-white" href="/home">
                   <i className="bi bi-box-arrow-in-right me-3"></i>
                   <span>Inicio e info. de la aplicacion</span>
                 </a>

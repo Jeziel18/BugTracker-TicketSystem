@@ -14,7 +14,7 @@ function Navbar() {
               <a
                 className="nav-link active text-white"
                 aria-current="page"
-                href="/"
+                href="/home"
               >
                 <i className="bi-house-fill"></i> Home
               </a>

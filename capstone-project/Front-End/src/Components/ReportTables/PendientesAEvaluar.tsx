@@ -65,7 +65,7 @@ const PendientesAEvaluar = () => {
       nombreActividad: "Activity 2",
       fechaActividad: "2023-05-02",
       horaActividad: "14:00:00",
-      status: "In Progress",
+      status: "pending",
     },
     {
       id: 3,
@@ -81,98 +81,9 @@ const PendientesAEvaluar = () => {
       nombreActividad: "Activity 3",
       fechaActividad: "2023-05-03",
       horaActividad: "15:00:00",
-      status: "Closed",
+      status: "closed",
     },
   ];
-
-  const indexOfLastData = currentPage * dataPerPage;
-  const indexOfFirstData = indexOfLastData - dataPerPage;
-  const currentData = data
-    .filter(
-      (item) =>
-        item.seccion.toLowerCase().includes(filters.seccion.toLowerCase()) &&
-        item.servicio.toLowerCase().includes(filters.servicio.toLowerCase()) &&
-        item.prioridad
-          .toLowerCase()
-          .includes(filters.prioridad.toLowerCase()) &&
-        item.edificio.toLowerCase().includes(filters.edificio.toLowerCase()) &&
-        item.descripcion
-          .toLowerCase()
-          .includes(filters.descripcion.toLowerCase()) &&
-        item.status.toLowerCase().includes(filters.status.toLowerCase())
-    )
-    .slice(indexOfFirstData, indexOfLastData);
-
-  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
-
-  const handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setFilters({
-      ...filters,
-      [event.target.name]: event.target.value,
-    });
-  };
-
-  const [seccion, setSeccion] =
-    useState<SingleValue<{ value: string; label: string } | null>>(null);
-
-  const [servicio, setServicio] =
-    useState<SingleValue<{ value: string; label: string } | null>>(null);
-
-  const [edificio, setEdificio] =
-    useState<SingleValue<{ value: string; label: string } | null>>(null);
-
-  const [decanato, setDecanato] =
-    useState<SingleValue<{ value: string; label: string } | null>>(null);
-
-  const [prioridad, setPrioridad] =
-    useState<SingleValue<{ value: string; label: string } | null>>(null);
-
-  const [numeroOficina, setNumeroOficina] = useState<string>("");
-  function handleNumeroOficinaChange(
-    event: React.ChangeEvent<HTMLTextAreaElement>
-  ) {
-    setNumeroOficina(event.target.value);
-  }
-
-  const [descripcion, setDescripcion] = useState<string>("");
-  function handleDescripcionChange(
-    event: React.ChangeEvent<HTMLTextAreaElement>
-  ) {
-    setDescripcion(event.target.value);
-  }
-
-  const [departamento, setDepartamento] = useState<string>("");
-  function handleDepartamentoChange(
-    event: React.ChangeEvent<HTMLTextAreaElement>
-  ) {
-    setDepartamento(event.target.value);
-  }
-
-  const [telefono, setTelefono] = useState<string>("");
-  function handleTelefonoChange(event: React.ChangeEvent<HTMLTextAreaElement>) {
-    setTelefono(event.target.value);
-  }
-
-  const [nombreActividad, setNombreActividad] = useState<string>("");
-  function handleNombreActividadChange(
-    event: React.ChangeEvent<HTMLTextAreaElement>
-  ) {
-    setNombreActividad(event.target.value);
-  }
-
-  const [fechaActividad, setFechaActividad] = useState<string>("");
-  function handleFechaActividadChange(
-    event: React.ChangeEvent<HTMLTextAreaElement>
-  ) {
-    setFechaActividad(event.target.value);
-  }
-
-  const [horaActividad, setHoraActividad] = useState<string>("");
-  function handleHoraActividadChange(
-    event: React.ChangeEvent<HTMLTextAreaElement>
-  ) {
-    setHoraActividad(event.target.value);
-  }
 
   const Seccion = [
     { value: "electricidad", label: "electricidad" },
@@ -222,6 +133,104 @@ const PendientesAEvaluar = () => {
     },
   ];
 
+  const Status = [
+    { value: "open", label: "open" },
+    { value: "pending", label: "pending" },
+    { value: "closed", label: "closed" },
+  ];
+
+  const indexOfLastData = currentPage * dataPerPage;
+  const indexOfFirstData = indexOfLastData - dataPerPage;
+  const currentData = data
+    .filter(
+      (item) =>
+        item.seccion.toLowerCase().includes(filters.seccion.toLowerCase()) &&
+        item.servicio.toLowerCase().includes(filters.servicio.toLowerCase()) &&
+        item.prioridad
+          .toLowerCase()
+          .includes(filters.prioridad.toLowerCase()) &&
+        item.edificio.toLowerCase().includes(filters.edificio.toLowerCase()) &&
+        item.descripcion
+          .toLowerCase()
+          .includes(filters.descripcion.toLowerCase()) &&
+        item.status.toLowerCase().includes(filters.status.toLowerCase())
+    )
+    .slice(indexOfFirstData, indexOfLastData);
+
+  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
+
+  const handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setFilters({
+      ...filters,
+      [event.target.name]: event.target.value,
+    });
+  };
+
+  const [seccion, setSeccion] =
+    useState<SingleValue<{ value: string; label: string } | null>>(null);
+
+  const [servicio, setServicio] =
+    useState<SingleValue<{ value: string; label: string } | null>>(null);
+
+  const [edificio, setEdificio] =
+    useState<SingleValue<{ value: string; label: string } | null>>(null);
+
+  const [decanato, setDecanato] =
+    useState<SingleValue<{ value: string; label: string } | null>>(null);
+
+  const [prioridad, setPrioridad] =
+    useState<SingleValue<{ value: string; label: string } | null>>(null);
+
+  const [status, setStatus] =
+    useState<SingleValue<{ value: string; label: string } | null>>(null);
+
+  const [numeroOficina, setNumeroOficina] = useState<string>("");
+  function handleNumeroOficinaChange(
+    event: React.ChangeEvent<HTMLTextAreaElement>
+  ) {
+    setNumeroOficina(event.target.value);
+  }
+
+  const [descripcion, setDescripcion] = useState<string>("");
+  function handleDescripcionChange(
+    event: React.ChangeEvent<HTMLTextAreaElement>
+  ) {
+    setDescripcion(event.target.value);
+  }
+
+  const [departamento, setDepartamento] = useState<string>("");
+  function handleDepartamentoChange(
+    event: React.ChangeEvent<HTMLTextAreaElement>
+  ) {
+    setDepartamento(event.target.value);
+  }
+
+  const [telefono, setTelefono] = useState<string>("");
+  function handleTelefonoChange(event: React.ChangeEvent<HTMLTextAreaElement>) {
+    setTelefono(event.target.value);
+  }
+
+  const [nombreActividad, setNombreActividad] = useState<string>("");
+  function handleNombreActividadChange(
+    event: React.ChangeEvent<HTMLTextAreaElement>
+  ) {
+    setNombreActividad(event.target.value);
+  }
+
+  const [fechaActividad, setFechaActividad] = useState<string>("");
+  function handleFechaActividadChange(
+    event: React.ChangeEvent<HTMLTextAreaElement>
+  ) {
+    setFechaActividad(event.target.value);
+  }
+
+  const [horaActividad, setHoraActividad] = useState<string>("");
+  function handleHoraActividadChange(
+    event: React.ChangeEvent<HTMLTextAreaElement>
+  ) {
+    setHoraActividad(event.target.value);
+  }
+
   function serviceOptions(
     section: SingleValue<{ value: string; label: string } | null>
   ) {
@@ -249,7 +258,8 @@ const PendientesAEvaluar = () => {
     phone: string,
     activityName: string,
     activityDate: string,
-    activityTime: string
+    activityTime: string,
+    status: string
   ) {
     setSeccion({ value: section, label: section });
     setServicio({ value: service, label: service });
@@ -263,7 +273,10 @@ const PendientesAEvaluar = () => {
     setNombreActividad(activityName);
     setFechaActividad(activityDate);
     setHoraActividad(activityTime);
+    setStatus({ value: status, label: status });
   }
+
+  const [reportError, setReportError] = useState("");
 
   function handelSaveReport(
     section: SingleValue<{ value: string; label: string } | null>,
@@ -277,24 +290,72 @@ const PendientesAEvaluar = () => {
     phone: string,
     activityName: string,
     activityDate: string,
-    activityTime: string
+    activityTime: string,
+    status: SingleValue<{ value: string; label: string } | null>
   ) {
-    console.log(
-      section,
-      service,
-      priority,
-      building,
-      officeNumber,
-      jobDescription,
-      deanery,
-      department,
-      phone,
-      activityName,
-      activityDate,
-      activityTime
-    );
+    let errorString = "Verifique los siguientes campos: ";
+    if (
+      !section?.value ||
+      !service?.value ||
+      !priority?.value ||
+      !building?.value ||
+      !officeNumber ||
+      !jobDescription ||
+      !deanery?.value ||
+      !department ||
+      !phone ||
+      !status?.value
+    ) {
+      if (section === null) {
+        errorString += "Seccion-";
+      }
+      if (service === null) {
+        errorString += "Servicio-";
+      }
+      if (priority === null) {
+        errorString += "Prioridad-";
+      }
+      if (building === null) {
+        errorString += "Edificio-";
+      }
+      if (officeNumber === "") {
+        errorString += "Numero de Oficina-";
+      }
+      if (jobDescription == "") {
+        errorString += "Descripcion del Trabajo-";
+      }
+      if (deanery === null) {
+        errorString += "Decanato-";
+      }
+      if (department == "") {
+        errorString += "Departamento-";
+      }
+      if (phone == "") {
+        errorString += "Telefono-";
+      }
+      if (status === null) {
+        errorString += "Status-";
+      }
+      setReportError(errorString);
+    } else {
+      setReportError("");
+      console.log(
+        section,
+        service,
+        priority,
+        building,
+        officeNumber,
+        jobDescription,
+        deanery,
+        department,
+        phone,
+        activityName,
+        activityDate,
+        activityTime,
+        status
+      );
+    }
   }
-
   return (
     <>
       <div className="mt-1 mb-2 p-2">
@@ -383,7 +444,8 @@ const PendientesAEvaluar = () => {
                         item.telefono,
                         item.nombreActividad,
                         item.fechaActividad,
-                        item.horaActividad
+                        item.horaActividad,
+                        item.status
                       );
                     }}
                   >
@@ -413,13 +475,39 @@ const PendientesAEvaluar = () => {
                         <div className="modal-body">
                           <div className="container-fluid mt-1 mb-2 p-0">
                             <div className="row justify-content-start mb-3">
-                              <div className="col">
-                                <div className="me-2 fs-6 badge bg-primary text-wrap">
+                              <div className="col-sm-2">
+                                <div className="fs-6 badge bg-primary text-wrap">
                                   <TimeAndDate />
                                 </div>
-                                <div className="fs-6 badge bg-primary text-wrap">
+                              </div>
+                              <div className="col-sm-3">
+                                <div className="me-5 fs-6 badge bg-primary text-wrap">
                                   Jeziel Torres - jeziel.torres1@upr.edu
                                 </div>
+                              </div>
+                              <div className="col-sm-1">
+                                <label
+                                  htmlFor="selectbox"
+                                  className="col-form-label fs-6 badge bg-success text-wrap"
+                                >
+                                  <span className="text-danger me-2">*</span>
+                                  <span>Seccion:</span>
+                                </label>
+                              </div>
+                              <div className="col-sm-2 d-flex align-items-center">
+                                <Select
+                                  value={status}
+                                  onChange={setStatus}
+                                  options={Status}
+                                  isClearable
+                                  isSearchable
+                                  styles={{
+                                    container: (provided) => ({
+                                      ...provided,
+                                      width: 170,
+                                    }),
+                                  }}
+                                />
                               </div>
                             </div>
                             <div className="row mb-2">
@@ -752,6 +840,7 @@ const PendientesAEvaluar = () => {
                                     type="button"
                                     className="btn btn-secondary me-1"
                                     data-bs-dismiss="modal"
+                                    onClick={() => setReportError("")}
                                   >
                                     Close
                                   </button>
@@ -771,13 +860,17 @@ const PendientesAEvaluar = () => {
                                         telefono,
                                         nombreActividad,
                                         fechaActividad,
-                                        horaActividad
+                                        horaActividad,
+                                        status
                                       )
                                     }
                                   >
                                     Save changes
                                   </button>
                                 </div>
+                              </div>
+                              <div className="fs-6 col-sm-5 badge bg-danger text-wrap">
+                                {reportError}
                               </div>
                             </div>
                           </div>

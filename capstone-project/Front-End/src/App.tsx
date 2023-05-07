@@ -5,6 +5,8 @@ import Navbar from "./Components/Navbar/Navbar";
 import CreateReport from "./Components/CreateRerpot/CreateReport";
 import Statistics from "./Components/Statistics/Statistics";
 import PendientesAEvaluar from "./Components/ReportTables/PendientesAEvaluar";
+import Home from "./Components/Home/Home";
+import LogIn from "./Components/Log In/LogIn";
 
 function App() {
   return (
@@ -17,7 +19,14 @@ function App() {
         <div>
           <BrowserRouter>
             <Routes>
-              <Route path="/" element={<></>}></Route>
+              <Route
+                path="/home"
+                element={
+                  <>
+                    <Home />
+                  </>
+                }
+              ></Route>
               <Route
                 path="/crearReporte"
                 element={

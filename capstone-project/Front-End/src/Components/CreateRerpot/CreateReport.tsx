@@ -185,6 +185,7 @@ function CreateReport() {
     activityDate: string,
     activityTime: string
   ) {
+    const status = "open";
     let errorString = "Verifique los siguientes campos: ";
     if (
       !section?.value ||
@@ -239,7 +240,8 @@ function CreateReport() {
         phone,
         activityName,
         activityDate,
-        activityTime
+        activityTime,
+        status
       );
     }
   }
