@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
 import SideBar from "./Components/SideBar/SideBar";
 import Navbar from "./Components/Navbar/Navbar";
 import CreateReport from "./Components/CreateRerpot/CreateReport";
@@ -16,12 +16,15 @@ function App() {
   const handleLogin = () => {
     localStorage.setItem("loggedIn", "true");
     setLoggedIn(true);
+    // navigate("/home");
   };
 
   const handleLogout = () => {
     localStorage.setItem("loggedIn", "false");
     setLoggedIn(false);
   };
+
+  // const navigate = useNavigate();
 
   return (
     <>

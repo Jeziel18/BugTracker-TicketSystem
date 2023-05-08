@@ -27,7 +27,7 @@ function Navbar(props: LogoutProps) {
               <a
                 className="nav-link active text-white"
                 aria-current="page"
-                href="#"
+                href="/LogIn"
                 onClick={props.onLogout}
               >
                 <i className="bi bi-person-dash"></i> Log Out
