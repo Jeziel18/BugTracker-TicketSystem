@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import SideBar from "./Components/SideBar/SideBar";
 import Navbar from "./Components/Navbar/Navbar";
 import CreateReport from "./Components/CreateRerpot/CreateReport";
@@ -16,15 +16,12 @@ function App() {
   const handleLogin = () => {
     localStorage.setItem("loggedIn", "true");
     setLoggedIn(true);
-    // navigate("/home");
   };
 
   const handleLogout = () => {
     localStorage.setItem("loggedIn", "false");
     setLoggedIn(false);
   };
-
-  // const navigate = useNavigate();
 
   return (
     <>
@@ -38,6 +35,14 @@ function App() {
               <div className="col overflow-auto">
                 <Navbar onLogout={handleLogout} />
                 <Routes>
+                  <Route
+                    path="/LogIn"
+                    element={
+                      <>
+                        <Navigate to="/home" />
+                      </>
+                    }
+                  ></Route>
                   <Route
                     path="/home"
                     element={

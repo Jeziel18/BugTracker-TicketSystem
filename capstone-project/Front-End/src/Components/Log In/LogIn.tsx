@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Button, Form } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
+import "./LogIn.css";
 
 interface LoginProps {
   onLogin: () => void;
@@ -24,14 +25,9 @@ function Login(props: LoginProps) {
 
   return (
     <>
-      <div className="bg-success">
-        <img
-          className="p-3"
-          src="https://www.uprm.edu/portada/wp-content/uploads/sites/24/2018/06/logo-upr-rum-white-150x150.png"
-          alt="UPRM logo"
-        />
-        <div className="vh-100 align-items-center">
-          <div className="text-light bg-dark container mt-3 ">
+      <div className="login-container">
+        <div className="d-flex vh-100 align-items-center">
+          <div className="text-light bg-dark container mt-3 container-opacity">
             <div className="fs-1 mt-3 mb-4 text-center fw-bolder text-decoration-underline">
               Bienvenidos a la pagina del Departamento de Edificios Y Terrenos
             </div>
@@ -61,7 +57,7 @@ function Login(props: LoginProps) {
                 <p className="text-danger">Invalid username or password</p>
               )}
 
-              <Button className="mt-3 mb-4" variant="primary" type="submit">
+              <Button className="mt-3 mb-4" variant="success" type="submit">
                 Submit
               </Button>
             </Form>
