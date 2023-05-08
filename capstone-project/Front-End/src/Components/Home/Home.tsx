@@ -11,7 +11,7 @@ function Home() {
           <div className="col mt-3 fs-3 badge bg-success text-wrap">
             Descripcion
           </div>
-          <p className="p-3 fs-6" style={{ textAlign: "justify" }}>
+          <p className="p-4 fs-4" style={{ textAlign: "justify" }}>
             ¡Bienvenido a la pagina de reportes del Departamento de Edificion y
             Terrenios de UPRM! Nuestra aplicación es una herramienta poderosa
             diseñada para simplificar el proceso de informar daños, solicitudes
@@ -27,6 +27,14 @@ function Home() {
             de cada ticket y asegurarse de que todos los problemas se resuelvan
             de manera oportuna.
           </p>
+        </div>
+        <div className="row">
+          <div className="">
+            <img
+              src="https://dev.uprm.edu/placement/assets/carousel/slide-1.jpg"
+              alt="Image description"
+            />
+          </div>
         </div>
       </div>
     </>

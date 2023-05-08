@@ -1,6 +1,10 @@
 import React from "react";
 
-function Navbar() {
+interface LogoutProps {
+  onLogout: () => void;
+}
+
+function Navbar(props: LogoutProps) {
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
       <div className="container-fluid">
@@ -24,6 +28,7 @@ function Navbar() {
                 className="nav-link active text-white"
                 aria-current="page"
                 href="#"
+                onClick={props.onLogout}
               >
                 <i className="bi bi-person-dash"></i> Log Out
               </a>
