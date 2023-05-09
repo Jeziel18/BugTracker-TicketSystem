@@ -8,7 +8,7 @@ interface LoginProps {
 }
 
 function Login(props: LoginProps) {
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showError, setShowError] = useState(false);
 
@@ -16,7 +16,7 @@ function Login(props: LoginProps) {
     event.preventDefault();
 
     // here you can add your own authentication logic
-    if (username === "1" && password === "1") {
+    if (email === "1" && password === "1") {
       props.onLogin();
     } else {
       setShowError(true);
@@ -34,12 +34,12 @@ function Login(props: LoginProps) {
             <div className="fs-2">Login</div>
             <Form onSubmit={handleSubmit}>
               <Form.Group controlId="formBasicEmail">
-                <Form.Label>Username</Form.Label>
+                <Form.Label>Email</Form.Label>
                 <Form.Control
                   type="text"
-                  placeholder="Enter username"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
+                  placeholder="Enter Email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                 />
               </Form.Group>
 
@@ -47,7 +47,7 @@ function Login(props: LoginProps) {
                 <Form.Label>Password</Form.Label>
                 <Form.Control
                   type="password"
-                  placeholder="Password"
+                  placeholder="Enter Password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />

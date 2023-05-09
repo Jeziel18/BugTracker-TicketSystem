@@ -7,7 +7,6 @@ import * as bootstrap from "bootstrap";
 import "bootstrap-select/dist/js/bootstrap-select";
 import TimeAndDate from "../TimeAndDate/TimeAndDate";
 import "./CreateReport.css";
-import { error } from "jquery";
 
 function CreateReport() {
   //------------------------------------------------------------------------------------
@@ -73,6 +72,15 @@ function CreateReport() {
 
   const [edificio, setEdificio] =
     useState<SingleValue<{ value: string; label: string } | null>>(null);
+
+  const [buildings, setBuildings] = useState([]);
+  useEffect(() => {
+    fetch("/buildings").then((response) =>
+      response.json().then((data) => {
+        console.log(data);
+      })
+    );
+  }, []);
 
   const [decanato, setDecanato] =
     useState<SingleValue<{ value: string; label: string } | null>>(null);

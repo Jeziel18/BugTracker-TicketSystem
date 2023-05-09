@@ -491,7 +491,7 @@ const PendientesAEvaluar = () => {
                                   className="col-form-label fs-6 badge bg-success text-wrap"
                                 >
                                   <span className="text-danger me-2">*</span>
-                                  <span>Seccion:</span>
+                                  <span>Status:</span>
                                 </label>
                               </div>
                               <div className="col-sm-2 d-flex align-items-center">
