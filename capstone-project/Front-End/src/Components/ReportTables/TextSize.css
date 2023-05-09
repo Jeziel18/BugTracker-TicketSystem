@@ -1,0 +1,9 @@
+.table td, .table th {
+    font-size: 14px; /* change the value as per your requirement */
+  }
+
+
+.my-modal .modal-body {
+    background-color: #6a6b6d;
+}
+  

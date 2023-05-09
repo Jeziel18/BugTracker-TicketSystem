@@ -1,0 +1,13 @@
+.sidebar ul li a:hover{
+  background-color: rgba(136, 136, 136, 0.37);
+  color: white
+}
+
+a {
+  text-decoration: none !important;
+}
+
+hr.new5 {
+  border: 2px solid rgb(0, 255, 94);
+  border-radius: 5px;
+}
