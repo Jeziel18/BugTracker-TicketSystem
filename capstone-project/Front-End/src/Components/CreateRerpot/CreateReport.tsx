@@ -7,6 +7,7 @@ import * as bootstrap from "bootstrap";
 import "bootstrap-select/dist/js/bootstrap-select";
 import TimeAndDate from "../TimeAndDate/TimeAndDate";
 import "./CreateReport.css";
+import axios from "axios";
 
 function CreateReport() {
   //------------------------------------------------------------------------------------
@@ -73,14 +74,16 @@ function CreateReport() {
   const [edificio, setEdificio] =
     useState<SingleValue<{ value: string; label: string } | null>>(null);
 
-  const [buildings, setBuildings] = useState([]);
-  useEffect(() => {
-    fetch("/buildings").then((response) =>
-      response.json().then((data) => {
-        console.log(data);
-      })
-    );
-  }, []);
+  const [data, setData] = useState([{}]);
+
+  axios
+    .get("http://localhost:5000/buildings")
+    .then((response) => {
+      console.log(response.data);
+    })
+    .catch((error) => {
+      console.error(error);
+    });
 
   const [decanato, setDecanato] =
     useState<SingleValue<{ value: string; label: string } | null>>(null);

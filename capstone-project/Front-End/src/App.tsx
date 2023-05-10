@@ -7,6 +7,7 @@ import Statistics from "./Components/Statistics/Statistics";
 import PendientesAEvaluar from "./Components/ReportTables/PendientesAEvaluar";
 import Home from "./Components/Home/Home";
 import Login from "./Components/Log In/LogIn";
+import axios from "axios";
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(
@@ -23,6 +24,14 @@ function App() {
     setLoggedIn(false);
   };
 
+  axios
+    .get("http://localhost:5000/buildings")
+    .then((response) => {
+      console.log(response.data);
+    })
+    .catch((error) => {
+      console.error(error);
+    });
   return (
     <>
       <div>
