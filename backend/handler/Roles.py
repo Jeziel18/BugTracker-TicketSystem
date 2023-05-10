@@ -59,19 +59,17 @@ class RolesHandler:
 
         check = user.get_user_by_role_id(role_id)
         if check:
-            new_role = 3
+            new_role = {'role_id' : 3}
             for x in check:
-                print(x)
-                # x[5] = new_role
                 replace = dao.find_user_id(role_id)
-                print(replace)
-                user.update_user(replace, new_role)
+                id_replacement = int(replace[0])
+                user.update_user(id_replacement, new_role)
 
         if not dao.get_role_by_id(role_id):
-            return jsonify(Error="Role not found."), 404
+            return jsonify(Error = "Role not found."), 404
         else:
             dao.delete_role(role_id)
-            return jsonify(DeleteStatus="OK"), 200
+            return jsonify(DeleteStatus = "OK"), 200
 
     def find_user_id(self, role_id):
         dao = RolesDAO()

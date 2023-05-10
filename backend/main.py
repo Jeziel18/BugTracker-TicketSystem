@@ -53,6 +53,7 @@ def get_or_update_user_by_id(user_id):
                 if key in ['first_name', 'last_name', 'email', 'password', 'role_id', 'phone_number',
                            'phone_extension']:
                     update_data[key] = value
+
             if not update_data:
                 return jsonify(Error="Invalid request parameters"), 400
         except KeyError:
