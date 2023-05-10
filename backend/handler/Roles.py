@@ -61,8 +61,7 @@ class RolesHandler:
         if check:
             new_role = {'role_id' : 3}
             for x in check:
-                replace = dao.find_user_id(role_id)
-                id_replacement = int(replace[0])
+                id_replacement = int(x[0])
                 user.update_user(id_replacement, new_role)
 
         if not dao.get_role_by_id(role_id):

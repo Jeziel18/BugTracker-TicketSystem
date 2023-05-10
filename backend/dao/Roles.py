@@ -64,13 +64,3 @@ class RolesDAO:
         self.conn.commit()
         cursor.close()
         return role_id
-
-    def find_user_id(self, role_id):
-        cursor = self.conn.cursor()
-        cursor.execute("SELECT user_id FROM users WHERE role_id = %s LIMIT 1", (role_id,))
-        user_id = cursor.fetchone()
-        cursor.close()
-        if user_id:
-            return user_id
-        else:
-            return None
