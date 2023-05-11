@@ -7,9 +7,11 @@ import * as bootstrap from "bootstrap";
 import "bootstrap-select/dist/js/bootstrap-select";
 import TimeAndDate from "../TimeAndDate/TimeAndDate";
 import "./CreateReport.css";
-import axios from "axios";
 
 function CreateReport() {
+  const [connectDB, setConnectDB] = useState(true);
+
+
   //------------------------------------------------------------------------------------
   //   This part of the code has the dummy data to test the Create Report page.
   //------------------------------------------------------------------------------------
@@ -39,16 +41,6 @@ function CreateReport() {
     { value: "Emergencia", label: "Emergencia" },
   ];
 
-  const Edificio = [
-    { value: "Stefani", label: "Stefani" },
-    { value: "Enfermeria", label: "Enfermeria" },
-    {
-      value: "Administracion de Empresas",
-      label: "Administracion de Empresas",
-    },
-    { value: "Chardon", label: "Chardon" },
-  ];
-
   const Decanato = [
     {
       value: "Decanato de Administracion",
@@ -74,16 +66,50 @@ function CreateReport() {
   const [edificio, setEdificio] =
     useState<SingleValue<{ value: string; label: string } | null>>(null);
 
-  const [data, setData] = useState([{}]);
+  const [buildingDB, setBuildingDB] = useState([]);
+  const [sectionDB, setSectionDB] = useState([]);
+  const [serviceDB, setServiceDB] = useState([]);
 
-  axios
-    .get("http://localhost:5000/buildings")
-    .then((response) => {
-      console.log(response.data);
-    })
-    .catch((error) => {
-      console.error(error);
-    });
+
+
+  if(connectDB){
+    fetch('http://127.0.0.1:5000/buildings')
+        .then(response => response.json())
+        .then(data => {
+          const buildings = data.Buildings;
+          const buildingValues = buildings.map((building: { building_id: string[], building_name: string[] }) => ({
+            value: building.building_id[0],
+            label: building.building_name[0]
+          }));
+    setBuildingDB((buildingValues));
+  });
+
+    fetch('http://127.0.0.1:5000/service_categories')
+        .then(response => response.json())
+        .then(data => {
+          const serviceCategories = data.map((category: any) => ({
+            value: category.service_category_id[0],
+            label: category.category_name
+          }));
+    setSectionDB(serviceCategories);
+  })
+
+    fetch('http://127.0.0.1:5000/services')
+        .then(response => response.json())
+        .then(data => {
+          const services = data;
+    setServiceDB(services);
+  })
+    console.log((serviceDB.length))
+    for (let i = 0; i < serviceDB.length; i++) {
+      const subArray = serviceDB[i];
+      //const thirdElement = subArray[2];
+      setServiceDB(subArray);
+    }
+
+    setConnectDB(false);
+  }
+
 
   const [decanato, setDecanato] =
     useState<SingleValue<{ value: string; label: string } | null>>(null);
@@ -293,7 +319,7 @@ function CreateReport() {
                 className=""
                 value={seccion}
                 onChange={setSeccion}
-                options={Seccion}
+                options={sectionDB}
                 isClearable
                 isSearchable
                 styles={{
@@ -391,7 +417,7 @@ function CreateReport() {
               <Select
                 value={edificio}
                 onChange={setEdificio}
-                options={Edificio}
+                options={buildingDB}
                 isClearable
                 isSearchable
                 styles={{
