@@ -24,14 +24,7 @@ function App() {
     setLoggedIn(false);
   };
 
-  axios
-    .get("http://localhost:5000/buildings")
-    .then((response) => {
-      console.log(response.data);
-    })
-    .catch((error) => {
-      console.error(error);
-    });
+
   return (
     <>
       <div>
