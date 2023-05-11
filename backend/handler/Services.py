@@ -51,3 +51,12 @@ class ServicesHandler:
             return jsonify(Message="Service updated successfully"), 200
         else:
             return jsonify(Error="Service not found or no changes made"), 404
+
+    def delete_service(self, service_id):
+        dao = ServicesDAO()
+
+        if not dao.get_service_by_id(service_id):
+            return jsonify(Error = "Service not found."), 404
+        else:
+            dao.delete_service(service_id)
+            return jsonify(DeleteStatus = "OK"), 200

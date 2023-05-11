@@ -65,3 +65,10 @@ class ServicesDAO:
             return row
         else:
             return None
+
+    def delete_service(self, service_id):
+        cursor = self.conn.cursor()
+        cursor.execute("DELETE FROM services WHERE service_id = %s", (service_id,))
+        self.conn.commit()
+        cursor.close()
+        return service_id

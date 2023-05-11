@@ -69,10 +69,3 @@ class RolesHandler:
         else:
             dao.delete_role(role_id)
             return jsonify(DeleteStatus = "OK"), 200
-
-    def find_user_id(self, role_id):
-        dao = RolesDAO()
-        if not dao.find_user_id(role_id):
-            return None
-        else:
-            return dao.find_user_id(role_id)

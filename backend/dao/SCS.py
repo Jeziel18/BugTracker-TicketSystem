@@ -63,7 +63,7 @@ class SCSDao:
         cursor.close()
     def delete_scs(self, scs_id):
         cursor = self.conn.cursor()
-        query = "DELETE FROM service_category_supervisors WHERE scs_id = %s;"
+        query = "DELETE FROM service_category_supervisor WHERE scs_id = %s;"
         cursor.execute(query, (scs_id,))
         self.conn.commit()
         return scs_id

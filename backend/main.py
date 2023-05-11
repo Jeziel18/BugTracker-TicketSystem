@@ -210,10 +210,12 @@ def get_all_services():
     else:
         return jsonify(Error="Method not allowed."), 405
 
-@app.route('/services/<int:service_id>', methods=['GET'])
+@app.route('/services/<int:service_id>', methods=['GET', 'DELETE'])
 def get_service_by_id(service_id):
     if request.method == 'GET':
         return ServicesHandler().get_service_by_id(service_id)
+    if request.method == 'DELETE':
+        return ServicesHandler().delete_service(service_id)
 
 @app.route('/services', methods=['POST'])
 def create_service():
@@ -338,14 +340,18 @@ def get_all_scs():
     else:
         return jsonify(Error="Method not allowed."), 405
 
-@app.route('/supervisors/<int:scs_id>', methods=['GET'])
+@app.route('/supervisors/<int:scs_id>', methods=['GET', 'DELETE'])
 def get_scs_by_id(scs_id):
-    dao = SCSDao()
-    scs = dao.get_scs_by_id(scs_id)
-    if not scs:
-        return jsonify(Error="Service category supervisor not found"), 404
-    else:
-        return jsonify(scs), 200
+    if request.method == 'GET':
+        dao = SCSDao()
+        scs = dao.get_scs_by_id(scs_id)
+        if not scs:
+            return jsonify(Error="Service category supervisor not found"), 404
+        else:
+            return jsonify(scs), 200
+
+    if request.method == 'DELETE':
+        return SCSHandler().delete_scs(scs_id)
 
     #Checks the user_id's roles before attempting to create_scs
 def check_user_is_supervisor(user_id):
@@ -404,6 +410,7 @@ def get_service_category_supervisor(user_id, service_category_id):
     handler = SCSHandler()
     return handler.get_service_category_supervisor(user_id, service_category_id)
 
+#ticket routes and methods
 @app.route('/tickets', methods=['GET'])
 def get_all_tickets():
     if request.method == 'GET':

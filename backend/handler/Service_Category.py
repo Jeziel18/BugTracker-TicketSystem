@@ -60,4 +60,4 @@ class ServiceCategoryHandler:
             return jsonify(Error="Service Category not found."), 404
         else:
             dao.delete_service_category(service_category_id)
-            return jsonify(DeleteStatus="OK"), 200
+            return jsonify(DeleteStatus = "OK"), 200
