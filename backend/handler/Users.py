@@ -109,3 +109,15 @@ class UserHandler:
         else:
             dao.delete_user(user_id)
             return jsonify(DeleteStatus="OK"), 200
+
+    def get_user_by_login(self, login_data):
+        dao = UserDAO()
+        login_data = request.get_json()
+        if not login_data:
+            return jsonify(Error = "Missing JSON Request"), 400
+
+        validation = dao.get_user_by_login(login_data)
+        if validation == 1:
+            return jsonify(Message = "Login Successful"), 200
+        else:
+            return jsonify(Error = "Failed to Login"), 500

@@ -67,3 +67,20 @@ class UserDAO:
         self.conn.commit()
         cursor.close()
         return user_id
+
+    def get_user_by_login(self, login_data):
+        cursor = self.conn.cursor()
+
+        search_clause = ""
+        login_values = []
+        for key, value in login_data.items():
+            search_clause += f"{key} = %s and "
+            login_values.append(value)
+        search_clause = search_clause[:-4]
+
+        query = f"SELECT count(user_id) FROM users WHERE {search_clause}"
+        cursor.execute(query, tuple(login_values))
+        login = cursor.fetchone()
+        self.conn.connect()
+        valid = int(login[0])
+        return valid

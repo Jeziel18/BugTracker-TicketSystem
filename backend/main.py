@@ -89,6 +89,29 @@ def create_user():
     else:
         return jsonify(Error="Method not allowed."), 405
 
+@app.route('/login', methods=['POST'])
+def get_user_by_login():
+    if request.method == 'POST':
+        data = request.get_json()
+        if not data:
+            return jsonify(Error = "Missing Login Information"), 400
+        try:
+            login_data = {}
+            for key, value in data.items():
+                if key in ['email', 'password']:
+                    login_data[key] = value
+        except KeyError:
+            return jsonify(Error = "Invalid request parameters"), 400
+
+        login = UserHandler().get_user_by_login(login_data)
+        if login[1] == 200:
+            return jsonify(success = True), 201
+        else:
+            return jsonify(success = False), 404
+
+    else:
+        return jsonify(Error = "Method not allowed"), 405
+
 #buildings routes and methods
 @app.route('/buildings', methods=['GET'])
 def get_all_buildings():

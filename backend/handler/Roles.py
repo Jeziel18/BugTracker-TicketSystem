@@ -1,6 +1,6 @@
 from flask import Flask, jsonify, request
-from dao.Roles import RolesDAO
-from dao.Users import UserDAO
+from backend.dao.Roles import RolesDAO
+from backend.dao.Users import UserDAO
 
 class RolesHandler:
     def __init__(self):

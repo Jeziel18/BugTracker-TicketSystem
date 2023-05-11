@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Button, Form } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./LogIn.css";
+import axios from "axios";
 
 interface LoginProps {
   onLogin: () => void;
@@ -13,15 +14,32 @@ function Login(props: LoginProps) {
   const [showError, setShowError] = useState(false);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  event.preventDefault();
 
-    // here you can add your own authentication logic
+  const loginData = {
+    email: email,
+    password: password
+  };
+  axios.post('http://127.0.0.1:5000/login', loginData)
+    .then(response => {
+      console.log(response);
+      if (response.data.success) {
+        // handle successful login
+        props.onLogin();
+      } else {
+        setShowError(true);
+      }
+    })
+    .catch(error => {
+      console.log(error);
+      setShowError(true);
+    });
     if (email === "1" && password === "1") {
       props.onLogin();
     } else {
       setShowError(true);
     }
-  };
+};
 
   return (
     <>
