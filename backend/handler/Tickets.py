@@ -20,7 +20,7 @@ class TicketsHandler:
         result['ticket_phone_number'] = row[10],
         result['ticket_activity_name'] = row[11],
         result['ticket_activity_date'] = row[12],
-        result['ticket_activity_time'] = row[13],
+        result['ticket_activity_time'] = str(row[13]),  # convert timedelta to string
         result['ticket_assigned_to'] = row[14],
         result['ticket_creation_date'] = row[15],
         result['ticket_update_date'] = row[16],
