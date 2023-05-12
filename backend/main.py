@@ -519,5 +519,56 @@ def update_ticket(ticket_id):
     else:
         return jsonify(Error="Method not allowed."), 405
 
+
+# TICKET STATISTICS UNDER THIS COMMENT
+
+@app.route('/tickets/total_tickets_created', methods=['GET'])
+def get_total_tickets_created():
+    if request.method == 'GET':
+        return TicketsHandler().count_total_tickets()
+    else:
+        return jsonify(Error="Method not allowed."), 405
+
+@app.route('/tickets/monthly-yearly', methods=['GET'])
+def get_monthly_yearly_tickets_created():
+    year = request.args.get('year')
+    months = request.args.getlist('month')
+    if year is None or months == []:
+        return jsonify(Error="Invalid request parameters"), 400
+    return TicketsHandler().get_monthly_yearly_tickets_created(year, months)
+
+@app.route('/tickets/monthly-yearly-status', methods=['GET'])
+def get_monthly_yearly_tickets_by_status():
+    year = request.args.get('year')
+    months = request.args.getlist('month')
+    if year is None or months == []:
+        return jsonify(Error="Invalid request parameters"), 400
+    return TicketsHandler().get_monthly_yearly_tickets_by_status(year, months)
+
+@app.route('/tickets/total_tickets_status', methods=['GET'])
+def get_total_tickets_by_status():
+    total_tickets_by_status = TicketsHandler().get_total_tickets_by_status()
+    return jsonify(total_tickets_by_status)
+
+@app.route('/top_buildings', methods=['GET'])
+def top_buildings():
+    handler = TicketsHandler()
+    top_buildings = handler.get_top_buildings()
+    return jsonify(top_buildings)
+
+@app.route('/top_categories', methods=['GET'])
+def top_categories():
+    handler = TicketsHandler()
+    top_categories = handler.get_top_service_categories()
+    return jsonify(top_categories)
+
+@app.route('/top_categories_by_year_and_month', methods=['GET'])
+def top_categories_by_year_and_month():
+    year = request.args.get('year')
+    months = request.args.getlist('month')
+    handler = TicketsHandler()
+    top_categories = handler.get_top_service_categories_by_year_and_month(year, months)
+    return jsonify(top_categories)
+
 if __name__ == '__main__':
     app.run(debug = 1)

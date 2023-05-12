@@ -62,6 +62,132 @@ class TicketsDAO:
         cursor.execute(query, tuple(update_values))
         self.conn.commit()
 
+# Statistics Down
+    def count_total_tickets(self):
+        cursor = self.conn.cursor()
+        cursor.execute("SELECT COUNT(*) FROM tickets")
+        total_tickets_created = cursor.fetchone()[0]
+        return total_tickets_created
+
+    def get_monthly_tickets_created(self, year, months):
+        cursor = self.conn.cursor()
+        query = "SELECT MONTH(ticket_creation_date) as month, COUNT(*) as total_tickets_created " \
+                "FROM tickets WHERE YEAR(ticket_creation_date) = %s AND MONTH(ticket_creation_date) IN ({}) " \
+                "GROUP BY MONTH(ticket_creation_date)".format(','.join(['%s']*len(months)))
+        cursor.execute(query, (year, *months))
+        monthly_tickets_created = {}
+        for month, count in cursor:
+            monthly_tickets_created[month] = count
+        return monthly_tickets_created
+
+    def get_yearly_tickets_created(self, year):
+        cursor = self.conn.cursor()
+        query = "SELECT YEAR(ticket_creation_date) as year, COUNT(*) as total_tickets_created " \
+                "FROM tickets WHERE YEAR(ticket_creation_date) = %s " \
+                "GROUP BY YEAR(ticket_creation_date)"
+        cursor.execute(query, (year,))
+        yearly_tickets_created = {}
+        for year, count in cursor:
+            yearly_tickets_created[year] = count
+        return yearly_tickets_created
+
+    def get_monthly_yearly_tickets_created(self, year, months):
+        yearly_count = self.get_yearly_tickets_created(year)
+        monthly_count = []
+        for month in months:
+            tickets = self.get_monthly_tickets_created(year, month)
+            monthly_count.append(tickets)
+        return {"yearly_count": yearly_count, "monthly_count": monthly_count}
+
+    def get_monthly_tickets_by_status(self, year, months):
+        cursor = self.conn.cursor()
+        query = "SELECT ticket_status, MONTH(ticket_creation_date) as month, COUNT(*) as count " \
+                "FROM tickets WHERE YEAR(ticket_creation_date) = %s AND MONTH(ticket_creation_date) IN ({}) " \
+                "GROUP BY ticket_status, MONTH(ticket_creation_date)".format(','.join(['%s'] * len(months)))
+        cursor.execute(query, (year, *months))
+        monthly_tickets_by_status = {"open": {}, "pending": {}, "closed": {}}
+        for status, month, count in cursor:
+            monthly_tickets_by_status[status][month] = count
+        return monthly_tickets_by_status
+
+    def get_yearly_tickets_by_status(self, year):
+        cursor = self.conn.cursor()
+        query = "SELECT ticket_status, COUNT(*) as total_tickets " \
+                "FROM tickets WHERE YEAR(ticket_creation_date) = %s " \
+                "GROUP BY ticket_status"
+        cursor.execute(query, (year,))
+        yearly_tickets_by_status = {}
+        for status, count in cursor:
+            yearly_tickets_by_status[status] = count
+        return yearly_tickets_by_status
+
+    def get_monthly_yearly_tickets_by_status(self, year, months):
+        yearly_count = self.get_yearly_tickets_by_status(year)
+        monthly_count = {"open": {}, "pending": {}, "closed": {}}
+        for month in months:
+            tickets = self.get_monthly_tickets_by_status(year, month)
+            for status, count in tickets.items():
+                monthly_count[status][month] = count
+        return {"yearly_count": yearly_count, "monthly_count": monthly_count}
+
+    def get_tickets_count_by_status(self):
+        cursor = self.conn.cursor()
+        query = "SELECT ticket_status, COUNT(*) as total_tickets FROM tickets GROUP BY ticket_status"
+        cursor.execute(query)
+        tickets_count_by_status = {}
+        for status, count in cursor:
+            tickets_count_by_status[status] = count
+        return tickets_count_by_status
+
+    def get_top_buildings(self, limit=5):
+        cursor = self.conn.cursor()
+        query = "SELECT buildings.building_name, COUNT(*) as total_tickets " \
+                "FROM tickets " \
+                "JOIN buildings ON tickets.building_id = buildings.building_id " \
+                "GROUP BY buildings.building_name " \
+                "ORDER BY total_tickets DESC " \
+                "LIMIT %s"
+        cursor.execute(query, (limit,))
+        top_buildings = {}
+        for row in cursor:
+            top_buildings[row[0]] = row[1]
+        return top_buildings
+
+    def get_top_service_categories(self, limit=3):
+        cursor = self.conn.cursor()
+        query = "SELECT sc.category_name, COUNT(*) as total_tickets " \
+                "FROM tickets t " \
+                "JOIN service_category sc ON t.service_category_id = sc.service_category_id " \
+                "GROUP BY sc.category_name " \
+                "ORDER BY total_tickets DESC " \
+                "LIMIT %s"
+        cursor.execute(query, (limit,))
+        top_categories = []
+        for row in cursor:
+            top_categories.append((row[0], row[1]))
+        return top_categories
+
+    def get_top_service_categories_by_year_and_month(self, year, months):
+        cursor = self.conn.cursor()
+        query = """
+            SELECT sc.category_name, COUNT(*) as total_tickets
+            FROM tickets t
+            JOIN service_category sc ON t.service_category_id = sc.service_category_id
+            WHERE YEAR(t.ticket_creation_date) = %s
+            AND MONTH(t.ticket_creation_date) IN ({})
+            GROUP BY sc.service_category_id
+            ORDER BY total_tickets DESC
+            LIMIT 3;
+        """.format(",".join("%s" for _ in range(len(months))))
+        cursor.execute(query, (year, *months))
+        top_service_categories = []
+        for row in cursor:
+            top_service_categories.append((row[0], row[1]))
+        return top_service_categories
+
+
+
+
 
 
 

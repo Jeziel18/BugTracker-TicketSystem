@@ -1,10 +1,15 @@
 from flask import Flask, jsonify, request, session
+from backend.dao.Building import BuildingDAO
+from backend.dao.Service_Category import ServiceCategoryDAO
 from backend.dao.Tickets import TicketsDAO
 from datetime import datetime, time, date
 
 class TicketsHandler:
     def __init__(self):
         self.Tickets_DAO = TicketsDAO()
+        self.building_dao = BuildingDAO()
+        self.service_category_dao = ServiceCategoryDAO()
+
     def build_tickets_dict(self, row):
         result = {}
         result['ticket_id'] = row[0],
@@ -105,6 +110,68 @@ class TicketsHandler:
             return jsonify(Message="Ticket updated successfully"), 200
         except:
             return jsonify(Error="Failed to update ticket"), 500
+
+#Statistics
+    def count_total_tickets(self):
+        total_tickets_created = self.Tickets_DAO.count_total_tickets()
+        return jsonify(total_tickets_created)
+
+    def get_monthly_yearly_tickets_created(self, year, months):
+        monthly_tickets_created = self.Tickets_DAO.get_monthly_tickets_created(year, months)
+        yearly_tickets_created = self.Tickets_DAO.get_yearly_tickets_created(year)
+        return jsonify({'monthly_tickets_created': monthly_tickets_created,
+                         'yearly_tickets_created': yearly_tickets_created})
+
+    def get_monthly_tickets_by_status(self, year, months):
+        monthly_tickets_by_status = {"open": {}, "pending": {}, "closed": {}}
+        tickets = self.Tickets_DAO.get_monthly_tickets_by_status(year, months)
+        for status, counts in tickets.items():
+            for month, count in counts.items():
+                monthly_tickets_by_status[status][month] = count
+        return monthly_tickets_by_status
+
+    def get_yearly_tickets_by_status(self, year):
+        yearly_tickets_by_status = {"open": 0, "pending": 0, "closed": 0}
+        tickets = self.Tickets_DAO.get_yearly_tickets_by_status(year)
+        for status, count in tickets.items():
+            yearly_tickets_by_status[status] = count
+        return yearly_tickets_by_status
+
+    def get_monthly_yearly_tickets_by_status(self, year, months):
+        yearly_count = self.get_yearly_tickets_by_status(year)
+        monthly_count = self.get_monthly_tickets_by_status(year, months)
+        return {"yearly_count": yearly_count, "monthly_count": monthly_count}
+
+    def get_total_tickets_by_status(self):
+        total_tickets_by_status = {"open": 0, "pending": 0, "closed": 0}
+        tickets_count_by_status = self.Tickets_DAO.get_tickets_count_by_status()
+        for status, count in tickets_count_by_status.items():
+            total_tickets_by_status[status] = count
+        return total_tickets_by_status
+
+    def get_top_buildings(self, limit=5):
+        top_buildings = self.Tickets_DAO.get_top_buildings(limit)
+        top_buildings_with_names = {}
+        for building_name, count in top_buildings.items():
+            top_buildings_with_names[building_name] = count
+        return top_buildings_with_names
+
+    def get_top_service_categories(self, limit=3):
+        top_categories = self.Tickets_DAO.get_top_service_categories(limit)
+        top_categories_with_names = {}
+        for category_name, count in top_categories:
+            top_categories_with_names[category_name] = count
+        return top_categories_with_names
+
+    def get_top_service_categories_by_year_and_month(self, year, months):
+        top_categories = self.Tickets_DAO.get_top_service_categories_by_year_and_month(year, months)
+        top_categories_with_names = {}
+        for category_name, count in top_categories:
+            top_categories_with_names[category_name] = count
+        return top_categories_with_names
+
+
+
 
 
 
