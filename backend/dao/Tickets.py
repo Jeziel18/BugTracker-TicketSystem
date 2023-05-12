@@ -99,28 +99,6 @@ class TicketsDAO:
             monthly_count.append(tickets)
         return {"yearly_count": yearly_count, "monthly_count": monthly_count}
 
-    def get_monthly_tickets_by_status(self, year, months):
-        cursor = self.conn.cursor()
-        query = "SELECT ticket_status, MONTH(ticket_creation_date) as month, COUNT(*) as count " \
-                "FROM tickets WHERE YEAR(ticket_creation_date) = %s AND MONTH(ticket_creation_date) IN ({}) " \
-                "GROUP BY ticket_status, MONTH(ticket_creation_date)".format(','.join(['%s'] * len(months)))
-        cursor.execute(query, (year, *months))
-        monthly_tickets_by_status = {"open": {}, "pending": {}, "closed": {}}
-        for status, month, count in cursor:
-            monthly_tickets_by_status[status][month] = count
-        return monthly_tickets_by_status
-
-    def get_yearly_tickets_by_status(self, year):
-        cursor = self.conn.cursor()
-        query = "SELECT ticket_status, COUNT(*) as total_tickets " \
-                "FROM tickets WHERE YEAR(ticket_creation_date) = %s " \
-                "GROUP BY ticket_status"
-        cursor.execute(query, (year,))
-        yearly_tickets_by_status = {}
-        for status, count in cursor:
-            yearly_tickets_by_status[status] = count
-        return yearly_tickets_by_status
-
     def get_monthly_yearly_tickets_by_status(self, years, months):
         cursor = self.conn.cursor()
         query = """
