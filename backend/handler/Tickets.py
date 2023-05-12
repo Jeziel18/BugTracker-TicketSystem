@@ -116,11 +116,9 @@ class TicketsHandler:
         total_tickets_created = self.Tickets_DAO.count_total_tickets()
         return jsonify(total_tickets_created)
 
-    def get_monthly_yearly_tickets_created(self, year, months):
-        monthly_tickets_created = self.Tickets_DAO.get_monthly_tickets_created(year, months)
-        yearly_tickets_created = self.Tickets_DAO.get_yearly_tickets_created(year)
-        return jsonify({'monthly_tickets_created': monthly_tickets_created,
-                         'yearly_tickets_created': yearly_tickets_created})
+    def get_monthly_yearly_tickets_created(self, years, months):
+        monthly_yearly_tickets = self.Tickets_DAO.get_monthly_yearly_tickets_created(years, months)
+        return monthly_yearly_tickets
 
     def get_monthly_yearly_tickets_by_status(self, years, months):
         monthly_yearly_tickets = self.Tickets_DAO.get_monthly_yearly_tickets_by_status(years, months)

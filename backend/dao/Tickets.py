@@ -69,35 +69,30 @@ class TicketsDAO:
         total_tickets_created = cursor.fetchone()[0]
         return total_tickets_created
 
-    def get_monthly_tickets_created(self, year, months):
+    def get_monthly_yearly_tickets_created(self, years, months):
         cursor = self.conn.cursor()
-        query = "SELECT MONTH(ticket_creation_date) as month, COUNT(*) as total_tickets_created " \
-                "FROM tickets WHERE YEAR(ticket_creation_date) = %s AND MONTH(ticket_creation_date) IN ({}) " \
-                "GROUP BY MONTH(ticket_creation_date)".format(','.join(['%s']*len(months)))
-        cursor.execute(query, (year, *months))
-        monthly_tickets_created = {}
-        for month, count in cursor:
-            monthly_tickets_created[month] = count
-        return monthly_tickets_created
-
-    def get_yearly_tickets_created(self, year):
-        cursor = self.conn.cursor()
-        query = "SELECT YEAR(ticket_creation_date) as year, COUNT(*) as total_tickets_created " \
-                "FROM tickets WHERE YEAR(ticket_creation_date) = %s " \
-                "GROUP BY YEAR(ticket_creation_date)"
-        cursor.execute(query, (year,))
-        yearly_tickets_created = {}
-        for year, count in cursor:
-            yearly_tickets_created[year] = count
-        return yearly_tickets_created
-
-    def get_monthly_yearly_tickets_created(self, year, months):
-        yearly_count = self.get_yearly_tickets_created(year)
-        monthly_count = []
-        for month in months:
-            tickets = self.get_monthly_tickets_created(year, month)
-            monthly_count.append(tickets)
-        return {"yearly_count": yearly_count, "monthly_count": monthly_count}
+        query = """
+            SELECT 
+                YEAR(ticket_creation_date) AS year, 
+                MONTH(ticket_creation_date) AS month, 
+                COUNT(*) AS monthly_total,
+                (SELECT COUNT(*) FROM tickets t2 WHERE YEAR(t2.ticket_creation_date) = YEAR(t.ticket_creation_date)) AS yearly_total
+            FROM tickets t
+            WHERE YEAR(ticket_creation_date) IN ({})
+            AND MONTH(ticket_creation_date) IN ({})
+            GROUP BY YEAR(ticket_creation_date), MONTH(ticket_creation_date)
+            ORDER BY YEAR(ticket_creation_date) DESC, MONTH(ticket_creation_date) DESC
+        """.format(",".join("%s" for _ in range(len(years))), ",".join("%s" for _ in range(len(months))))
+        cursor.execute(query, (*years, *months))
+        monthly_yearly_tickets = []
+        for row in cursor:
+            monthly_yearly_tickets.append({
+                "year": row[0],
+                "month": row[1],
+                "monthly_total": row[2],
+                "yearly_total": row[3]
+            })
+        return monthly_yearly_tickets
 
     def get_monthly_yearly_tickets_by_status(self, years, months):
         cursor = self.conn.cursor()
