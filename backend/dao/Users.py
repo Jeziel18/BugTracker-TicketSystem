@@ -78,9 +78,8 @@ class UserDAO:
             login_values.append(value)
         search_clause = search_clause[:-4]
 
-        query = f"SELECT count(user_id) FROM users WHERE {search_clause}"
+        query = f"SELECT count(user_id), user_id, email FROM users WHERE {search_clause}"
         cursor.execute(query, tuple(login_values))
         login = cursor.fetchone()
         self.conn.connect()
-        valid = int(login[0])
-        return valid
+        return login

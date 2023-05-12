@@ -117,7 +117,7 @@ class UserHandler:
             return jsonify(Error = "Missing JSON Request"), 400
 
         validation = dao.get_user_by_login(login_data)
-        if validation == 1:
-            return jsonify(Message = "Login Successful"), 200
+        if validation[0] == 1:
+            return jsonify(Message = "Login Successful"), 200, validation[1], validation[2]
         else:
             return jsonify(Error = "Failed to Login"), 500

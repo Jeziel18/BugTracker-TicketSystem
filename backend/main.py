@@ -15,6 +15,8 @@ from backend.handler.Services import ServicesHandler
 from backend.handler.Tickets import TicketsHandler
 from backend.handler.Users import UserHandler
 from backend.handler.Building import BuildingHandler
+from backend.convertion.ReportConvert import JSONtoCSV
+
 import mysql.connector
 
 app = Flask(__name__)
@@ -105,12 +107,9 @@ def get_user_by_login():
 
         login = UserHandler().get_user_by_login(login_data)
         if login[1] == 200:
-            return jsonify(success = True), 201
+            return jsonify(success = True, user_id = login[2], email = login[3]), 201
         else:
             return jsonify(success = False), 404
-
-    else:
-        return jsonify(Error = "Method not allowed"), 405
 
 #buildings routes and methods
 @app.route('/buildings', methods=['GET'])
@@ -537,6 +536,7 @@ def get_monthly_yearly_tickets_created():
     months_list = months.split(',') if months else []
     handler = TicketsHandler()
     monthly_yearly_tickets = handler.get_monthly_yearly_tickets_created(years_list, months_list)
+    #JSONtoCSV().total_year_month_created_tickets(monthly_yearly_tickets)
     return jsonify(monthly_yearly_tickets)
 
 @app.route('/tickets/monthly-yearly-status', methods=['GET'])
@@ -549,6 +549,7 @@ def get_monthly_yearly_tickets_by_status():
         return jsonify(Error="Invalid request parameters"), 400
     handler = TicketsHandler()
     monthly_count = handler.get_monthly_yearly_tickets_by_status(years_list, months_list)
+    JSONtoCSV().year_month_status_report(monthly_count)
     return jsonify(monthly_count)
 
 @app.route('/tickets/total_tickets_status', methods=['GET'])
