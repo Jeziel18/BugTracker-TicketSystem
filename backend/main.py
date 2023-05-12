@@ -564,10 +564,12 @@ def top_categories():
 
 @app.route('/top_categories_by_year_and_month', methods=['GET'])
 def top_categories_by_year_and_month():
-    year = request.args.get('year')
-    months = request.args.getlist('month')
+    years = request.args.get('year')
+    years_list = years.split(',') if years else []
+    months = request.args.get('month')
+    months_list = months.split(',') if months else []
     handler = TicketsHandler()
-    top_categories = handler.get_top_service_categories_by_year_and_month(year, months)
+    top_categories = handler.get_top_service_categories_by_year_and_month(years_list, months_list)
     return jsonify(top_categories)
 
 if __name__ == '__main__':

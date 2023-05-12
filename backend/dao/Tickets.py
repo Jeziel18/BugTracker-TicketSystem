@@ -167,23 +167,24 @@ class TicketsDAO:
             top_categories.append((row[0], row[1]))
         return top_categories
 
-    def get_top_service_categories_by_year_and_month(self, year, months):
+    def get_top_service_categories_by_year_and_month(self, years, months):
         cursor = self.conn.cursor()
         query = """
             SELECT sc.category_name, COUNT(*) as total_tickets
             FROM tickets t
             JOIN service_category sc ON t.service_category_id = sc.service_category_id
-            WHERE YEAR(t.ticket_creation_date) = %s
+            WHERE YEAR(t.ticket_creation_date) IN ({})
             AND MONTH(t.ticket_creation_date) IN ({})
             GROUP BY sc.service_category_id
             ORDER BY total_tickets DESC
             LIMIT 3;
-        """.format(",".join("%s" for _ in range(len(months))))
-        cursor.execute(query, (year, *months))
+        """.format(",".join("%s" for _ in range(len(years))), ",".join("%s" for _ in range(len(months))))
+        cursor.execute(query, (*years, *months))
         top_service_categories = []
         for row in cursor:
             top_service_categories.append((row[0], row[1]))
         return top_service_categories
+
 
 
 
