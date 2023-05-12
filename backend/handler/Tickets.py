@@ -137,10 +137,9 @@ class TicketsHandler:
             yearly_tickets_by_status[status] = count
         return yearly_tickets_by_status
 
-    def get_monthly_yearly_tickets_by_status(self, year, months):
-        yearly_count = self.get_yearly_tickets_by_status(year)
-        monthly_count = self.get_monthly_tickets_by_status(year, months)
-        return {"yearly_count": yearly_count, "monthly_count": monthly_count}
+    def get_monthly_yearly_tickets_by_status(self, years, months):
+        monthly_yearly_tickets = self.Tickets_DAO.get_monthly_yearly_tickets_by_status(years, months)
+        return monthly_yearly_tickets
 
     def get_total_tickets_by_status(self):
         total_tickets_by_status = {"open": 0, "pending": 0, "closed": 0}

@@ -121,14 +121,29 @@ class TicketsDAO:
             yearly_tickets_by_status[status] = count
         return yearly_tickets_by_status
 
-    def get_monthly_yearly_tickets_by_status(self, year, months):
-        yearly_count = self.get_yearly_tickets_by_status(year)
-        monthly_count = {"open": {}, "pending": {}, "closed": {}}
-        for month in months:
-            tickets = self.get_monthly_tickets_by_status(year, month)
-            for status, count in tickets.items():
-                monthly_count[status][month] = count
-        return {"yearly_count": yearly_count, "monthly_count": monthly_count}
+    def get_monthly_yearly_tickets_by_status(self, years, months):
+        cursor = self.conn.cursor()
+        query = """
+            SELECT YEAR(ticket_creation_date) as year, MONTH(ticket_creation_date) as month, ticket_status, COUNT(*) as count
+            FROM tickets
+            WHERE YEAR(ticket_creation_date) IN ({})
+            AND MONTH(ticket_creation_date) IN ({})
+            GROUP BY YEAR(ticket_creation_date), MONTH(ticket_creation_date), ticket_status
+            ORDER BY YEAR(ticket_creation_date), MONTH(ticket_creation_date), count DESC;
+        """.format(",".join("%s" for _ in range(len(years))), ",".join("%s" for _ in range(len(months))))
+        cursor.execute(query, (*years, *months))
+        monthly_count = {}
+        for row in cursor:
+            year = row[0]
+            month = row[1]
+            status = row[2]
+            count = row[3]
+            if year not in monthly_count:
+                monthly_count[year] = {}
+            if month not in monthly_count[year]:
+                monthly_count[year][month] = {}
+            monthly_count[year][month][status] = count
+        return monthly_count
 
     def get_tickets_count_by_status(self):
         cursor = self.conn.cursor()
@@ -184,7 +199,6 @@ class TicketsDAO:
         for row in cursor:
             top_service_categories.append((row[0], row[1]))
         return top_service_categories
-
 
 
 

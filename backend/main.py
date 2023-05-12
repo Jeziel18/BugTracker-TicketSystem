@@ -539,11 +539,15 @@ def get_monthly_yearly_tickets_created():
 
 @app.route('/tickets/monthly-yearly-status', methods=['GET'])
 def get_monthly_yearly_tickets_by_status():
-    year = request.args.get('year')
-    months = request.args.getlist('month')
-    if year is None or months == []:
+    years = request.args.get('year')
+    years_list = years.split(',') if years else []
+    months = request.args.get('month')
+    months_list = months.split(',') if months else []
+    if not years_list or not months_list:
         return jsonify(Error="Invalid request parameters"), 400
-    return TicketsHandler().get_monthly_yearly_tickets_by_status(year, months)
+    handler = TicketsHandler()
+    monthly_count = handler.get_monthly_yearly_tickets_by_status(years_list, months_list)
+    return jsonify(monthly_count)
 
 @app.route('/tickets/total_tickets_status', methods=['GET'])
 def get_total_tickets_by_status():
