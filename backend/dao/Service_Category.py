@@ -56,3 +56,12 @@ class ServiceCategoryDAO:
         cursor.execute(query, (service_category_id,))
         self.conn.commit()
         return service_category_id
+
+    def get_category_name(self, category_id):
+        cursor = self.conn.cursor()
+        query = "SELECT category_name FROM service_categories WHERE category_id = %s"
+        cursor.execute(query, (category_id,))
+        category = cursor.fetchone()
+        if not category:
+            return None
+        return category[0]
