@@ -8,42 +8,40 @@ class JSONtoCSV:
 
     def total_year_month_created_tickets(self, data):
         # Verifying that tickets are found, if empty then no report is generated
-        if data == {}:
-            return print(f"There are no tickets.")
-        # Create the reports folder if it doesn't exist
+        if not data:
+            return print(f"There is no data.")
+
+            # Create the reports folder if it doesn't exist
         if not os.path.exists("reports"):
             os.makedirs("reports")
-        # Get the current date and time
+
+            # Get the current date and time
         now = datetime.datetime.now()
         current_time = now.strftime("%Y-%m-%d_%H-%M-%S")
 
         # Create the filename with the current date and time
-        filename = f"Total Tickets Report by Year and Month-{current_time}.csv"
+        filename = f"Month Year Report-{current_time}.csv"
 
+        # Open the file in write mode
         with open(os.path.join("reports", filename), 'w', newline='') as file:
             # Create a CSV writer
             writer = csv.writer(file)
 
             # Write the header row
-            writer.writerow(['Year', 'Month', 'Open', 'Pending'])
+            writer.writerow(['Year', 'Month', 'Monthly Total', 'Yearly Total'])
 
             # Loop through the JSON data and write each row to the CSV file
-            for year in data:
-                for month in data[year]:
-                    try:
-                        open_count = data[year][month]['open']
-                    except KeyError:
-                        open_count = None
-                    try:
-                        pending_count = data[year][month]['pending']
-                    except KeyError:
-                        pending_count = None
-                    writer.writerow([year, month, open_count, pending_count])
+            for item in data:
+                year = item.get('year', '')
+                month = item.get('month', '')
+                monthly_total = item.get('monthly_total', 0)
+                yearly_total = item.get('yearly_total', 0)
+                writer.writerow([year, month, monthly_total, yearly_total])
 
         print(f"CSV file '{filename}' created successfully.")
 
     def year_month_status_report(self, data):
-
+        # Verifying that tickets are found, if empty then no report is generated
         if data == {}:
             return print(f"There are no tickets.")
         # Create the reports folder if it doesn't exist
@@ -80,5 +78,72 @@ class JSONtoCSV:
                     except KeyError:
                         closed_count = 0
                     writer.writerow([year, month, open_count, pending_count, closed_count])
+
+            print(f"CSV file '{filename}' created successfully.")
+
+    def full_tickets_report(self, data):
+        # Verifying that tickets are found, if empty then no report is generated
+        if data == {}:
+            return print(f"There are no tickets.")
+        # Create the reports folder if it doesn't exist
+        if not os.path.exists("reports"):
+            os.makedirs("reports")
+        # Get the current date and time
+        now = datetime.datetime.now()
+        current_time = now.strftime("%Y-%m-%d_%H-%M-%S")
+
+        # Create the filename with the current date and time
+        filename = f"Full Tickets Report-{current_time}.csv"
+
+        # Open the file in write mode
+        with open(os.path.join("reports", filename), 'w', newline='') as file:
+            # Create a CSV writer
+            writer = csv.writer(file)
+
+            # Write the header row
+            writer.writerow(['Year', 'Month', 'Category', 'Service', 'Priority', 'Status', 'Total Tickets'])
+
+            # Loop through the JSON data and write each row to the CSV file
+            for item in data:
+                year = item.get('year', '')
+                month = item.get('month', '')
+                category = item.get('category', '')
+                service = item.get('service', '')
+                priority = item.get('priority', '')
+                status = item.get('status', '')
+                total_tickets = item.get('total_tickets', '')
+                writer.writerow([year, month, category, service, priority, status, total_tickets])
+
+            print(f"CSV file '{filename}' created successfully.")
+
+    def ticket_category_report(self, data):
+        # Verifying that tickets are found, if empty then no report is generated
+        if data == {}:
+            return print(f"There are no tickets.")
+        # Create the reports folder if it doesn't exist
+        if not os.path.exists("reports"):
+            os.makedirs("reports")
+        # Get the current date and time
+        now = datetime.datetime.now()
+        current_time = now.strftime("%Y-%m-%d_%H-%M-%S")
+
+        # Create the filename with the current date and time
+        filename = f"Ticket Category Report-{current_time}.csv"
+
+        # Open the file in write mode
+        with open(os.path.join("reports", filename), 'w', newline='') as file:
+            # Create a CSV writer
+            writer = csv.writer(file)
+
+            # Write the header row
+            writer.writerow(['Year', 'Month', 'Category', 'Total Tickets'])
+
+            # Loop through the JSON data and write each row to the CSV file
+            for item in data:
+                year = item.get('year', '')
+                month = item.get('month', '')
+                category = item.get('category', '')
+                total_tickets = item.get('total_tickets', '')
+                writer.writerow([year, month, category, total_tickets])
 
             print(f"CSV file '{filename}' created successfully.")
