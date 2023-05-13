@@ -381,9 +381,10 @@ function CreateReport() {
         errorString += "Telefono-";
       }
       setReportError(errorString);
-    } else {
+    }
+    else {
       setReportError("");
-      const sumbmitNewTicket = {
+      const submitNewTicket = {
         user_id: 2,
         service_category_id: parseInt(section.value, 10),
         service_id: parseInt(service.value, 10),
@@ -391,16 +392,13 @@ function CreateReport() {
         building_id: parseInt(building.value,10),
         office_number: officeNumber,
         job_description: jobDescription,
-        dean: deanery,
+        dean: deanery.value,
         department: department,
         ticket_phone_number: phone,
-        ticket_activity_name: activityName,
-        ticket_activity_date: activityDate,
-        ticket_activity_time: activityTime,
         ticket_assigned_to: 2
       }
-      console.log(sumbmitNewTicket);
-      axios.post('http://127.0.0.1:5000/new-ticket', sumbmitNewTicket)
+      console.log(submitNewTicket);
+      axios.post('http://127.0.0.1:5000/new-ticket', submitNewTicket)
           .then(response => {
             console.log(response.data);
           })
