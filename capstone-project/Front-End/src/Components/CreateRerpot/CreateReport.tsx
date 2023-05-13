@@ -10,20 +10,25 @@ import "./CreateReport.css";
 import BeatLoader from "react-spinners/BeatLoader";
 import axios from "axios";
 
+
+//--------------------------------------------------------------------------------
+//  Interface to work with the userID that comes from the App.tsx after log in
+//--------------------------------------------------------------------------------
 interface Props {
   user_id: number | null;
 }
 
 const CreateReport: React.FC<Props> = ({ user_id }) => {
+  //--------------------------------------------------------------------------
+  //          Variables to store the userID from the App.tsx
+  //--------------------------------------------------------------------------
   const storedUserID = localStorage.getItem("userID");
   const userID = user_id ?? (storedUserID ? parseInt(storedUserID) : null);
 
-  //----------------------------------------------------------------------------------------
-  //   Here is all the arrays and useState variables for the connection to the database.
-  //----------------------------------------------------------------------------------------
-  const [connectDB, setConnectDB] = useState(true);
-
-
+  //-----------------------------------------------------------------------------------
+  //             Here are all the arrays and useState variables for the
+  //                  service dependant select from the section.
+  //-----------------------------------------------------------------------------------
   const service1Array: Array<{value: string, label: string}> = [];
   const [service1, setService1] = useState<Array<{value: string, label: string}>>([]);
   const service2Array: Array<{value: string, label: string}> = [];
@@ -55,15 +60,26 @@ const CreateReport: React.FC<Props> = ({ user_id }) => {
   const service15Array: Array<{value: string, label: string}> = [];
   const [service15, setService15] = useState<Array<{value: string, label: string}>>([]);
 
-
+  //--------------------------------------------------------------------------
+  //          Variables to store information from the database.
+  //--------------------------------------------------------------------------
+  const [connectDB, setConnectDB] = useState(true);
   const [buildingDB, setBuildingDB] = useState([]);
   const [sectionDB, setSectionDB] = useState([]);
   const [userEmail, setUserEmail] = useState("");
+
+
+  //--------------------------------------------------------------------------
+  //       Variables for animations and success submission of the report.
+  //--------------------------------------------------------------------------
   const [loading, setLoading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [successSubmission, setSuccessSubmission] = useState("");
 
-
+  //--------------------------------------------------------------------------
+  //         Connection to the database and sort all information.
+  //                Also set the animation and disable it.
+  //--------------------------------------------------------------------------
   if (connectDB) {
     setLoading(true);
 
@@ -169,7 +185,6 @@ const CreateReport: React.FC<Props> = ({ user_id }) => {
   //------------------------------------------------------------------------------------
   //   This part of the code has the dummy data to test the Create Report page.
   //------------------------------------------------------------------------------------
-
   const Prioridad = [
     { value: "routine", label: "Rutina" },
     { value: "urgent", label: "Urgente" },
@@ -188,27 +203,22 @@ const CreateReport: React.FC<Props> = ({ user_id }) => {
     },
   ];
 
-  //------------------------------------------------------------------------------------
-  //    This part of the code has all the useState value to change state in the
-  //                          select and input boxes.
-  //------------------------------------------------------------------------------------
+  //--------------------------------------------------------------------------------------
+  //   This part of the code has all the useState value to change state in the select
+  //--------------------------------------------------------------------------------------
   const [seccion, setSeccion] =
     useState<SingleValue<{ value: string; label: string } | null>>(null);
-
   const [servicio, setServicio] =
     useState<SingleValue<{ value: string; label: string } | null>>(null);
-
   const [edificio, setEdificio] =
     useState<SingleValue<{ value: string; label: string } | null>>(null);
-
   const [decanato, setDecanato] =
     useState<SingleValue<{ value: string; label: string } | null>>(null);
-
   const [prioridad, setPrioridad] =
     useState<SingleValue<{ value: string; label: string } | null>>(null);
 
   //------------------------------------------------------------------------------------
-  //   This part of the code has all useStates and hanldes for the input text boxes.
+  //   This part of the code has all useStates and handles for the input text boxes.
   //                   This get the values that the user inputs.
   //------------------------------------------------------------------------------------
   const [numeroOficina, setNumeroOficina] = useState<string>("");
@@ -217,40 +227,34 @@ const CreateReport: React.FC<Props> = ({ user_id }) => {
   ) {
     setNumeroOficina(event.target.value);
   }
-
   const [descripcion, setDescripcion] = useState<string>("");
   function handleDescripcionChange(
     event: React.ChangeEvent<HTMLTextAreaElement>
   ) {
     setDescripcion(event.target.value);
   }
-
   const [departamento, setDepartamento] = useState<string>("");
   function handleDepartamentoChange(
     event: React.ChangeEvent<HTMLTextAreaElement>
   ) {
     setDepartamento(event.target.value);
   }
-
   const [telefono, setTelefono] = useState<string>("");
   function handleTelefonoChange(event: React.ChangeEvent<HTMLTextAreaElement>) {
     setTelefono(event.target.value);
   }
-
   const [nombreActividad, setNombreActividad] = useState<string>("");
   function handleNombreActividadChange(
     event: React.ChangeEvent<HTMLTextAreaElement>
   ) {
     setNombreActividad(event.target.value);
   }
-
   const [fechaActividad, setFechaActividad] = useState<string>("");
   function handleFechaActividadChange(
     event: React.ChangeEvent<HTMLTextAreaElement>
   ) {
     setFechaActividad(event.target.value);
   }
-
   const [horaActividad, setHoraActividad] = useState<string>("");
   function handleHoraActividadChange(
     event: React.ChangeEvent<HTMLTextAreaElement>
@@ -270,7 +274,6 @@ const CreateReport: React.FC<Props> = ({ user_id }) => {
       return new bootstrap.Tooltip(tooltipTriggerEl);
     });
   }, []);
-
 
   //---------------------------------------------------------------------------------------
   //   This function reset all values after correct submission of report to database
@@ -356,7 +359,7 @@ const CreateReport: React.FC<Props> = ({ user_id }) => {
   const [reportError, setReportError] = useState("");
 
   //------------------------------------------------------------------------------------
-  //       This function handle the submit event when the button is click.
+  //        This function handle the submit event when the button is click.
   //          It also creates the error string if there is an empty box.
   //------------------------------------------------------------------------------------
   function handleSummitReport(

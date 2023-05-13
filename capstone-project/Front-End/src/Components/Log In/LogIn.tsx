@@ -5,17 +5,26 @@ import "./LogIn.css";
 import BeatLoader from "react-spinners/BeatLoader";
 import axios from "axios";
 
+
+//------------------------------------------------------------------------------
+//     Interface to send the App.tsx the userID information from the log in.
+//------------------------------------------------------------------------------
 interface LoginProps {
   onLogin: (userID: number) => void;
 }
 
 function Login(props: LoginProps) {
+  //------------------------------------------------------------------------------------
+  //  Variables to store information from user log in, errors and loading animation.
+  //------------------------------------------------------------------------------------
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showError, setShowError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-
+  //--------------------------------------------------------------------------------
+  //   Handel button click and check in database validation on log in information
+  //--------------------------------------------------------------------------------
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setIsLoading(true);
@@ -42,6 +51,9 @@ function Login(props: LoginProps) {
       });
   };
 
+  //------------------------------------------------------------------------------------
+  //        This return displays and render all the frontend for the user.
+  //------------------------------------------------------------------------------------
   return (
     <>
       <div className="login-container">
