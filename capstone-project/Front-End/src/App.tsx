@@ -7,7 +7,6 @@ import Statistics from "./Components/Statistics/Statistics";
 import PendientesAEvaluar from "./Components/ReportTables/PendientesAEvaluar";
 import Home from "./Components/Home/Home";
 import Login from "./Components/Log In/LogIn";
-import axios from "axios";
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(

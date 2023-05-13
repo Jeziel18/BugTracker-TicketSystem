@@ -8,6 +8,26 @@ import "bootstrap-select/dist/js/bootstrap-select";
 import TimeAndDate from "../TimeAndDate/TimeAndDate";
 import "./CreateReport.css";
 import BeatLoader from "react-spinners/BeatLoader";
+import axios from "axios";
+
+
+interface newTicket{
+  userID: number,
+  serviceCategoryID: number,
+  serviceID: number,
+  ticketPriority: string,
+  buildingID: number,
+  officeNumber: string,
+  jobDescription: string,
+  deanery: string,
+  department: string,
+  ticketPhoneNumber: string,
+  ticketActivityName?: string,
+  ticketActivityDate?: string,
+  ticketActivityTime?: string,
+  ticketAssignedTo?: string
+}
+
 
 function CreateReport() {
 
@@ -159,9 +179,9 @@ function CreateReport() {
   //------------------------------------------------------------------------------------
 
   const Prioridad = [
-    { value: "Rutina  ", label: "Rutina" },
-    { value: "Urgente", label: "Urgente" },
-    { value: "Emergencia", label: "Emergencia" },
+    { value: "routine", label: "Rutina" },
+    { value: "urgent", label: "Urgente" },
+    { value: "emergency", label: "Emergencia" },
   ];
 
   const Decanato = [
@@ -310,6 +330,9 @@ function CreateReport() {
   else if(section?.value == "15"){
     return service15;
   }
+  else{
+    return [];
+    }
   }
 
   //------------------------------------------------------------------------------------
@@ -338,15 +361,15 @@ function CreateReport() {
     const status = "open";
     let errorString = "Verifique los siguientes campos: ";
     if (
-      !section?.value ||
-      !service?.value ||
-      !priority?.value ||
-      !building?.value ||
-      !officeNumber ||
-      !jobDescription ||
-      !deanery?.value ||
-      !department ||
-      !phone
+        !section?.value ||
+        !service?.value ||
+        !priority?.value ||
+        !building?.value ||
+        !officeNumber ||
+        !jobDescription ||
+        !deanery?.value ||
+        !department ||
+        !phone
     ) {
       if (section === null) {
         errorString += "Seccion-";
@@ -378,24 +401,30 @@ function CreateReport() {
       setReportError(errorString);
     } else {
       setReportError("");
-      console.log(
-        section,
-        service,
-        priority,
-        building,
-        officeNumber,
-        jobDescription,
-        deanery,
-        department,
-        phone,
-        activityName,
-        activityDate,
-        activityTime,
-        status
-      );
+      const newTicketInfoSubmit: newTicket = {
+        userID: 2,
+        serviceCategoryID: parseInt(section.value,10),
+        serviceID: parseInt(service.value, 10),
+        ticketPriority: priority.value,
+        buildingID: parseInt(building.value, 10),
+        officeNumber: officeNumber,
+        jobDescription: jobDescription,
+        deanery: deanery.value,
+        department: department,
+        ticketPhoneNumber: phone,
+      }
+      console.log(newTicketInfoSubmit);
+
+      axios.post('http://127.0.0.1:5000/new-ticket', newTicketInfoSubmit)
+          .then(response => {
+            console.log(response.data);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+
     }
   }
-
   //------------------------------------------------------------------------------------
   //        This return displays and render all the frontend for the user.
   //------------------------------------------------------------------------------------
