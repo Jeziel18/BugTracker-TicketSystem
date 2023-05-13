@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect} from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import SideBar from "./Components/SideBar/SideBar";
 import Navbar from "./Components/Navbar/Navbar";
@@ -13,14 +13,21 @@ function App() {
     localStorage.getItem("loggedIn") === "true"
   );
 
-  const handleLogin = () => {
-    localStorage.setItem("loggedIn", "true");
-    setLoggedIn(true);
-  };
+  const [userID, setUserID] = useState<number | null>(null);
+
+
+  const handleLogin = (id: number) => {
+  localStorage.setItem("loggedIn", "true");
+  localStorage.setItem("userID", id.toString());
+  setLoggedIn(true);
+  setUserID(id);
+};
 
   const handleLogout = () => {
     localStorage.setItem("loggedIn", "false");
+    localStorage.removeItem("userID");
     setLoggedIn(false);
+    setUserID(null);
   };
 
 
@@ -56,7 +63,7 @@ function App() {
                     path="/crearReporte"
                     element={
                       <>
-                        <CreateReport />
+                        <CreateReport user_id={userID}/>
                       </>
                     }
                   ></Route>

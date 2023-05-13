@@ -2,39 +2,45 @@ import React, { useState } from "react";
 import { Button, Form } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./LogIn.css";
+import BeatLoader from "react-spinners/BeatLoader";
 import axios from "axios";
 
 interface LoginProps {
-  onLogin: () => void;
+  onLogin: (userID: number) => void;
 }
 
 function Login(props: LoginProps) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showError, setShowError] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-  event.preventDefault();
+    event.preventDefault();
+    setIsLoading(true);
+    setShowError(false);
 
-  const loginData = {
-    email: email,
-    password: password
-  };
-  axios.post('http://127.0.0.1:5000/login', loginData)
-    .then(response => {
-      console.log(response);
-      if (response.data.success) {
-        // handle successful login
-        props.onLogin();
-      } else {
+    const loginData = {
+      email: email,
+      password: password
+    };
+    axios.post('http://127.0.0.1:5000/login', loginData)
+      .then(response => {
+        console.log(response);
+        if (response.data.success) {
+          props.onLogin(response.data.user_id);
+        } else {
+          setShowError(true);
+        }
+        setIsLoading(false);
+      })
+      .catch(error => {
+        console.log(error);
         setShowError(true);
-      }
-    })
-    .catch(error => {
-      console.log(error);
-      setShowError(true);
-    });
-};
+        setIsLoading(false);
+      });
+  };
 
   return (
     <>
@@ -70,9 +76,13 @@ function Login(props: LoginProps) {
                 <p className="text-danger">Invalid username or password</p>
               )}
 
-              <Button className="mt-3 mb-4" variant="success" type="submit">
-                Submit
-              </Button>
+              <Button className="mt-3 mb-4" variant="success" type="submit" disabled={isLoading}>
+                {isLoading ? (
+                  <BeatLoader color={"#fff"} size={10} margin={2} />
+                ) : (
+                  "Submit"
+                )}
+            </Button>
             </Form>
           </div>
         </div>

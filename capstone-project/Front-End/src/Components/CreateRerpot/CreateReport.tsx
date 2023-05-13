@@ -10,13 +10,19 @@ import "./CreateReport.css";
 import BeatLoader from "react-spinners/BeatLoader";
 import axios from "axios";
 
+interface Props {
+  user_id: number | null;
+}
 
-function CreateReport() {
+const CreateReport: React.FC<Props> = ({ user_id }) => {
+  const storedUserID = localStorage.getItem("userID");
+  const userID = user_id ?? (storedUserID ? parseInt(storedUserID) : null);
 
   //----------------------------------------------------------------------------------------
   //   Here is all the arrays and useState variables for the connection to the database.
   //----------------------------------------------------------------------------------------
   const [connectDB, setConnectDB] = useState(true);
+
 
   const service1Array: Array<{value: string, label: string}> = [];
   const [service1, setService1] = useState<Array<{value: string, label: string}>>([]);
@@ -52,109 +58,113 @@ function CreateReport() {
 
   const [buildingDB, setBuildingDB] = useState([]);
   const [sectionDB, setSectionDB] = useState([]);
+  const [userEmail, setUserEmail] = useState("");
   const [loading, setLoading] = useState(false);
-
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [successSubmission, setSuccessSubmission] = useState("");
 
 
   if (connectDB) {
-  fetch('http://127.0.0.1:5000/buildings')
-    .then(response => response.json())
-    .then(data => {
-      const buildings = data.Buildings;
-      const buildingValues = buildings.map((building: { building_id: string[], building_name: string[] }) => ({
-        value: building.building_id[0],
-        label: building.building_name[0]
-      }));
-      setBuildingDB(buildingValues);
-    });
-
-  fetch('http://127.0.0.1:5000/service_categories')
-    .then(response => response.json())
-    .then(data => {
-      const serviceCategories = data.map((category: any) => ({
-        value: category.service_category_id[0],
-        label: category.category_name
-      }));
-      setSectionDB(serviceCategories);
-    });
-
-  fetch('http://127.0.0.1:5000/services')
-    .then(response => response.json())
-    .then(data => {
-      const services = data;
-      for (let i = 0; i < services.length; i++) {
-        const subArray = services[i];
-        if (subArray[2] == "1"){
-          service1Array.push({value: subArray[0], label: subArray[1]});
-        }
-        else if (subArray[2] == "2") {
-          service2Array.push({value: subArray[0], label: subArray[1]});
-        }
-        else if (subArray[2] == "3") {
-          service3Array.push({value: subArray[0], label: subArray[1]});
-        }
-        else if (subArray[2] == "4") {
-          service4Array.push({value: subArray[0], label: subArray[1]});
-        }
-        else if (subArray[2] == "5") {
-          service5Array.push({value: subArray[0], label: subArray[1]});
-        }
-        else if (subArray[2] == "6") {
-          service6Array.push({value: subArray[0], label: subArray[1]});
-        }
-        else if (subArray[2] == "7") {
-          service7Array.push({value: subArray[0], label: subArray[1]});
-        }
-        else if (subArray[2] == "8") {
-          service8Array.push({value: subArray[0], label: subArray[1]});
-        }
-        else if (subArray[2] == "9") {
-          service9Array.push({value: subArray[0], label: subArray[1]});
-        }
-        else if (subArray[2] == "10") {
-          service10Array.push({value: subArray[0], label: subArray[1]});
-        }
-        else if (subArray[2] == "11") {
-          service11Array.push({value: subArray[0], label: subArray[1]});
-        }
-        else if (subArray[2] == "12") {
-          service12Array.push({value: subArray[0], label: subArray[1]});
-        }
-        else if (subArray[2] == "13") {
-          service13Array.push({value: subArray[0], label: subArray[1]});
-        }
-        else if (subArray[2] == "14") {
-          service14Array.push({value: subArray[0], label: subArray[1]});
-        }
-        else if (subArray[2] == "15") {
-          service15Array.push({value: subArray[0], label: subArray[1]});
-        }
-      }
-      setService1(service1Array);
-      setService2(service2Array);
-      setService3(service3Array);
-      setService4(service4Array);
-      setService5(service5Array);
-      setService6(service6Array);
-      setService7(service7Array);
-      setService8(service8Array);
-      setService9(service9Array);
-      setService10(service10Array);
-      setService11(service11Array);
-      setService12(service12Array);
-      setService13(service13Array);
-      setService14(service14Array);
-      setService15(service15Array);
-    });
-  setConnectDB(false);
-  }
-
-  useEffect(() => {
     setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-    },1800)
-  },[])
+
+    fetch(`http://127.0.0.1:5000/users/${userID}`)
+      .then(response => response.json())
+      .then(data => {
+        setUserEmail(data.email);
+      })
+
+    fetch('http://127.0.0.1:5000/buildings')
+      .then(response => response.json())
+      .then(data => {
+        const buildings = data.Buildings;
+        const buildingValues = buildings.map((building: { building_id: string[], building_name: string[] }) => ({
+          value: building.building_id[0],
+          label: building.building_name[0]
+        }));
+        setBuildingDB(buildingValues);
+      });
+
+    fetch('http://127.0.0.1:5000/service_categories')
+      .then(response => response.json())
+      .then(data => {
+        const serviceCategories = data.map((category: any) => ({
+          value: category.service_category_id[0],
+          label: category.category_name
+        }));
+        setSectionDB(serviceCategories);
+      });
+
+    fetch('http://127.0.0.1:5000/services')
+      .then(response => response.json())
+      .then(data => {
+        const services = data;
+        for (let i = 0; i < services.length; i++) {
+          const subArray = services[i];
+          if (subArray[2] == "1"){
+            service1Array.push({value: subArray[0], label: subArray[1]});
+          }
+          else if (subArray[2] == "2") {
+            service2Array.push({value: subArray[0], label: subArray[1]});
+          }
+          else if (subArray[2] == "3") {
+            service3Array.push({value: subArray[0], label: subArray[1]});
+          }
+          else if (subArray[2] == "4") {
+            service4Array.push({value: subArray[0], label: subArray[1]});
+          }
+          else if (subArray[2] == "5") {
+            service5Array.push({value: subArray[0], label: subArray[1]});
+          }
+          else if (subArray[2] == "6") {
+            service6Array.push({value: subArray[0], label: subArray[1]});
+          }
+          else if (subArray[2] == "7") {
+            service7Array.push({value: subArray[0], label: subArray[1]});
+          }
+          else if (subArray[2] == "8") {
+            service8Array.push({value: subArray[0], label: subArray[1]});
+          }
+          else if (subArray[2] == "9") {
+            service9Array.push({value: subArray[0], label: subArray[1]});
+          }
+          else if (subArray[2] == "10") {
+            service10Array.push({value: subArray[0], label: subArray[1]});
+          }
+          else if (subArray[2] == "11") {
+            service11Array.push({value: subArray[0], label: subArray[1]});
+          }
+          else if (subArray[2] == "12") {
+            service12Array.push({value: subArray[0], label: subArray[1]});
+          }
+          else if (subArray[2] == "13") {
+            service13Array.push({value: subArray[0], label: subArray[1]});
+          }
+          else if (subArray[2] == "14") {
+            service14Array.push({value: subArray[0], label: subArray[1]});
+          }
+          else if (subArray[2] == "15") {
+            service15Array.push({value: subArray[0], label: subArray[1]});
+          }
+        }
+        setService1(service1Array);
+        setService2(service2Array);
+        setService3(service3Array);
+        setService4(service4Array);
+        setService5(service5Array);
+        setService6(service6Array);
+        setService7(service7Array);
+        setService8(service8Array);
+        setService9(service9Array);
+        setService10(service10Array);
+        setService11(service11Array);
+        setService12(service12Array);
+        setService13(service13Array);
+        setService14(service14Array);
+        setService15(service15Array);
+        setLoading(false);
+      });
+    setConnectDB(false);
+  }
 
   //------------------------------------------------------------------------------------
   //   This part of the code has the dummy data to test the Create Report page.
@@ -261,6 +271,29 @@ function CreateReport() {
     });
   }, []);
 
+
+  //---------------------------------------------------------------------------------------
+  //   This function reset all values after correct submission of report to database
+  //---------------------------------------------------------------------------------------
+  function resetAllValues(){
+    setSeccion(null);
+    setServicio(null);
+    setPrioridad(null);
+    setEdificio(null);
+    setNumeroOficina("");
+    setDescripcion("");
+    setDecanato(null);
+    setDepartamento("");
+    setTelefono("");
+    setNombreActividad("");
+    setFechaActividad("");
+    setHoraActividad("");
+    setSuccessSubmission("Su reporte a sido sometido correctamente. Puede ver su reporte en pagina: Lista de mis solicitudes");
+    setTimeout(() => {
+      setSuccessSubmission("");
+    },7000)
+  }
+
   //------------------------------------------------------------------------------------
   //   This function make the "Servicio" select dependant of the "Seccion" select.
   //------------------------------------------------------------------------------------
@@ -323,10 +356,10 @@ function CreateReport() {
   const [reportError, setReportError] = useState("");
 
   //------------------------------------------------------------------------------------
-  //       This function handle the sumbit event when the button is click.
-  //          It also create the error string if there is an empty box.
+  //       This function handle the submit event when the button is click.
+  //          It also creates the error string if there is an empty box.
   //------------------------------------------------------------------------------------
-  function handleSumbitReport(
+  function handleSummitReport(
     section: SingleValue<{ value: string; label: string } | null>,
     service: SingleValue<{ value: string; label: string } | null>,
     priority: SingleValue<{ value: string; label: string } | null>,
@@ -340,7 +373,6 @@ function CreateReport() {
     activityDate: string,
     activityTime: string
   ) {
-    const status = "open";
     let errorString = "Verifique los siguientes campos: ";
     if (
         !section?.value ||
@@ -382,10 +414,55 @@ function CreateReport() {
       }
       setReportError(errorString);
     }
+    else if (activityName || activityDate || activityTime){
+      if(!activityName || !activityDate || !activityTime){
+        if (!activityName){
+          errorString += "Nombre de la actividad-";
+        }
+        if (!activityDate){
+          errorString += "Dia de la actividad-";
+        }
+        if (!activityTime){
+          errorString += "Hora de la actividad-";
+        }
+        setReportError(errorString);
+      }
+      else{
+        setReportError("");
+        setIsSubmitting(true);
+        const submitNewTicketWithActivity = {
+          user_id: userID,
+          service_category_id: parseInt(section.value, 10),
+          service_id: parseInt(service.value, 10),
+          ticket_priority: priority.value,
+          building_id: parseInt(building.value,10),
+          office_number: officeNumber,
+          job_description: jobDescription,
+          dean: deanery.value,
+          department: department,
+          ticket_phone_number: phone,
+          ticket_activity_name: activityName,
+          ticket_activity_date: new Date(activityDate),
+          ticket_activity_time: new Date(activityTime)
+        }
+        axios.post('http://127.0.0.1:5000/new-ticket', submitNewTicketWithActivity)
+            .then(response => {
+              console.log(response.data);
+              setIsSubmitting(false);
+              resetAllValues();
+            })
+            .catch((error) => {
+              console.log(error);
+              setIsSubmitting(false);
+              setReportError("Occurio un error al someter el reporte. Intentelo de nuevo mas tarde");
+            });
+      }
+    }
     else {
       setReportError("");
+      setIsSubmitting(true);
       const submitNewTicket = {
-        user_id: 2,
+        user_id: userID,
         service_category_id: parseInt(section.value, 10),
         service_id: parseInt(service.value, 10),
         ticket_priority: priority.value,
@@ -394,16 +471,18 @@ function CreateReport() {
         job_description: jobDescription,
         dean: deanery.value,
         department: department,
-        ticket_phone_number: phone,
-        ticket_assigned_to: 2
+        ticket_phone_number: phone
       }
-      console.log(submitNewTicket);
       axios.post('http://127.0.0.1:5000/new-ticket', submitNewTicket)
           .then(response => {
             console.log(response.data);
+            setIsSubmitting(false);
+            resetAllValues();
           })
           .catch((error) => {
             console.log(error);
+            setIsSubmitting(false);
+            setReportError("Occurio un error al someter el reporte. Intentelo de nuevo mas tarde");
           });
 
     }
@@ -437,7 +516,7 @@ function CreateReport() {
                       <TimeAndDate />
                     </div>
                     <div className="fs-6 badge bg-primary text-wrap">
-                      When user name and email is recived from the db, insert here
+                      {userEmail}
                     </div>
                   </div>
                 </div>
@@ -794,7 +873,7 @@ function CreateReport() {
                         value={fechaActividad}
                         onChange={handleFechaActividadChange}
                         style={{ width: "150px" }}
-                        placeholder="MM/DD/YYYY"
+                        placeholder="YYYY-MM-DD"
                       ></textarea>
                     </div>
                     <button
@@ -842,11 +921,20 @@ function CreateReport() {
 
                   <div className="col-sm-2">
                     <div className="d-flex justify-content-center">
-                      <button
+                      {isSubmitting ? ( // Conditionally render the loading animation or the button text
+                            <BeatLoader
+                              loading={isSubmitting}
+                              color= "#016b28"
+                              size={25}
+                              aria-label="Loading Spinner"
+                              data-testid="loader"
+                            />
+                        ) : (
+                          <button
                         type="submit"
                         className="btn btn-primary btn-lg"
                         onClick={() => {
-                          handleSumbitReport(
+                          handleSummitReport(
                             seccion,
                             servicio,
                             prioridad,
@@ -861,13 +949,16 @@ function CreateReport() {
                             horaActividad
                           );
                         }}
+                        disabled={isSubmitting} // Disable the button while the report is being submitted
                       >
-                        Someter Reporte
+                        "Someter Reporte"
                       </button>
+                        )}
                     </div>
                   </div>
-                  <div className="fs-6 col-sm-5 badge bg-danger text-wrap">
-                    {reportError}
+                  <div className="col-sm-5">
+                    {reportError && <div className="fs-6 badge bg-danger text-wrap">{reportError}</div>}
+                    {successSubmission && <div className="fs-6 badge bg-success text-wrap">{successSubmission}</div>}
                   </div>
                 </div>
               </div>
