@@ -34,11 +34,6 @@ function Login(props: LoginProps) {
       console.log(error);
       setShowError(true);
     });
-    if (email === "1" && password === "1") {
-      props.onLogin();
-    } else {
-      setShowError(true);
-    }
 };
 
   return (
