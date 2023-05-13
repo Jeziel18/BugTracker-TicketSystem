@@ -173,10 +173,167 @@ class TicketsDAO:
             top_service_categories.append((row[0], row[1]))
         return top_service_categories
 
+    def get_full_report_by_year(self, years):
+        cursor = self.conn.cursor()
+        query = """
+                SELECT YEAR(ticket_creation_date) AS year,
+                MONTH(ticket_creation_date) AS month,
+                sc.category_name,
+                s.service_name,
+                t.ticket_priority,
+                t.ticket_status,
+                COUNT(*) as total_tickets
+                    FROM tickets t
+                    JOIN service_category sc ON t.service_category_id = sc.service_category_id
+                    JOIN services s ON t.service_id = s.service_id
+                    WHERE YEAR(t.ticket_creation_date) IN ({})
+                    GROUP BY s.service_id
+                    ORDER BY year ASC, month ASC;
+                """.format(",".join("%s" for _ in range(len(years))))
+        cursor.execute(query, (*years,))
+        full_ticket_report = []
+        for row in cursor:
+            full_ticket_report.append({
+                "year": row[0],
+                "month": row[1],
+                "category": row[2],
+                "service": row[3],
+                "priority": row[4],
+                "status": row[5],
+                "total_tickets": row[6]
+            })
+        return full_ticket_report
 
+    def get_full_report_by_month(self, months):
+        cursor = self.conn.cursor()
+        query = """
+                SELECT YEAR(ticket_creation_date) AS year,
+                MONTH(ticket_creation_date) AS month,
+                sc.category_name,
+                s.service_name,
+                t.ticket_priority,
+                t.ticket_status,
+                COUNT(*) as total_tickets
+                    FROM tickets t
+                    JOIN service_category sc ON t.service_category_id = sc.service_category_id
+                    JOIN services s ON t.service_id = s.service_id
+                    WHERE MONTH(t.ticket_creation_date) IN ({})
+                    GROUP BY s.service_id
+                    ORDER BY year ASC, month ASC;
+                """.format(",".join("%s" for _ in range(len(months))))
+        cursor.execute(query, (*months,))
+        full_ticket_report = []
+        for row in cursor:
+            full_ticket_report.append({
+                "year": row[0],
+                "month": row[1],
+                "category": row[2],
+                "service": row[3],
+                "priority": row[4],
+                "status": row[5],
+                "total_tickets": row[6]
+            })
+        return full_ticket_report
 
+    def get_full_report_by_year_and_month(self, years, months):
+        cursor = self.conn.cursor()
+        query = """
+                SELECT YEAR(ticket_creation_date) AS year,
+                MONTH(ticket_creation_date) AS month,
+                sc.category_name,
+                s.service_name,
+                t.ticket_priority,
+                t.ticket_status,
+                COUNT(*) as total_tickets
+                    FROM tickets t
+                    JOIN service_category sc ON t.service_category_id = sc.service_category_id
+                    JOIN services s ON t.service_id = s.service_id
+                    WHERE YEAR(t.ticket_creation_date) IN ({}) AND MONTH(t.ticket_creation_date) IN ({})
+                    GROUP BY s.service_id
+                    ORDER BY year ASC, month ASC;
+                """.format(",".join("%s" for _ in range(len(years))), ",".join("%s" for _ in range(len(months))))
+        cursor.execute(query, (*years, *months))
+        full_ticket_report = []
+        for row in cursor:
+            full_ticket_report.append({
+                "year": row[0],
+                "month": row[1],
+                "category": row[2],
+                "service": row[3],
+                "priority": row[4],
+                "status": row[5],
+                "total_tickets": row[6]
+            })
+        return full_ticket_report
 
+    def get_category_report_by_year(self, years):
+        cursor = self.conn.cursor()
+        query = """
+                SELECT YEAR(ticket_creation_date) AS year,
+                MONTH(ticket_creation_date) AS month,
+                sc.category_name,
+                COUNT(*) as total_tickets
+                    FROM tickets t
+                    JOIN service_category sc ON t.service_category_id = sc.service_category_id
+                    WHERE YEAR(t.ticket_creation_date) IN ({})
+                    GROUP BY sc.service_category_id
+                    ORDER BY year ASC, month ASC;
+                """.format(",".join("%s" for _ in range(len(years))))
+        cursor.execute(query, (*years,))
+        category_report = []
+        for row in cursor:
+            category_report.append({
+                "year": row[0],
+                "month": row[1],
+                "category": row[2],
+                "total_tickets": row[3]
+            })
+        return category_report
 
+    def get_category_report_by_month(self, months):
+        cursor = self.conn.cursor()
+        query = """
+                SELECT YEAR(ticket_creation_date) AS year,
+                MONTH(ticket_creation_date) AS month,
+                sc.category_name,
+                COUNT(*) as total_tickets
+                    FROM tickets t
+                    JOIN service_category sc ON t.service_category_id = sc.service_category_id
+                    WHERE MONTH(t.ticket_creation_date) IN ({})
+                    GROUP BY sc.service_category_id
+                    ORDER BY year ASC, month ASC;
+                """.format(",".join("%s" for _ in range(len(months))))
+        cursor.execute(query, (*months,))
+        category_report = []
+        for row in cursor:
+            category_report.append({
+                "year": row[0],
+                "month": row[1],
+                "category": row[2],
+                "total_tickets": row[3]
+            })
+        return category_report
 
-
-
+    def get_category_report_by_year_and_month(self, years, months):
+        cursor = self.conn.cursor()
+        query = """
+                SELECT YEAR(ticket_creation_date) AS year,
+                MONTH(ticket_creation_date) AS month,
+                sc.category_name,
+                COUNT(*) as total_tickets
+                    FROM tickets t
+                    JOIN service_category sc ON t.service_category_id = sc.service_category_id
+                    WHERE YEAR(t.ticket_creation_date) IN ({}) AND MONTH(t.ticket_creation_date) IN ({})
+                    GROUP BY sc.service_category_id
+                    ORDER BY year ASC, month ASC;
+                """.format(",".join("%s" for _ in range(len(years))), ",".join("%s" for _ in range(len(months))))
+        cursor.execute(query, (*years, *months))
+        category_report = []
+        for row in cursor:
+            category_report.append({
+                "year": row[0],
+                "month": row[1],
+                "category": row[2],
+                "total_tickets": row[3]
+            })
+        return category_report
