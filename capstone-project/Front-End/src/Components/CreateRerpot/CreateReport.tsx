@@ -1,32 +1,14 @@
 import React, { useEffect, useState } from "react";
 import Select, { SingleValue } from "react-select";
+import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-select/dist/css/bootstrap-select.min.css";
-import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import * as bootstrap from "bootstrap";
 import "bootstrap-select/dist/js/bootstrap-select";
 import TimeAndDate from "../TimeAndDate/TimeAndDate";
 import "./CreateReport.css";
 import BeatLoader from "react-spinners/BeatLoader";
 import axios from "axios";
-
-
-interface newTicket{
-  userID: number,
-  serviceCategoryID: number,
-  serviceID: number,
-  ticketPriority: string,
-  buildingID: number,
-  officeNumber: string,
-  jobDescription: string,
-  deanery: string,
-  department: string,
-  ticketPhoneNumber: string,
-  ticketActivityName?: string,
-  ticketActivityDate?: string,
-  ticketActivityTime?: string,
-  ticketAssignedTo?: string
-}
 
 
 function CreateReport() {
@@ -274,7 +256,7 @@ function CreateReport() {
     var tooltipTriggerList = [].slice.call(
       document.querySelectorAll('[data-bs-toggle="tooltip"]')
     );
-    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+    tooltipTriggerList.map((tooltipTriggerEl) => {
       return new bootstrap.Tooltip(tooltipTriggerEl);
     });
   }, []);
@@ -401,21 +383,24 @@ function CreateReport() {
       setReportError(errorString);
     } else {
       setReportError("");
-      const newTicketInfoSubmit: newTicket = {
-        userID: 2,
-        serviceCategoryID: parseInt(section.value,10),
-        serviceID: parseInt(service.value, 10),
-        ticketPriority: priority.value,
-        buildingID: parseInt(building.value, 10),
-        officeNumber: officeNumber,
-        jobDescription: jobDescription,
-        deanery: deanery.value,
+      const sumbmitNewTicket = {
+        user_id: 2,
+        service_category_id: parseInt(section.value, 10),
+        service_id: parseInt(service.value, 10),
+        ticket_priority: priority.value,
+        building_id: parseInt(building.value,10),
+        office_number: officeNumber,
+        job_description: jobDescription,
+        dean: deanery,
         department: department,
-        ticketPhoneNumber: phone,
+        ticket_phone_number: phone,
+        ticket_activity_name: activityName,
+        ticket_activity_date: activityDate,
+        ticket_activity_time: activityTime,
+        ticket_assigned_to: 2
       }
-      console.log(newTicketInfoSubmit);
-
-      axios.post('http://127.0.0.1:5000/new-ticket', newTicketInfoSubmit)
+      console.log(sumbmitNewTicket);
+      axios.post('http://127.0.0.1:5000/new-ticket', sumbmitNewTicket)
           .then(response => {
             console.log(response.data);
           })
@@ -488,7 +473,7 @@ function CreateReport() {
                       data-bs-placement="right"
                       data-bs-custom-class="custom-tooltip"
                       data-bs-title="Escoga la Seccion con la que tiene que ver el servicio"
-                    ></button>
+                  ></button>
                   </div>
                 </div>
 
