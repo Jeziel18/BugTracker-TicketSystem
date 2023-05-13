@@ -117,8 +117,21 @@ class TicketsHandler:
         return jsonify(total_tickets_created)
 
     def get_monthly_yearly_tickets_created(self, years, months):
-        monthly_yearly_tickets = self.Tickets_DAO.get_monthly_yearly_tickets_created(years, months)
-        return monthly_yearly_tickets
+
+        if not years and not months:
+            return jsonify(Error="Invalid request parameters"), 400
+
+        elif not months:
+            yearly_tickets = self.Tickets_DAO.get_tickets_created_by_year(years)
+            return yearly_tickets
+
+        elif not years:
+            monthly_tickets = self.Tickets_DAO.get_tickets_created_by_month(months)
+            return monthly_tickets
+
+        else:
+            monthly_yearly_tickets = self.Tickets_DAO.get_monthly_yearly_tickets_created(years, months)
+            return monthly_yearly_tickets
 
     def get_monthly_yearly_tickets_by_status(self, years, months):
         monthly_yearly_tickets = self.Tickets_DAO.get_monthly_yearly_tickets_by_status(years, months)

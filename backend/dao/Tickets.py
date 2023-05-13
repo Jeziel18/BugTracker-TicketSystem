@@ -69,6 +69,54 @@ class TicketsDAO:
         total_tickets_created = cursor.fetchone()[0]
         return total_tickets_created
 
+    def get_tickets_created_by_year(self, years):
+        cursor = self.conn.cursor()
+        query = """
+            SELECT 
+                YEAR(ticket_creation_date) AS year, 
+                MONTH(ticket_creation_date) AS month, 
+                COUNT(*) AS monthly_total,
+                (SELECT COUNT(*) FROM tickets t2 WHERE YEAR(t2.ticket_creation_date) = YEAR(t.ticket_creation_date)) AS yearly_total
+            FROM tickets t
+            WHERE YEAR(ticket_creation_date) IN ({})
+            GROUP BY YEAR(ticket_creation_date), MONTH(ticket_creation_date)
+            ORDER BY YEAR(ticket_creation_date) ASC, MONTH(ticket_creation_date) ASC
+        """.format(",".join("%s" for _ in range(len(years))))
+        cursor.execute(query, (*years,))
+        yearly_tickets = []
+        for row in cursor:
+            yearly_tickets.append({
+                "year": row[0],
+                "month": row[1],
+                "monthly_total": row[2],
+                "yearly_total": row[3]
+            })
+        return yearly_tickets
+
+    def get_tickets_created_by_month(self, months):
+        cursor = self.conn.cursor()
+        query = """
+            SELECT 
+                YEAR(ticket_creation_date) AS year, 
+                MONTH(ticket_creation_date) AS month, 
+                COUNT(*) AS monthly_total,
+                (SELECT COUNT(*) FROM tickets t2 WHERE YEAR(t2.ticket_creation_date) = YEAR(t.ticket_creation_date)) AS yearly_total
+            FROM tickets t
+            WHERE MONTH(ticket_creation_date) IN ({})
+            GROUP BY YEAR(ticket_creation_date), MONTH(ticket_creation_date)
+            ORDER BY YEAR(ticket_creation_date) ASC, MONTH(ticket_creation_date) ASC
+        """.format(",".join("%s" for _ in range(len(months))))
+        cursor.execute(query, (*months,))
+        monthly_tickets = []
+        for row in cursor:
+            monthly_tickets.append({
+                "year": row[0],
+                "month": row[1],
+                "monthly_total": row[2],
+                "yearly_total": row[3]
+            })
+        return monthly_tickets
+
     def get_monthly_yearly_tickets_created(self, years, months):
         cursor = self.conn.cursor()
         query = """
@@ -81,7 +129,7 @@ class TicketsDAO:
             WHERE YEAR(ticket_creation_date) IN ({})
             AND MONTH(ticket_creation_date) IN ({})
             GROUP BY YEAR(ticket_creation_date), MONTH(ticket_creation_date)
-            ORDER BY YEAR(ticket_creation_date) DESC, MONTH(ticket_creation_date) DESC
+            ORDER BY YEAR(ticket_creation_date) ASC, MONTH(ticket_creation_date) ASC
         """.format(",".join("%s" for _ in range(len(years))), ",".join("%s" for _ in range(len(months))))
         cursor.execute(query, (*years, *months))
         monthly_yearly_tickets = []

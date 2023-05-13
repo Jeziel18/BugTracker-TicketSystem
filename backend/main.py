@@ -528,18 +528,19 @@ def get_total_tickets_created():
     else:
         return jsonify(Error="Method not allowed."), 405
 
-@app.route('/monthly_yearly_tickets_created', methods=['GET'])
+@app.route('/report/tickets_created_year_month', methods=['GET'])
 def get_monthly_yearly_tickets_created():
     years = request.args.get('year')
     years_list = years.split(',') if years else []
     months = request.args.get('month')
     months_list = months.split(',') if months else []
+
     handler = TicketsHandler()
     monthly_yearly_tickets = handler.get_monthly_yearly_tickets_created(years_list, months_list)
-    #JSONtoCSV().total_year_month_created_tickets(monthly_yearly_tickets)
-    return jsonify(monthly_yearly_tickets)
+    report_name = JSONtoCSV().total_year_month_created_tickets(monthly_yearly_tickets)
+    return jsonify(monthly_yearly_tickets, report_name)
 
-@app.route('/tickets/monthly-yearly-status', methods=['GET'])
+@app.route('/report/ticket_status_by_year_month', methods=['GET'])
 def get_monthly_yearly_tickets_by_status():
     years = request.args.get('year')
     years_list = years.split(',') if years else []
@@ -549,8 +550,8 @@ def get_monthly_yearly_tickets_by_status():
         return jsonify(Error="Invalid request parameters"), 400
     handler = TicketsHandler()
     monthly_count = handler.get_monthly_yearly_tickets_by_status(years_list, months_list)
-    JSONtoCSV().year_month_status_report(monthly_count)
-    return jsonify(monthly_count)
+    report_name = JSONtoCSV().year_month_status_report(monthly_count)
+    return jsonify(monthly_count, report_name)
 
 @app.route('/tickets/total_tickets_status', methods=['GET'])
 def get_total_tickets_by_status():
@@ -579,18 +580,19 @@ def top_categories_by_year_and_month():
     top_categories = handler.get_top_service_categories_by_year_and_month(years_list, months_list)
     return jsonify(top_categories)
 
-@app.route('/full_tickets_report', methods = ['GET'])
+@app.route('/report/full_report', methods = ['GET'])
 def full_tickets_report_by_year_and_or_month():
     years = request.args.get('year')
     years_list = years.split(',') if years else []
     months = request.args.get('month')
     months_list = months.split(',') if months else []
     handler = TicketsHandler()
+    print(years, months)
     full_report = handler.get_full_report_by_year_and_month(years_list, months_list)
-    JSONtoCSV().full_tickets_report(full_report)
-    return jsonify(full_report)
+    report_name = JSONtoCSV().full_tickets_report(full_report)
+    return jsonify(full_report, report_name)
 
-@app.route('/ticket_category_report', methods = ['GET'])
+@app.route('/report/ticket_category_report', methods = ['GET'])
 def ticket_category_report_by_year_and_or_month():
     years = request.args.get('year')
     years_list = years.split(',') if years else []
@@ -598,9 +600,8 @@ def ticket_category_report_by_year_and_or_month():
     months_list = months.split(',') if months else []
     handler = TicketsHandler()
     category_report = handler.get_category_report_by_year_and_month(years_list, months_list)
-    JSONtoCSV().ticket_category_report(category_report)
-    return jsonify(category_report)
-
+    report_name = JSONtoCSV().ticket_category_report(category_report)
+    return jsonify(category_report, report_name)
 
 if __name__ == '__main__':
     app.run(debug = 1)

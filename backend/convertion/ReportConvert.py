@@ -20,7 +20,7 @@ class JSONtoCSV:
         current_time = now.strftime("%Y-%m-%d_%H-%M-%S")
 
         # Create the filename with the current date and time
-        filename = f"Month Year Report-{current_time}.csv"
+        filename = f"Ticket Amount per Year and Month Report-{current_time}.csv"
 
         # Open the file in write mode
         with open(os.path.join("reports", filename), 'w', newline='') as file:
@@ -39,6 +39,7 @@ class JSONtoCSV:
                 writer.writerow([year, month, monthly_total, yearly_total])
 
         print(f"CSV file '{filename}' created successfully.")
+        return filename
 
     def year_month_status_report(self, data):
         # Verifying that tickets are found, if empty then no report is generated
@@ -80,6 +81,7 @@ class JSONtoCSV:
                     writer.writerow([year, month, open_count, pending_count, closed_count])
 
             print(f"CSV file '{filename}' created successfully.")
+            return filename
 
     def full_tickets_report(self, data):
         # Verifying that tickets are found, if empty then no report is generated
@@ -115,6 +117,7 @@ class JSONtoCSV:
                 writer.writerow([year, month, category, service, priority, status, total_tickets])
 
             print(f"CSV file '{filename}' created successfully.")
+            return filename
 
     def ticket_category_report(self, data):
         # Verifying that tickets are found, if empty then no report is generated
@@ -147,3 +150,4 @@ class JSONtoCSV:
                 writer.writerow([year, month, category, total_tickets])
 
             print(f"CSV file '{filename}' created successfully.")
+            return filename

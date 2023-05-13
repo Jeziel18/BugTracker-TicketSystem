@@ -285,7 +285,7 @@ const PendientesAEvaluar = () => {
     building: SingleValue<{ value: string; label: string } | null>,
     officeNumber: string,
     jobDescription: string,
-    deanery: SingleValue<{ value: string; label: string } | null>,
+    dean: SingleValue<{ value: string; label: string } | null>,
     department: string,
     phone: string,
     activityName: string,
@@ -301,7 +301,7 @@ const PendientesAEvaluar = () => {
       !building?.value ||
       !officeNumber ||
       !jobDescription ||
-      !deanery?.value ||
+      !dean?.value ||
       !department ||
       !phone ||
       !status?.value
@@ -324,7 +324,7 @@ const PendientesAEvaluar = () => {
       if (jobDescription == "") {
         errorString += "Descripcion del Trabajo-";
       }
-      if (deanery === null) {
+      if (dean === null) {
         errorString += "Decanato-";
       }
       if (department == "") {
@@ -346,7 +346,7 @@ const PendientesAEvaluar = () => {
         building,
         officeNumber,
         jobDescription,
-        deanery,
+        dean,
         department,
         phone,
         activityName,
