@@ -579,5 +579,28 @@ def top_categories_by_year_and_month():
     top_categories = handler.get_top_service_categories_by_year_and_month(years_list, months_list)
     return jsonify(top_categories)
 
+@app.route('/full_tickets_report', methods = ['GET'])
+def full_tickets_report_by_year_and_or_month():
+    years = request.args.get('year')
+    years_list = years.split(',') if years else []
+    months = request.args.get('month')
+    months_list = months.split(',') if months else []
+    handler = TicketsHandler()
+    full_report = handler.get_full_report_by_year_and_month(years_list, months_list)
+    JSONtoCSV().full_tickets_report(full_report)
+    return jsonify(full_report)
+
+@app.route('/ticket_category_report', methods = ['GET'])
+def ticket_category_report_by_year_and_or_month():
+    years = request.args.get('year')
+    years_list = years.split(',') if years else []
+    months = request.args.get('month')
+    months_list = months.split(',') if months else []
+    handler = TicketsHandler()
+    category_report = handler.get_category_report_by_year_and_month(years_list, months_list)
+    JSONtoCSV().ticket_category_report(category_report)
+    return jsonify(category_report)
+
+
 if __name__ == '__main__':
     app.run(debug = 1)

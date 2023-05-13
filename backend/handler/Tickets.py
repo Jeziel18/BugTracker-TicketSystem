@@ -152,9 +152,38 @@ class TicketsHandler:
             top_categories_with_names[category_name] = count
         return top_categories_with_names
 
+    def get_full_report_by_year_and_month(self, year, month):
+        dao = TicketsDAO()
 
+        if year == [] and month == []:
+            return jsonify(Error="Missing JSON request body"), 400
 
+        elif not month:
+            full_report = dao.get_full_report_by_year(year)
+            return full_report
 
+        elif not year:
+            full_report = dao.get_full_report_by_month(month)
+            return full_report
 
+        else:
+            full_report = dao.get_full_report_by_year_and_month(year, month)
+            return full_report
 
+    def get_category_report_by_year_and_month(self, year, month):
+        dao = TicketsDAO()
 
+        if year == [] and month == []:
+            return jsonify(Error="Missing JSON request body"), 400
+
+        elif not month:
+            category_report = dao.get_category_report_by_year(year)
+            return category_report
+
+        elif not year:
+            category_report = dao.get_category_report_by_month(month)
+            return category_report
+
+        else:
+            category_report = dao.get_category_report_by_year_and_month(year, month)
+            return category_report
