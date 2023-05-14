@@ -1,18 +1,20 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import { Table, Pagination, Button } from "react-bootstrap";
 import { InputActionMeta, SingleValue } from "react-select";
 import TimeAndDate from "../TimeAndDate/TimeAndDate";
 import Select from "react-select";
+//import BeatLoader from "react-spinners/BeatLoader";
+import axios from "axios";
 
-interface Data {
-  id: number;
-  seccion: string;
-  servicio: string;
+interface ticketObject {
+  ticketID: number;
+  seccion: { value: number; label: string; };
+  servicio: { value: number; label: string; };
   prioridad: string;
-  edificio: string;
+  edificio: { value: number; label: string; };
   numerDeOficina: string;
   descripcion: string;
-  decanato: string;
+  decanato: { value: string; label: string; };
   departamento: string;
   telefono: string;
   nombreActividad: string;
@@ -21,9 +23,221 @@ interface Data {
   status: string;
 }
 
+interface TicketData {
+  building_id: number[];
+  dean: string[];
+  department: string[];
+  job_description: string[];
+  office_number: string[];
+  service_category_id: number[];
+  service_id: number[];
+  ticket_activity_date: string[];
+  ticket_activity_name: string[];
+  ticket_activity_time: string[];
+  ticket_assigned_to: number[] | null;
+  ticket_creation_date: string[];
+  ticket_id: number[];
+  ticket_phone_number: string[];
+  ticket_priority: string[];
+  ticket_status: string;
+  ticket_update_date: string[] | null;
+  user_id: number[];
+}
+
 const PendientesAEvaluar = () => {
+
+
+  const service1Array: Array<{value: number, label: string}> = [];
+  const [service1, setService1] = useState<Array<{value: number, label: string}>>([]);
+  const service2Array: Array<{value: number, label: string}> = [];
+  const [service2, setService2] = useState<Array<{value: number, label: string}>>([]);
+  const service3Array: Array<{value: number, label: string}> = [];
+  const [service3, setService3] = useState<Array<{value: number, label: string}>>([]);
+  const service4Array: Array<{value: number, label: string}> = [];
+  const [service4, setService4] = useState<Array<{value: number, label: string}>>([]);
+  const service5Array: Array<{value: number, label: string}> = [];
+  const [service5, setService5] = useState<Array<{value: number, label: string}>>([]);
+  const service6Array: Array<{value: number, label: string}> = [];
+  const [service6, setService6] = useState<Array<{value: number, label: string}>>([]);
+  const service7Array: Array<{value: number, label: string}> = [];
+  const [service7, setService7] = useState<Array<{value: number, label: string}>>([]);
+  const service8Array: Array<{value: number, label: string}> = [];
+  const [service8, setService8] = useState<Array<{value: number, label: string}>>([]);
+  const service9Array: Array<{value: number, label: string}> = [];
+  const [service9, setService9] = useState<Array<{value: number, label: string}>>([]);
+  const service10Array: Array<{value: number, label: string}> = [];
+  const [service10, setService10] = useState<Array<{value: number, label: string}>>([]);
+  const service11Array: Array<{value: number, label: string}> = [];
+  const [service11, setService11] = useState<Array<{value: number, label: string}>>([]);
+  const service12Array: Array<{value: number, label: string}> = [];
+  const [service12, setService12] = useState<Array<{value: number, label: string}>>([]);
+  const service13Array: Array<{value: number, label: string}> = [];
+  const [service13, setService13] = useState<Array<{value: number, label: string}>>([]);
+  const service14Array: Array<{value: number, label: string}> = [];
+  const [service14, setService14] = useState<Array<{value: number, label: string}>>([]);
+  const service15Array: Array<{value: number, label: string}> = [];
+  const [service15, setService15] = useState<Array<{value: number, label: string}>>([]);
+
+
+  const [getAllDBTickets, setGetAllDBTickets] = useState(false);
+  const [getAllDBInfo, setGetAllDBInfo] = useState(true);
+  const [allTicket, setAllTickets] = useState<ticketObject[]>([]);
+  const [buildingDB, setBuildingDB] = useState<Array<{value: number, label: string}>>([]);
+  const [sectionDB, setSectionDB] = useState<Array<{value: number, label: string}>>([]);
+
+
+  if (getAllDBInfo){
+    fetch('http://127.0.0.1:5000/buildings')
+      .then(response => response.json())
+      .then(data => {
+        const buildings = data.Buildings;
+        const buildingValues = buildings.map((building: { building_id: string[], building_name: string[] }) => ({
+          value: building.building_id[0],
+          label: building.building_name[0]
+        }));
+        setBuildingDB(buildingValues);
+      });
+
+    fetch('http://127.0.0.1:5000/service_categories')
+      .then(response => response.json())
+      .then(data => {
+        const serviceCategories = data.map((category: any) => ({
+          value: category.service_category_id[0],
+          label: category.category_name
+        }));
+        setSectionDB(serviceCategories);
+      });
+
+    fetch('http://127.0.0.1:5000/services')
+      .then(response => response.json())
+      .then(data => {
+        const services = data;
+        for (let i = 0; i < services.length; i++) {
+          const subArray = services[i];
+          if (subArray[2] == "1"){
+            service1Array.push({value: subArray[0], label: subArray[1]});
+          }
+          else if (subArray[2] == "2") {
+            service2Array.push({value: subArray[0], label: subArray[1]});
+          }
+          else if (subArray[2] == "3") {
+            service3Array.push({value: subArray[0], label: subArray[1]});
+          }
+          else if (subArray[2] == "4") {
+            service4Array.push({value: subArray[0], label: subArray[1]});
+          }
+          else if (subArray[2] == "5") {
+            service5Array.push({value: subArray[0], label: subArray[1]});
+          }
+          else if (subArray[2] == "6") {
+            service6Array.push({value: subArray[0], label: subArray[1]});
+          }
+          else if (subArray[2] == "7") {
+            service7Array.push({value: subArray[0], label: subArray[1]});
+          }
+          else if (subArray[2] == "8") {
+            service8Array.push({value: subArray[0], label: subArray[1]});
+          }
+          else if (subArray[2] == "9") {
+            service9Array.push({value: subArray[0], label: subArray[1]});
+          }
+          else if (subArray[2] == "10") {
+            service10Array.push({value: subArray[0], label: subArray[1]});
+          }
+          else if (subArray[2] == "11") {
+            service11Array.push({value: subArray[0], label: subArray[1]});
+          }
+          else if (subArray[2] == "12") {
+            service12Array.push({value: subArray[0], label: subArray[1]});
+          }
+          else if (subArray[2] == "13") {
+            service13Array.push({value: subArray[0], label: subArray[1]});
+          }
+          else if (subArray[2] == "14") {
+            service14Array.push({value: subArray[0], label: subArray[1]});
+          }
+          else if (subArray[2] == "15") {
+            service15Array.push({value: subArray[0], label: subArray[1]});
+          }
+        }
+        setService1(service1Array);
+        setService2(service2Array);
+        setService3(service3Array);
+        setService4(service4Array);
+        setService5(service5Array);
+        setService6(service6Array);
+        setService7(service7Array);
+        setService8(service8Array);
+        setService9(service9Array);
+        setService10(service10Array);
+        setService11(service11Array);
+        setService12(service12Array);
+        setService13(service13Array);
+        setService14(service14Array);
+        setService15(service15Array);
+      });
+    setGetAllDBTickets(true);
+    setGetAllDBInfo(false);
+  }
+
+
+  async function getSection(serviceCategoryID: number){
+    const response = await axios.get(`http://127.0.0.1:5000/service_categories/${serviceCategoryID}`);
+    const section = {value: serviceCategoryID, label: response.data.category_name};
+    return section;
+  }
+
+  async function getService(serviceID: number){
+    const response = await axios.get(`http://127.0.0.1:5000/services/${serviceID}`);
+    return {value: serviceID, label: response.data.service_name};
+  }
+
+  async function getBuilding(buildingID: number){
+    const response = await axios.get(`http://127.0.0.1:5000/buildings/${buildingID}`);
+    return {value: buildingID, label: response.data.building_name[0]};
+  }
+
+  if (getAllDBTickets){
+    let tempAllTicket: ticketObject[] = [];
+
+    axios.get("http://127.0.0.1:5000/tickets")
+        .then(async (response) => {
+          const allTickets = response.data;
+
+          for(let key in allTickets){
+            for (let i = 0; i<allTickets[key].length-1; i++){
+              const serviceCategoryName = await getSection(allTickets[key][i].service_category_id[0]);
+              const serviceName = await getService(allTickets[key][i].service_id[0]);
+              const buildingName = await getBuilding(allTickets[key][i].building_id[0]);
+              tempAllTicket.push({
+                ticketID: allTickets[key][i].ticket_id[0],
+                seccion: serviceCategoryName,
+                servicio: serviceName,
+                prioridad: allTickets[key][i].ticket_priority[0],
+                edificio: buildingName,
+                numerDeOficina: allTickets[key][i].office_number[0],
+                descripcion: allTickets[key][i].job_description[0],
+                decanato: { value: allTickets[key][i].dean[0], label: allTickets[key][i].dean[0]},
+                departamento: allTickets[key][i].department[0],
+                telefono: allTickets[key][i].ticket_phone_number[0],
+                nombreActividad: allTickets[key][i].ticket_activity_name[0],
+                fechaActividad: allTickets[key][i].ticket_activity_date[0],
+                horaActividad: allTickets[key][i].ticket_activity_time[0],
+                status: allTickets[key][i].ticket_status
+              })
+            }
+          }
+          setAllTickets(tempAllTicket);
+          console.log(allTicket);
+        })
+        .catch((error) => {
+          console.log("Failed to load all tickets", error);
+        });
+    setGetAllDBTickets(false);
+  }
+
   const [currentPage, setCurrentPage] = useState(1);
-  const [dataPerPage] = useState(3);
+  const [dataPerPage] = useState(12);
   const [filters, setFilters] = useState({
     seccion: "",
     servicio: "",
@@ -33,77 +247,6 @@ const PendientesAEvaluar = () => {
     status: "",
   });
 
-  const data: Data[] = [
-    {
-      id: 1,
-      seccion: "electricidad",
-      servicio: "corto circuito",
-      prioridad: "emergencia",
-      edificio: "Stefani",
-      numerDeOficina: "S-113",
-      descripcion:
-        "El salon hizo un corto circuito en el switch para prender la luz al lado de la puerta principal",
-      decanato: "Administracion",
-      departamento: "Ingenieria electrica y de computadora",
-      telefono: "123-456-7890",
-      nombreActividad: "",
-      fechaActividad: "",
-      horaActividad: "",
-      status: "Open",
-    },
-    {
-      id: 2,
-      seccion: "plomeria",
-      servicio: "Service 2",
-      prioridad: "Medium",
-      edificio: "Building 2",
-      numerDeOficina: "Office 2",
-      descripcion: "Description 2",
-      decanato: "Decanate 2",
-      departamento: "Department 2",
-      telefono: "234-567-8901",
-      nombreActividad: "Activity 2",
-      fechaActividad: "2023-05-02",
-      horaActividad: "14:00:00",
-      status: "pending",
-    },
-    {
-      id: 3,
-      seccion: "flora",
-      servicio: "Service 3",
-      prioridad: "Low",
-      edificio: "Building 3",
-      numerDeOficina: "Office 3",
-      descripcion: "Description 3",
-      decanato: "Decanate 3",
-      departamento: "Department 3",
-      telefono: "345-678-9012",
-      nombreActividad: "Activity 3",
-      fechaActividad: "2023-05-03",
-      horaActividad: "15:00:00",
-      status: "closed",
-    },
-  ];
-
-  const Seccion = [
-    { value: "electricidad", label: "electricidad" },
-    { value: "plomeria", label: "plomeria" },
-    { value: "flora", label: "flora" },
-    { value: "mesas y sillas", label: "mesas y sillas" },
-  ];
-
-  const ServicioElectricidad = [
-    { value: "luz mala", label: "luz mala" },
-    { value: "receptaculo no sirve", label: "receptaculo no sirve" },
-    { value: "switch no sirve", label: "switch no sirve" },
-    { value: "corto circuito", label: "corto circuito" },
-  ];
-
-  const ServicioPlomeria = [{ value: "tubo roto", label: "tubo roto" }];
-
-  const ServicioFlora = [{ value: "arbol caido", label: "arbol caido" }];
-
-  const ServicioMesasYSillas = [{ value: "silla rota", label: "silla rota" }];
 
   const Prioridad = [
     { value: "Rutina  ", label: "Rutina" },
@@ -111,15 +254,6 @@ const PendientesAEvaluar = () => {
     { value: "Emergencia", label: "Emergencia" },
   ];
 
-  const Edificio = [
-    { value: "Stefani", label: "Stefani" },
-    { value: "Enfermeria", label: "Enfermeria" },
-    {
-      value: "Administracion de Empresas",
-      label: "Administracion de Empresas",
-    },
-    { value: "Chardon", label: "Chardon" },
-  ];
 
   const Decanato = [
     {
@@ -139,17 +273,18 @@ const PendientesAEvaluar = () => {
     { value: "closed", label: "closed" },
   ];
 
+
   const indexOfLastData = currentPage * dataPerPage;
   const indexOfFirstData = indexOfLastData - dataPerPage;
-  const currentData = data
+  const currentData = allTicket
     .filter(
       (item) =>
-        item.seccion.toLowerCase().includes(filters.seccion.toLowerCase()) &&
-        item.servicio.toLowerCase().includes(filters.servicio.toLowerCase()) &&
+        item.seccion.label.toLowerCase().includes(filters.seccion.toLowerCase()) &&
+        item.servicio.label.toLowerCase().includes(filters.servicio.toLowerCase()) &&
         item.prioridad
           .toLowerCase()
           .includes(filters.prioridad.toLowerCase()) &&
-        item.edificio.toLowerCase().includes(filters.edificio.toLowerCase()) &&
+        item.edificio.label.toLowerCase().includes(filters.edificio.toLowerCase()) &&
         item.descripcion
           .toLowerCase()
           .includes(filters.descripcion.toLowerCase()) &&
@@ -167,13 +302,13 @@ const PendientesAEvaluar = () => {
   };
 
   const [seccion, setSeccion] =
-    useState<SingleValue<{ value: string; label: string } | null>>(null);
+    useState<SingleValue<{ value: number; label: string } | null>>(null);
 
   const [servicio, setServicio] =
-    useState<SingleValue<{ value: string; label: string } | null>>(null);
+    useState<SingleValue<{ value: number; label: string } | null>>(null);
 
   const [edificio, setEdificio] =
-    useState<SingleValue<{ value: string; label: string } | null>>(null);
+    useState<SingleValue<{ value: number; label: string } | null>>(null);
 
   const [decanato, setDecanato] =
     useState<SingleValue<{ value: string; label: string } | null>>(null);
@@ -232,28 +367,66 @@ const PendientesAEvaluar = () => {
   }
 
   function serviceOptions(
-    section: SingleValue<{ value: string; label: string } | null>
+      section: SingleValue<{ value: number; label: string } | null>
   ) {
-    switch (section?.value) {
-      case "electricidad":
-        return ServicioElectricidad;
-      case "plomeria":
-        return ServicioPlomeria;
-      case "flora":
-        return ServicioFlora;
-      case "mesas y sillas":
-        return ServicioMesasYSillas;
+    if(section?.value == 1) {
+      return service1;
+    }
+    else if(section?.value == 2){
+      return service2;
+    }
+    else if(section?.value == 3){
+      return service3;
+    }
+    else if(section?.value == 4){
+      return service4;
+    }
+    else if(section?.value == 5){
+      return service5;
+    }
+    else if(section?.value == 6){
+      return service6;
+    }
+    else if(section?.value == 7){
+      return service7;
+    }
+    else if(section?.value == 8){
+      return service8;
+    }
+    else if(section?.value == 9){
+      return service9;
+    }
+    else if(section?.value == 10){
+      return service10;
+    }
+    else if(section?.value == 11){
+      return service11;
+    }
+    else if(section?.value == 12){
+      return service12;
+    }
+    else if(section?.value == 13){
+      return service13;
+    }
+    else if(section?.value == 14){
+      return service14;
+    }
+    else if(section?.value == 15){
+      return service15;
+    }
+    else{
+      return [];
     }
   }
 
   function handelReportInfo(
-    section: string,
-    service: string,
+    section: {value: number, label: string},
+    service: {value: number, label: string},
     priority: string,
-    building: string,
+    building: {value: number, label: string},
     officeNumber: string,
     description: string,
-    deanery: string,
+    deanery: {value: string, label: string},
     department: string,
     phone: string,
     activityName: string,
@@ -261,13 +434,13 @@ const PendientesAEvaluar = () => {
     activityTime: string,
     status: string
   ) {
-    setSeccion({ value: section, label: section });
-    setServicio({ value: service, label: service });
+    setSeccion(section);
+    setServicio(service);
     setPrioridad({ value: priority, label: priority });
-    setEdificio({ value: building, label: building });
+    setEdificio(building);
     setNumeroOficina(officeNumber);
     setDescripcion(description);
-    setDecanato({ value: deanery, label: deanery });
+    setDecanato(deanery);
     setDepartamento(department);
     setTelefono(phone);
     setNombreActividad(activityName);
@@ -279,10 +452,10 @@ const PendientesAEvaluar = () => {
   const [reportError, setReportError] = useState("");
 
   function handelSaveReport(
-    section: SingleValue<{ value: string; label: string } | null>,
-    service: SingleValue<{ value: string; label: string } | null>,
+    section: SingleValue<{ value: number; label: string } | null>,
+    service: SingleValue<{ value: number; label: string } | null>,
     priority: SingleValue<{ value: string; label: string } | null>,
-    building: SingleValue<{ value: string; label: string } | null>,
+    building: SingleValue<{ value: number; label: string } | null>,
     officeNumber: string,
     jobDescription: string,
     dean: SingleValue<{ value: string; label: string } | null>,
@@ -424,13 +597,13 @@ const PendientesAEvaluar = () => {
           </thead>
           <tbody>
             {currentData.map((item) => (
-              <tr key={item.id}>
+              <tr key={item.ticketID}>
                 <td>
                   <button
                     type="button"
                     className="btn btn-link"
                     data-bs-toggle="modal"
-                    data-bs-target={`#exampleModal${item.id}`}
+                    data-bs-target={`#exampleModal${item.ticketID}`}
                     onClick={() => {
                       handelReportInfo(
                         item.seccion,
@@ -449,12 +622,12 @@ const PendientesAEvaluar = () => {
                       );
                     }}
                   >
-                    {item.id}
+                    {item.ticketID}
                   </button>
                   <div
                     className="modal"
                     tabIndex={-1}
-                    id={`exampleModal${item.id}`}
+                    id={`exampleModal${item.ticketID}`}
                   >
                     <div className="modal-dialog modal-fullscreen">
                       <div className="modal-content">
@@ -463,7 +636,7 @@ const PendientesAEvaluar = () => {
                             className="modal-title fs-5"
                             id="staticBackdropLabel"
                           >
-                            Reporte - {item.id}
+                            Reporte - {item.ticketID}
                           </h1>
                           <button
                             type="button"
@@ -525,7 +698,7 @@ const PendientesAEvaluar = () => {
                                 <Select
                                   value={seccion}
                                   onChange={setSeccion}
-                                  options={Seccion}
+                                  options={sectionDB}
                                   isClearable
                                   isSearchable
                                   styles={{
@@ -608,7 +781,7 @@ const PendientesAEvaluar = () => {
                                 <Select
                                   value={edificio}
                                   onChange={setEdificio}
-                                  options={Edificio}
+                                  options={buildingDB}
                                   isClearable
                                   isSearchable
                                   styles={{
@@ -879,10 +1052,10 @@ const PendientesAEvaluar = () => {
                     </div>
                   </div>
                 </td>
-                <td>{item.seccion}</td>
-                <td>{item.servicio}</td>
+                <td>{item.seccion.label}</td>
+                <td>{item.servicio.label}</td>
                 <td>{item.prioridad}</td>
-                <td>{item.edificio}</td>
+                <td>{item.edificio.label}</td>
                 <td>{item.descripcion}</td>
                 <td>{item.status}</td>
               </tr>
@@ -890,7 +1063,7 @@ const PendientesAEvaluar = () => {
           </tbody>
         </Table>
         <Pagination>
-          {Array(Math.ceil(data.length / dataPerPage))
+          {Array(Math.ceil(allTicket.length / dataPerPage))
             .fill(null)
             .map((_, index) => (
               <Pagination.Item
