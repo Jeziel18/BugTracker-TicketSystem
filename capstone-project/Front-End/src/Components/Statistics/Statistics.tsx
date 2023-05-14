@@ -73,8 +73,9 @@ function Statistics() {
         })
         .then((response) => {
           const filename = response.data;
-          console.log(`File ${filename} generated successfully.`);
-          // do something with the filename, e.g. display it on the UI
+          console.log(filename[1])
+          console.log(`File ${filename[1]} generated successfully.`);
+          downloadReport(filename[1])
         })
         .catch((error) => {
           console.error("Failed to generate statistics", error);
@@ -88,9 +89,9 @@ function Statistics() {
           },
         })
         .then((response) => {
-          const filename = response.data.report_name;
-          console.log(`File ${filename} generated successfully.`);
-          // do something with the filename, e.g. display it on the UI
+          const filename = response.data;
+          console.log(`File ${filename[1]} generated successfully.`);
+          downloadReport(filename[1])
         })
         .catch((error) => {
           console.error("Failed to generate statistics", error);
@@ -104,9 +105,9 @@ function Statistics() {
           },
         })
         .then((response) => {
-          const filename = response.data.report_name;
-          console.log(`File ${filename} generated successfully.`);
-          // do something with the filename, e.g. display it on the UI
+          const filename = response.data;
+          console.log(`File ${filename[1]} generated successfully.`);
+          downloadReport(filename[1])
         })
         .catch((error) => {
           console.error("Failed to generate statistics", error);
@@ -120,9 +121,9 @@ function Statistics() {
           },
         })
         .then((response) => {
-          const filename = response.data.report_name;
-          console.log(`File ${filename} generated successfully.`);
-          // do something with the filename, e.g. display it on the UI
+          const filename = response.data;
+          console.log(`File ${filename[1]} generated successfully.`);
+          downloadReport(filename[1])
         })
         .catch((error) => {
           console.error("Failed to generate statistics", error);
@@ -130,6 +131,15 @@ function Statistics() {
     }
     else //Missing Report type
         console.error("Failed to generate statistics, missing type of report");
+};
+
+  const downloadReport = (filename: string) => {
+    const link = document.createElement('a');
+    link.href = `backend/reports/${filename}`;
+    link.setAttribute('download', filename);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
 };
 
 
@@ -205,9 +215,6 @@ function Statistics() {
                 type="submit"
                 className="btn btn-primary btn-lg"
                 onClick={() => {
-                  // // generateStatistics()
-                  // console.log(selectedYears);
-                  // console.log(selectedMonths);
                   generateStatistics(selectedReport, selectedYears, selectedMonths);
                 }}
               >

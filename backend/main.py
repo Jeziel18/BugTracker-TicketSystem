@@ -601,7 +601,6 @@ def full_tickets_report_by_year_and_or_month():
     months = request.args.get('month')
     months_list = months.split(',') if months else []
     handler = TicketsHandler()
-    print(years, months)
     full_report = handler.get_full_report_by_year_and_month(years_list, months_list)
     report_name = JSONtoCSV().full_tickets_report(full_report)
     return jsonify(full_report, report_name)
