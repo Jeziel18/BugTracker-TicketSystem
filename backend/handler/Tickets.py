@@ -111,6 +111,25 @@ class TicketsHandler:
         except:
             return jsonify(Error="Failed to update ticket"), 500
 
+    def get_user_tickets(self, user_id):
+        rows = self.Tickets_DAO.get_all_tickets_by_user(user_id)
+        tickets = []
+        for row in rows:
+            ticket = self.build_tickets_dict(row)
+            tickets.append(ticket)
+        return {"Tickets": tickets}
+
+    def get_all_tickets_by_status(self, ticket_status):
+        tickets = []
+        try:
+            results = self.Tickets_DAO.get_all_tickets_by_status(ticket_status)
+            for row in results:
+                ticket = self.build_tickets_dict(row)
+                tickets.append(ticket)
+        except:
+            print("Error while fetching data from database")
+        return tickets
+
 #Statistics
     def count_total_tickets(self):
         total_tickets_created = self.Tickets_DAO.count_total_tickets()

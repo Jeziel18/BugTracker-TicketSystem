@@ -62,7 +62,21 @@ class TicketsDAO:
         cursor.execute(query, tuple(update_values))
         self.conn.commit()
 
-# Statistics Down
+    def get_all_tickets_by_user(self, user_id):
+        cursor = self.conn.cursor()
+        query = "SELECT * FROM tickets WHERE user_id = %s"
+        cursor.execute(query, (user_id,))
+        results = cursor.fetchall()
+        return results
+
+    def get_all_tickets_by_status(self, ticket_status):
+        cursor = self.conn.cursor()
+        query = "SELECT * FROM tickets WHERE ticket_status = %s"
+        cursor.execute(query, (ticket_status,))
+        result = cursor.fetchall()
+        return result
+
+    # Statistics Down
     def count_total_tickets(self):
         cursor = self.conn.cursor()
         cursor.execute("SELECT COUNT(*) FROM tickets")

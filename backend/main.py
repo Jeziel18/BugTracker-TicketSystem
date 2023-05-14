@@ -518,6 +518,21 @@ def update_ticket(ticket_id):
     else:
         return jsonify(Error="Method not allowed."), 405
 
+@app.route('/user-tickets/<int:user_id>', methods=['GET'])
+def get_user_tickets(user_id):
+    handler = TicketsHandler()
+    return jsonify(handler.get_user_tickets(user_id))
+
+@app.route('/tickets/status/<ticket_status>', methods=['GET'])
+def get_tickets_by_status(ticket_status):
+    try:
+        tickets = TicketsHandler().get_all_tickets_by_status(ticket_status)
+        return jsonify(tickets=tickets), 200
+    except:
+        return jsonify(message="Failed to retrieve tickets by status"), 500
+
+
+
 
 # TICKET STATISTICS UNDER THIS COMMENT
 
