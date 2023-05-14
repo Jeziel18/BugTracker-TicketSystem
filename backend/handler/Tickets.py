@@ -153,8 +153,21 @@ class TicketsHandler:
             return monthly_yearly_tickets
 
     def get_monthly_yearly_tickets_by_status(self, years, months):
-        monthly_yearly_tickets = self.Tickets_DAO.get_monthly_yearly_tickets_by_status(years, months)
-        return monthly_yearly_tickets
+
+        if not years and not months:
+            return jsonify(Error="Invalid request parameters"), 400
+
+        elif not months:
+            yearly_ticket_status = self.Tickets_DAO.get_ticket_status_by_year(years)
+            return yearly_ticket_status
+
+        elif not years:
+            monthly_ticket_status = self.Tickets_DAO.get_ticket_status_by_month(months)
+            return monthly_ticket_status
+
+        else:
+            monthly_yearly_tickets = self.Tickets_DAO.get_monthly_yearly_tickets_by_status(years, months)
+            return monthly_yearly_tickets
 
     def get_total_tickets_by_status(self):
         total_tickets_by_status = {"open": 0, "pending": 0, "closed": 0}

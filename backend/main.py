@@ -561,8 +561,7 @@ def get_monthly_yearly_tickets_by_status():
     years_list = years.split(',') if years else []
     months = request.args.get('month')
     months_list = months.split(',') if months else []
-    if not years_list or not months_list:
-        return jsonify(Error="Invalid request parameters"), 400
+
     handler = TicketsHandler()
     monthly_count = handler.get_monthly_yearly_tickets_by_status(years_list, months_list)
     report_name = JSONtoCSV().year_month_status_report(monthly_count)
