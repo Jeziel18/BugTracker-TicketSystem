@@ -62,7 +62,21 @@ class TicketsDAO:
         cursor.execute(query, tuple(update_values))
         self.conn.commit()
 
-# Statistics Down
+    def get_all_tickets_by_user(self, user_id):
+        cursor = self.conn.cursor()
+        query = "SELECT * FROM tickets WHERE user_id = %s"
+        cursor.execute(query, (user_id,))
+        results = cursor.fetchall()
+        return results
+
+    def get_all_tickets_by_status(self, ticket_status):
+        cursor = self.conn.cursor()
+        query = "SELECT * FROM tickets WHERE ticket_status = %s"
+        cursor.execute(query, (ticket_status,))
+        result = cursor.fetchall()
+        return result
+
+    # Statistics Down
     def count_total_tickets(self):
         cursor = self.conn.cursor()
         cursor.execute("SELECT COUNT(*) FROM tickets")
@@ -141,6 +155,52 @@ class TicketsDAO:
                 "yearly_total": row[3]
             })
         return monthly_yearly_tickets
+
+    def get_ticket_status_by_year(self, years):
+        cursor = self.conn.cursor()
+        query = """
+                    SELECT YEAR(ticket_creation_date) as year, MONTH(ticket_creation_date) as month, ticket_status, COUNT(*) as count
+                    FROM tickets
+                    WHERE YEAR(ticket_creation_date) IN ({})
+                    GROUP BY YEAR(ticket_creation_date), MONTH(ticket_creation_date), ticket_status
+                    ORDER BY YEAR(ticket_creation_date), MONTH(ticket_creation_date), count DESC;
+                """.format(",".join("%s" for _ in range(len(years))))
+        cursor.execute(query, (*years,))
+        monthly_count = {}
+        for row in cursor:
+            year = row[0]
+            month = row[1]
+            status = row[2]
+            count = row[3]
+            if year not in monthly_count:
+                monthly_count[year] = {}
+            if month not in monthly_count[year]:
+                monthly_count[year][month] = {}
+            monthly_count[year][month][status] = count
+        return monthly_count
+
+    def get_ticket_status_by_month(self, months):
+        cursor = self.conn.cursor()
+        query = """
+            SELECT YEAR(ticket_creation_date) as year, MONTH(ticket_creation_date) as month, ticket_status, COUNT(*) as count
+                FROM tickets
+                WHERE MONTH(ticket_creation_date) IN ({})
+                GROUP BY YEAR(ticket_creation_date), MONTH(ticket_creation_date), ticket_status
+                ORDER BY YEAR(ticket_creation_date), MONTH(ticket_creation_date), count DESC;
+                """.format(",".join("%s" for _ in range(len(months))))
+        cursor.execute(query, (*months,))
+        monthly_count = {}
+        for row in cursor:
+            year = row[0]
+            month = row[1]
+            status = row[2]
+            count = row[3]
+            if year not in monthly_count:
+                monthly_count[year] = {}
+            if month not in monthly_count[year]:
+                monthly_count[year][month] = {}
+            monthly_count[year][month][status] = count
+        return monthly_count
 
     def get_monthly_yearly_tickets_by_status(self, years, months):
         cursor = self.conn.cursor()

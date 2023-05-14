@@ -111,6 +111,25 @@ class TicketsHandler:
         except:
             return jsonify(Error="Failed to update ticket"), 500
 
+    def get_user_tickets(self, user_id):
+        rows = self.Tickets_DAO.get_all_tickets_by_user(user_id)
+        tickets = []
+        for row in rows:
+            ticket = self.build_tickets_dict(row)
+            tickets.append(ticket)
+        return {"Tickets": tickets}
+
+    def get_all_tickets_by_status(self, ticket_status):
+        tickets = []
+        try:
+            results = self.Tickets_DAO.get_all_tickets_by_status(ticket_status)
+            for row in results:
+                ticket = self.build_tickets_dict(row)
+                tickets.append(ticket)
+        except:
+            print("Error while fetching data from database")
+        return tickets
+
 #Statistics
     def count_total_tickets(self):
         total_tickets_created = self.Tickets_DAO.count_total_tickets()
@@ -134,8 +153,21 @@ class TicketsHandler:
             return monthly_yearly_tickets
 
     def get_monthly_yearly_tickets_by_status(self, years, months):
-        monthly_yearly_tickets = self.Tickets_DAO.get_monthly_yearly_tickets_by_status(years, months)
-        return monthly_yearly_tickets
+
+        if not years and not months:
+            return jsonify(Error="Invalid request parameters"), 400
+
+        elif not months:
+            yearly_ticket_status = self.Tickets_DAO.get_ticket_status_by_year(years)
+            return yearly_ticket_status
+
+        elif not years:
+            monthly_ticket_status = self.Tickets_DAO.get_ticket_status_by_month(months)
+            return monthly_ticket_status
+
+        else:
+            monthly_yearly_tickets = self.Tickets_DAO.get_monthly_yearly_tickets_by_status(years, months)
+            return monthly_yearly_tickets
 
     def get_total_tickets_by_status(self):
         total_tickets_by_status = {"open": 0, "pending": 0, "closed": 0}

@@ -518,6 +518,21 @@ def update_ticket(ticket_id):
     else:
         return jsonify(Error="Method not allowed."), 405
 
+@app.route('/user-tickets/<int:user_id>', methods=['GET'])
+def get_user_tickets(user_id):
+    handler = TicketsHandler()
+    return jsonify(handler.get_user_tickets(user_id))
+
+@app.route('/tickets/status/<ticket_status>', methods=['GET'])
+def get_tickets_by_status(ticket_status):
+    try:
+        tickets = TicketsHandler().get_all_tickets_by_status(ticket_status)
+        return jsonify(tickets=tickets), 200
+    except:
+        return jsonify(message="Failed to retrieve tickets by status"), 500
+
+
+
 
 # TICKET STATISTICS UNDER THIS COMMENT
 
@@ -546,8 +561,7 @@ def get_monthly_yearly_tickets_by_status():
     years_list = years.split(',') if years else []
     months = request.args.get('month')
     months_list = months.split(',') if months else []
-    if not years_list or not months_list:
-        return jsonify(Error="Invalid request parameters"), 400
+
     handler = TicketsHandler()
     monthly_count = handler.get_monthly_yearly_tickets_by_status(years_list, months_list)
     report_name = JSONtoCSV().year_month_status_report(monthly_count)
@@ -587,7 +601,6 @@ def full_tickets_report_by_year_and_or_month():
     months = request.args.get('month')
     months_list = months.split(',') if months else []
     handler = TicketsHandler()
-    print(years, months)
     full_report = handler.get_full_report_by_year_and_month(years_list, months_list)
     report_name = JSONtoCSV().full_tickets_report(full_report)
     return jsonify(full_report, report_name)

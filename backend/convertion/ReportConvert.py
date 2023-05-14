@@ -1,8 +1,9 @@
-from flask import Flask, jsonify, request
-import json
+import shutil
 import csv
 import datetime
 import os
+import time
+
 
 class JSONtoCSV:
 
@@ -37,6 +38,11 @@ class JSONtoCSV:
                 monthly_total = item.get('monthly_total', 0)
                 yearly_total = item.get('yearly_total', 0)
                 writer.writerow([year, month, monthly_total, yearly_total])
+
+        # potential code to move file between directories
+        # dest_path = os.path.abspath(os.path.join(r"C:\\Users\\carlo\\PycharmProjects\\BugTracker-TicketSystem\capstone-project\Front-End\public", "reports"))
+        # dest_file = os.path.join(dest_path, filename)
+        # shutil.move(os.path.join(os.getcwd(), "reports", filename), dest_file)
 
         print(f"CSV file '{filename}' created successfully.")
         return filename
