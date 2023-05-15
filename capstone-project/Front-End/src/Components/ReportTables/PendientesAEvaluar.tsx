@@ -4,7 +4,7 @@ import { InputActionMeta, SingleValue } from "react-select";
 import TimeAndDate from "../TimeAndDate/TimeAndDate";
 import Select from "react-select";
 //import BeatLoader from "react-spinners/BeatLoader";
-import axios from "axios";
+import axios, {all} from "axios";
 
 interface ticketObject {
   ticketID: number;
@@ -21,32 +21,15 @@ interface ticketObject {
   fechaActividad: string;
   horaActividad: string;
   status: string;
-}
-
-interface TicketData {
-  building_id: number[];
-  dean: string[];
-  department: string[];
-  job_description: string[];
-  office_number: string[];
-  service_category_id: number[];
-  service_id: number[];
-  ticket_activity_date: string[];
-  ticket_activity_name: string[];
-  ticket_activity_time: string[];
-  ticket_assigned_to: number[] | null;
-  ticket_creation_date: string[];
-  ticket_id: number[];
-  ticket_phone_number: string[];
-  ticket_priority: string[];
-  ticket_status: string;
-  ticket_update_date: string[] | null;
-  user_id: number[];
+  ticketCreationDate: string;
+  userID: number;
 }
 
 const PendientesAEvaluar = () => {
 
 
+  const allServicesArray: Array<{value: number, label: string}> = [];
+  const [allServices, setAllServices] = useState<Array<{value: number, label: string}>>([]);
   const service1Array: Array<{value: number, label: string}> = [];
   const [service1, setService1] = useState<Array<{value: number, label: string}>>([]);
   const service2Array: Array<{value: number, label: string}> = [];
@@ -114,6 +97,7 @@ const PendientesAEvaluar = () => {
         const services = data;
         for (let i = 0; i < services.length; i++) {
           const subArray = services[i];
+          allServicesArray.push({value: subArray[0], label: subArray[1]});
           if (subArray[2] == "1"){
             service1Array.push({value: subArray[0], label: subArray[1]});
           }
@@ -160,6 +144,7 @@ const PendientesAEvaluar = () => {
             service15Array.push({value: subArray[0], label: subArray[1]});
           }
         }
+        setAllServices(allServicesArray);
         setService1(service1Array);
         setService2(service2Array);
         setService3(service3Array);
@@ -175,40 +160,55 @@ const PendientesAEvaluar = () => {
         setService13(service13Array);
         setService14(service14Array);
         setService15(service15Array);
+        setGetAllDBInfo(false);
+        setGetAllDBTickets(true);
       });
-    setGetAllDBTickets(true);
-    setGetAllDBInfo(false);
+
   }
 
 
-  async function getSection(serviceCategoryID: number){
-    const response = await axios.get(`http://127.0.0.1:5000/service_categories/${serviceCategoryID}`);
-    const section = {value: serviceCategoryID, label: response.data.category_name};
-    return section;
+  function getSection(serviceCategoryID: number){
+    for(let i = 0; i < sectionDB.length; i++){
+      if(sectionDB[i].value == serviceCategoryID){
+        return {value: serviceCategoryID, label: sectionDB[i].label};
+        break;
+      }
+    }
+    return { value: 0, label: "Unknown" };
   }
 
-  async function getService(serviceID: number){
-    const response = await axios.get(`http://127.0.0.1:5000/services/${serviceID}`);
-    return {value: serviceID, label: response.data.service_name};
+  function getService(serviceID: number){
+    for(let i = 0; i < allServices.length; i++){
+      if(allServices[i].value == serviceID){
+        return {value: serviceID, label: allServices[i].label};
+        break;
+      }
+    }
+    return {value: 0, label: "Unknown"}
   }
 
-  async function getBuilding(buildingID: number){
-    const response = await axios.get(`http://127.0.0.1:5000/buildings/${buildingID}`);
-    return {value: buildingID, label: response.data.building_name[0]};
+  function getBuilding(buildingID: number){
+    for(let i = 0; i < buildingDB.length; i++){
+      if(buildingDB[i].value == buildingID){
+        return {value: buildingID, label: buildingDB[i].label};
+        break;
+      }
+    }
+    return {value: 0, label: "Unknown"}
   }
+
 
   if (getAllDBTickets){
     let tempAllTicket: ticketObject[] = [];
-
     axios.get("http://127.0.0.1:5000/tickets")
         .then(async (response) => {
           const allTickets = response.data;
 
           for(let key in allTickets){
-            for (let i = 0; i<allTickets[key].length-1; i++){
-              const serviceCategoryName = await getSection(allTickets[key][i].service_category_id[0]);
-              const serviceName = await getService(allTickets[key][i].service_id[0]);
-              const buildingName = await getBuilding(allTickets[key][i].building_id[0]);
+            for (let i = 0; i<allTickets[key].length; i++){
+              const serviceCategoryName = getSection(allTickets[key][i].service_category_id[0]);
+              const serviceName = getService(allTickets[key][i].service_id[0]);
+              const buildingName = getBuilding(allTickets[key][i].building_id[0]);
               tempAllTicket.push({
                 ticketID: allTickets[key][i].ticket_id[0],
                 seccion: serviceCategoryName,
@@ -223,18 +223,22 @@ const PendientesAEvaluar = () => {
                 nombreActividad: allTickets[key][i].ticket_activity_name[0],
                 fechaActividad: allTickets[key][i].ticket_activity_date[0],
                 horaActividad: allTickets[key][i].ticket_activity_time[0],
-                status: allTickets[key][i].ticket_status
+                status: allTickets[key][i].ticket_status,
+                ticketCreationDate: allTickets[key][i].ticket_creation_date[0],
+                userID: allTickets[key][i].user_id[0]
               })
             }
           }
           setAllTickets(tempAllTicket);
-          console.log(allTicket);
+          setGetAllDBTickets(false);
         })
         .catch((error) => {
           console.log("Failed to load all tickets", error);
+          setGetAllDBTickets(false);
         });
-    setGetAllDBTickets(false);
+
   }
+
 
   const [currentPage, setCurrentPage] = useState(1);
   const [dataPerPage] = useState(12);
@@ -249,9 +253,9 @@ const PendientesAEvaluar = () => {
 
 
   const Prioridad = [
-    { value: "Rutina  ", label: "Rutina" },
-    { value: "Urgente", label: "Urgente" },
-    { value: "Emergencia", label: "Emergencia" },
+    { value: "routine", label: "routine" },
+    { value: "urgent", label: "urgent" },
+    { value: "emergency", label: "emergency" },
   ];
 
 
@@ -303,20 +307,32 @@ const PendientesAEvaluar = () => {
 
   const [seccion, setSeccion] =
     useState<SingleValue<{ value: number; label: string } | null>>(null);
+  const [seccionOriginal, setSeccionOriginal] =
+    useState<SingleValue<{ value: number; label: string } | null>>(null);
 
   const [servicio, setServicio] =
+    useState<SingleValue<{ value: number; label: string } | null>>(null);
+  const [servicioOriginal, setServicioOriginal] =
     useState<SingleValue<{ value: number; label: string } | null>>(null);
 
   const [edificio, setEdificio] =
     useState<SingleValue<{ value: number; label: string } | null>>(null);
+  const [edificioOriginal, setEdificioOriginal] =
+    useState<SingleValue<{ value: number; label: string } | null>>(null);
 
   const [decanato, setDecanato] =
+    useState<SingleValue<{ value: string; label: string } | null>>(null);
+  const [decanatoOriginal, setDecanatoOriginal] =
     useState<SingleValue<{ value: string; label: string } | null>>(null);
 
   const [prioridad, setPrioridad] =
     useState<SingleValue<{ value: string; label: string } | null>>(null);
+  const [prioridadOriginal, setPrioridadOriginal] =
+    useState<SingleValue<{ value: string; label: string } | null>>(null);
 
   const [status, setStatus] =
+    useState<SingleValue<{ value: string; label: string } | null>>(null);
+  const [statusOriginal, setStatusOriginal] =
     useState<SingleValue<{ value: string; label: string } | null>>(null);
 
   const [numeroOficina, setNumeroOficina] = useState<string>("");
@@ -325,6 +341,7 @@ const PendientesAEvaluar = () => {
   ) {
     setNumeroOficina(event.target.value);
   }
+  const [numeroOficinaOriginal, setNumeroOficinaOriginal] = useState<string>("");
 
   const [descripcion, setDescripcion] = useState<string>("");
   function handleDescripcionChange(
@@ -332,6 +349,7 @@ const PendientesAEvaluar = () => {
   ) {
     setDescripcion(event.target.value);
   }
+  const [descripcionOriginal, setDescripcionOriginal] = useState<string>("");
 
   const [departamento, setDepartamento] = useState<string>("");
   function handleDepartamentoChange(
@@ -339,11 +357,13 @@ const PendientesAEvaluar = () => {
   ) {
     setDepartamento(event.target.value);
   }
+  const [departamentoOriginal, setDepartamentoOriginal] = useState<string>("");
 
   const [telefono, setTelefono] = useState<string>("");
   function handleTelefonoChange(event: React.ChangeEvent<HTMLTextAreaElement>) {
     setTelefono(event.target.value);
   }
+  const [telefonoOriginal, setTelefonoOriginal] = useState<string>("");
 
   const [nombreActividad, setNombreActividad] = useState<string>("");
   function handleNombreActividadChange(
@@ -351,6 +371,7 @@ const PendientesAEvaluar = () => {
   ) {
     setNombreActividad(event.target.value);
   }
+  const [nombreActividadOriginal, setNombreActividadOriginal] = useState<string>("");
 
   const [fechaActividad, setFechaActividad] = useState<string>("");
   function handleFechaActividadChange(
@@ -358,6 +379,7 @@ const PendientesAEvaluar = () => {
   ) {
     setFechaActividad(event.target.value);
   }
+  const [fechaActividadOriginal, setFechaActividadOriginal] = useState<string>("");
 
   const [horaActividad, setHoraActividad] = useState<string>("");
   function handleHoraActividadChange(
@@ -365,6 +387,8 @@ const PendientesAEvaluar = () => {
   ) {
     setHoraActividad(event.target.value);
   }
+  const [horaActividadOriginal, setHoraActividadOriginal] = useState<string>("");
+
 
   function serviceOptions(
       section: SingleValue<{ value: number; label: string } | null>
@@ -435,18 +459,60 @@ const PendientesAEvaluar = () => {
     status: string
   ) {
     setSeccion(section);
+    setSeccionOriginal(section);
     setServicio(service);
+    setServicioOriginal(service);
     setPrioridad({ value: priority, label: priority });
+    setPrioridadOriginal({ value: priority, label: priority });
     setEdificio(building);
+    setEdificioOriginal(building);
     setNumeroOficina(officeNumber);
+    setNumeroOficinaOriginal(officeNumber);
     setDescripcion(description);
+    setDescripcionOriginal(description);
     setDecanato(deanery);
+    setDecanatoOriginal(deanery);
     setDepartamento(department);
+    setDepartamentoOriginal(department);
     setTelefono(phone);
-    setNombreActividad(activityName);
-    setFechaActividad(activityDate);
-    setHoraActividad(activityTime);
+    setTelefonoOriginal(phone);
+    if(activityName === null){
+      setNombreActividad("");
+      setNombreActividadOriginal("");
+    }
+    else{
+      setNombreActividad(activityName);
+      setNombreActividadOriginal(activityName);
+    }
+    if(activityDate === null){
+      setFechaActividad("");
+      setFechaActividadOriginal("");
+    }
+    else{
+      setFechaActividad(activityDate);
+      setFechaActividadOriginal(activityDate);
+    }
+    if (activityTime == "None"){
+      setHoraActividad("");
+      setHoraActividadOriginal("");
+    }
+    else{
+      setHoraActividad(activityTime);
+      setHoraActividadOriginal(activityTime);
+    }
     setStatus({ value: status, label: status });
+    setStatusOriginal({ value: status, label: status });
+  }
+
+
+  function updateTicket(ticketID: number, updateValueJSON: any){
+    axios.put(`http://127.0.0.1:5000/tickets/${ticketID}`, updateValueJSON)
+        .then(response =>{
+          console.log(response);
+        })
+        .catch(error => {
+          console.log(error);
+        })
   }
 
   const [reportError, setReportError] = useState("");
@@ -464,7 +530,8 @@ const PendientesAEvaluar = () => {
     activityName: string,
     activityDate: string,
     activityTime: string,
-    status: SingleValue<{ value: string; label: string } | null>
+    status: SingleValue<{ value: string; label: string } | null>,
+    ticketID: number
   ) {
     let errorString = "Verifique los siguientes campos: ";
     if (
@@ -479,16 +546,16 @@ const PendientesAEvaluar = () => {
       !phone ||
       !status?.value
     ) {
-      if (section === null) {
+      if (!section) {
         errorString += "Seccion-";
       }
-      if (service === null) {
+      if (!service) {
         errorString += "Servicio-";
       }
-      if (priority === null) {
+      if (!priority) {
         errorString += "Prioridad-";
       }
-      if (building === null) {
+      if (!building) {
         errorString += "Edificio-";
       }
       if (officeNumber === "") {
@@ -497,7 +564,7 @@ const PendientesAEvaluar = () => {
       if (jobDescription == "") {
         errorString += "Descripcion del Trabajo-";
       }
-      if (dean === null) {
+      if (!dean) {
         errorString += "Decanato-";
       }
       if (department == "") {
@@ -506,29 +573,98 @@ const PendientesAEvaluar = () => {
       if (phone == "") {
         errorString += "Telefono-";
       }
-      if (status === null) {
-        errorString += "Status-";
+      if(!status){
+        errorString += "Status-"
       }
+      if (activityName || activityDate || activityTime) {
+      if (activityName == "" || activityDate == "" || activityTime == "") {
+        if (activityName == "") {
+          errorString += "Nombre de la actividad-";
+        }
+        if (activityDate == "") {
+          errorString += "Dia de la actividad-";
+        }
+        if (activityTime == "") {
+          errorString += "Hora de la actividad-";
+        }
+        setReportError(errorString);
+      }
+    }
       setReportError(errorString);
-    } else {
+    }
+    else {
       setReportError("");
-      console.log(
-        section,
-        service,
-        priority,
-        building,
-        officeNumber,
-        jobDescription,
-        dean,
-        department,
-        phone,
-        activityName,
-        activityDate,
-        activityTime,
-        status
-      );
+      if(section.label !== seccionOriginal?.label){
+        for(let i = 0; i<sectionDB.length; i++){
+          if(section.label === sectionDB[i].label){
+            const json = {service_category_id: sectionDB[i].value};
+            updateTicket(ticketID, json);
+            break;
+          }
+        }
+      }
+      if(service.label !== servicioOriginal?.label){
+        for(let i = 0; i<allServices.length; i++){
+          if(service.label === allServices[i].label){
+            const json = {service_id: allServices[i].value};
+            updateTicket(ticketID, json);
+            break;
+          }
+        }
+      }
+      if(priority.value !== prioridadOriginal?.value){
+        const json = {ticket_priority: priority.value};
+        updateTicket(ticketID, json);
+      }
+      if(building.label !== edificioOriginal?.label){
+        for(let i = 0; i<buildingDB.length; i++){
+          if(building.label === buildingDB[i].label){
+            const json = {building_id: buildingDB[i].value};
+            updateTicket(ticketID, json);
+            break;
+          }
+        }
+      }
+      if(officeNumber !== numeroOficinaOriginal){
+        const json = {office_number: officeNumber};
+        updateTicket(ticketID, json);
+      }
+      if(jobDescription !== descripcionOriginal){
+        const json = {job_description: jobDescription};
+        updateTicket(ticketID, json);
+      }
+      if(dean.value !== decanatoOriginal?.value){
+        const json = {dean: dean.value};
+        updateTicket(ticketID, json);
+      }
+      if(department !== departamentoOriginal){
+        const json = {department: department};
+        updateTicket(ticketID, json);
+      }
+      if(phone !== telefonoOriginal){
+        const json = {ticket_phone_number: phone};
+        updateTicket(ticketID, json);
+      }
+      if(activityName !== nombreActividadOriginal){
+        const json = {ticket_activity_name: activityName};
+        updateTicket(ticketID, json);
+      }
+      if(activityDate !== fechaActividadOriginal){
+        const json = {ticket_activity_date: activityDate};
+        updateTicket(ticketID, json);
+      }
+      if(activityTime !== horaActividadOriginal){
+        const json = {ticket_activity_time: activityTime};
+        updateTicket(ticketID, json);
+      }
+      if(status.value !== statusOriginal?.value){
+        const json = {ticket_status: status.value};
+        updateTicket(ticketID, json);
+      }
     }
   }
+
+
   return (
     <>
       <div className="mt-1 mb-2 p-2">
@@ -650,12 +786,12 @@ const PendientesAEvaluar = () => {
                             <div className="row justify-content-start mb-3">
                               <div className="col-sm-2">
                                 <div className="fs-6 badge bg-primary text-wrap">
-                                  <TimeAndDate />
+                                  {item.ticketCreationDate}
                                 </div>
                               </div>
                               <div className="col-sm-3">
                                 <div className="me-5 fs-6 badge bg-primary text-wrap">
-                                  Jeziel Torres - jeziel.torres1@upr.edu
+                                  {item.userID.toString()}
                                 </div>
                               </div>
                               <div className="col-sm-1">
@@ -1034,7 +1170,8 @@ const PendientesAEvaluar = () => {
                                         nombreActividad,
                                         fechaActividad,
                                         horaActividad,
-                                        status
+                                        status,
+                                        item.ticketID
                                       )
                                     }
                                   >

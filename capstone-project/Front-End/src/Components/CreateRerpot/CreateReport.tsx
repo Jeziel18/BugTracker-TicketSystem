@@ -388,16 +388,16 @@ const CreateReport: React.FC<Props> = ({ user_id }) => {
         !department ||
         !phone
     ) {
-      if (section === null) {
+      if (!section) {
         errorString += "Seccion-";
       }
-      if (service === null) {
+      if (!service) {
         errorString += "Servicio-";
       }
-      if (priority === null) {
+      if (!priority) {
         errorString += "Prioridad-";
       }
-      if (building === null) {
+      if (!building) {
         errorString += "Edificio-";
       }
       if (officeNumber === "") {
@@ -406,7 +406,7 @@ const CreateReport: React.FC<Props> = ({ user_id }) => {
       if (jobDescription == "") {
         errorString += "Descripcion del Trabajo-";
       }
-      if (deanery === null) {
+      if (!deanery) {
         errorString += "Decanato-";
       }
       if (department == "") {
@@ -445,8 +445,8 @@ const CreateReport: React.FC<Props> = ({ user_id }) => {
           department: department,
           ticket_phone_number: phone,
           ticket_activity_name: activityName,
-          ticket_activity_date: new Date(activityDate),
-          ticket_activity_time: new Date(activityTime)
+          ticket_activity_date: activityDate,
+          ticket_activity_time: activityTime
         }
         axios.post('http://127.0.0.1:5000/new-ticket', submitNewTicketWithActivity)
             .then(response => {
