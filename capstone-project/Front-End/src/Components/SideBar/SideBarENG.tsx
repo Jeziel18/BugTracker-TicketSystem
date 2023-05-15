@@ -2,7 +2,7 @@ import React from "react";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "./SideBar.css";
 
-function SideBar() {
+function SideBarENG() {
   return (
     <>
       <div className="sidebar d-flex justify-content-between flex-column bg-dark text-white p-3 vh-100">
@@ -137,4 +137,4 @@ function SideBar() {
   );
 }
 
-export default SideBar;
+export default SideBarENG;

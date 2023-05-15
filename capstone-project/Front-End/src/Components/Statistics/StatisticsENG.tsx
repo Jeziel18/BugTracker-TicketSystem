@@ -3,29 +3,29 @@ import Select, {MultiValue, ActionMeta, SingleValue} from "react-select";
 import makeAnimated from "react-select/animated";
 import axios from "axios";
 
-function Statistics() {
+function StatisticsENG() {
     const months = [
-    { value: 1, label: "Enero"},
-    { value: 2, label: "Febrero"},
-    { value: 3, label: "Marzo"},
-    { value: 4, label: "Abril"},
-    { value: 5, label: "Mayo"},
-    { value: 6, label: "Junio"},
-    { value: 7, label: "Julio"},
-    { value: 8, label: "Agosto"},
-    { value: 9, label: "Septiembre"},
-    { value: 10, label: "Octubre"},
-    { value: 11, label: "Noviembre"},
-    { value: 12, label: "Deciembre"},
+    { value: 1, label: "January"},
+    { value: 2, label: "February"},
+    { value: 3, label: "March"},
+    { value: 4, label: "April"},
+    { value: 5, label: "May"},
+    { value: 6, label: "June"},
+    { value: 7, label: "July"},
+    { value: 8, label: "August"},
+    { value: 9, label: "September"},
+    { value: 10, label: "October"},
+    { value: 11, label: "November"},
+    { value: 12, label: "December"},
   ];
 
   const years = [];
 
   const report = [
-      {value: 1, label: "Informe Completo"},
-      {value: 2, label: "Informe: Cantidad de Solicitudes"},
-      {value: 3, label: "Informe: Tipo de Servicios"},
-      {value: 4, label: "Informe: Estatus de las Solicitudes"}
+      {value: 1, label: "Full Report"},
+      {value: 2, label: "Report: Amount of Tickets"},
+      {value: 3, label: "Report: Service Category"},
+      {value: 4, label: "Report: Ticket Status"}
   ];
 
   for (let i = 2013; i <= 2050; i++) {
@@ -147,17 +147,17 @@ function Statistics() {
     <>
       <div className="mt-1 mb-2 p-2">
         <div className="fs-3 fw-bolder text-decoration-underline bi bi-calendar-day-fill">
-          <span className="ms-2">Generar Informes</span>
+          <span className="ms-2">Generate Reports</span>
         </div>
         <p className="fs-6 fw-bolder fst-italic text-decoration-underline">
           <i className="bi bi-info-circle-fill me-2"></i>
-          Los reportes se recopilaran y se bajaran a un excel
+          The reports will be compiled then available to download as an excel doc.
         </p>
 
           <div className="row">
           <div className="col-9">
             <div className="fs-5 badge bg-success text-wrap mb-3">
-              Seleccione el tipo de reporte:
+              Choose the type of report:
             </div>
             <Select
                 className="Report"
@@ -173,7 +173,7 @@ function Statistics() {
         <div className="row">
           <div className="col-9">
             <div className="fs-5 badge bg-success text-wrap mb-3 mt-3">
-              Selecciones los meses que quiere para la estadistica:
+              Choose which months you want the report to be based on:
             </div>
             <Select
               isMulti
@@ -192,7 +192,7 @@ function Statistics() {
         <div className="row mt-4">
           <div className="col-9">
             <div className="fs-5 badge bg-success text-wrap mb-3">
-              Selecciones los anos que quiere para la estadistica:
+              Choose which years you want the report to be based on:
             </div>
             <Select
               isMulti
@@ -218,7 +218,7 @@ function Statistics() {
                   generateStatistics(selectedReport, selectedYears, selectedMonths);
                 }}
               >
-                Generar Estadisticas
+                Generate Statistics
               </button>
             </div>
           </div>
@@ -228,4 +228,4 @@ function Statistics() {
   );
 }
 
-export default Statistics;
+export default StatisticsENG;

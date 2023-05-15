@@ -1,6 +1,6 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 
-function Home() {
+function HomeENG() {
   return (
     <>
       <div className="text-center mt-1 mb-2 p-2">
@@ -36,4 +36,4 @@ function Home() {
   );
 }
 
-export default Home;
+export default HomeENG;

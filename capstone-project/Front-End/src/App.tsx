@@ -1,11 +1,17 @@
 import React, { useState, useEffect} from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import SideBar from "./Components/SideBar/SideBar";
+import SideBarENG from "./Components/SideBar/SideBarENG";
 import Navbar from "./Components/Navbar/Navbar";
+import NavbarENG from "./Components/Navbar/NavbarENG";
 import CreateReport from "./Components/CreateRerpot/CreateReport";
+import CreateReportENG from "./Components/CreateRerpot/CreateReportENG";
 import Statistics from "./Components/Statistics/Statistics";
+import StatisticsENG from "./Components/Statistics/StatisticsENG";
 import PendientesAEvaluar from "./Components/ReportTables/PendientesAEvaluar";
+import PendientesAEvaluarENG from "./Components/ReportTables/PendientesAEvaluarENG";
 import Home from "./Components/Home/Home";
+import HomeENG from "./Components/Home/HomeENG";
 import Login from "./Components/Log In/LogIn";
 
 function App() {
@@ -14,7 +20,9 @@ function App() {
   );
 
   const [userID, setUserID] = useState<number | null>(null);
-
+  const [language, setLanguage] = useState<string>(
+    localStorage.getItem("language") || "es"
+  );
 
   const handleLogin = (id: number) => {
   localStorage.setItem("loggedIn", "true");
@@ -30,6 +38,15 @@ function App() {
     setUserID(null);
   };
 
+  const onLanguageChange = (language:string) => {
+    localStorage.setItem("language", language)
+    setLanguage(language)
+  }
+
+  useEffect(() => {
+  document.documentElement.lang = language;
+  }, [language]);
+
 
   return (
     <>
@@ -38,16 +55,24 @@ function App() {
           {loggedIn ? (
             <div className="d-flex">
               <div className="w-auto">
-                <SideBar />
+                {language === "es" ? (
+                    <SideBar />
+                ) : (
+                    <SideBarENG />
+                )}
               </div>
               <div className="col overflow-auto">
-                <Navbar onLogout={handleLogout} />
+                {language === "es" ? (
+                    <Navbar onLogout={handleLogout}  onLanguageChange={onLanguageChange}/>
+                ) : (
+                    <NavbarENG onLogout={handleLogout} onLanguageChange={onLanguageChange}/>
+                )}
                 <Routes>
                   <Route
                     path="/LogIn"
                     element={
                       <>
-                        <Navigate to="/home" />
+                        <Navigate to ="/home" />
                       </>
                     }
                   ></Route>
@@ -55,7 +80,11 @@ function App() {
                     path="/home"
                     element={
                       <>
-                        <Home />
+                        {language === "es" ? (
+                          <Home />
+                        ) : (
+                          <HomeENG />
+                        )}
                       </>
                     }
                   ></Route>
@@ -63,7 +92,11 @@ function App() {
                     path="/crearReporte"
                     element={
                       <>
-                        <CreateReport user_id={userID}/>
+                        {language === "es" ? (
+                          <CreateReport user_id={userID}/>
+                        ) : (
+                          <CreateReportENG user_id={userID}/>
+                        )}
                       </>
                     }
                   ></Route>
@@ -71,7 +104,11 @@ function App() {
                     path="/generarInformes"
                     element={
                       <>
-                        <Statistics />
+                        {language === "es" ? (
+                          <Statistics />
+                        ) : (
+                          <StatisticsENG />
+                        )}
                       </>
                     }
                   ></Route>
@@ -79,7 +116,11 @@ function App() {
                     path="/pendientesAEvaluar"
                     element={
                       <>
-                        <PendientesAEvaluar />
+                        {language === "es" ? (
+                          <PendientesAEvaluar />
+                        ) : (
+                          <PendientesAEvaluarENG />
+                        )}
                       </>
                     }
                   ></Route>

@@ -1,10 +1,15 @@
 import React from "react";
 
-interface LogoutProps {
+interface NavbarProps {
   onLogout: () => void;
+  onLanguageChange: (lang: string) => void;
 }
 
-function Navbar(props: LogoutProps) {
+
+function NavbarENG(props: NavbarProps) {
+  const handleLanguageChange = (lang: string) => {
+    props.onLanguageChange(lang);
+  };
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
       <div className="container-fluid">
@@ -38,6 +43,7 @@ function Navbar(props: LogoutProps) {
                 className="nav-link active text-white"
                 aria-current="page"
                 href="#"
+                onClick={() => handleLanguageChange("en")}
               >
                 <i className="bi bi-translate"></i> English
               </a>
@@ -47,6 +53,7 @@ function Navbar(props: LogoutProps) {
                 className="nav-link active text-white"
                 aria-current="page"
                 href="#"
+                onClick={() => handleLanguageChange("es")}
               >
                 <i className="bi bi-globe2"></i> Spanish
               </a>
@@ -58,4 +65,4 @@ function Navbar(props: LogoutProps) {
   );
 }
 
-export default Navbar;
+export default NavbarENG;
