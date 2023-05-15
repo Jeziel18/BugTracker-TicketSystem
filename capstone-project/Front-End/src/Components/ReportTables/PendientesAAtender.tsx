@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import { Table, Pagination, Button } from "react-bootstrap";
 import { InputActionMeta, SingleValue } from "react-select";
-import TimeAndDate from "../TimeAndDate/TimeAndDate";
+//import TimeAndDate from "../TimeAndDate/TimeAndDate";
 import Select from "react-select";
 import BeatLoader from "react-spinners/BeatLoader";
 import axios, {all} from "axios";
@@ -25,7 +25,7 @@ interface ticketObject {
   userID: number;
 }
 
-const PendientesAEvaluar = () => {
+const PendientesAAtender = () => {
 
 
   const allServicesArray: Array<{value: number, label: string}> = [];
@@ -211,7 +211,7 @@ const PendientesAEvaluar = () => {
 
           for(let key in allTickets){
             for (let i = 0; i<allTickets[key].length; i++){
-              if(allTickets[key][i].ticket_status == "open"){
+              if(allTickets[key][i].ticket_status == "pending"){
                 const serviceCategoryName = getSection(allTickets[key][i].service_category_id[0]);
                 const serviceName = getService(allTickets[key][i].service_id[0]);
                 const buildingName = getBuilding(allTickets[key][i].building_id[0]);
@@ -232,7 +232,7 @@ const PendientesAEvaluar = () => {
                   status: allTickets[key][i].ticket_status,
                   ticketCreationDate: allTickets[key][i].ticket_creation_date[0],
                   userID: allTickets[key][i].user_id[0]
-                })
+              })
               }
             }
           }
@@ -716,7 +716,7 @@ const PendientesAEvaluar = () => {
           :
           <div className="mt-1 mb-2 p-2">
             <div className="fs-3 fw-bolder text-decoration-underline">
-              <span>Tables de Reportes - Pendientes a Evaluar</span>
+              <span>Tables de Reportes - Pendientes a Atender</span>
             </div>
             <Table striped bordered hover style={{fontSize: "13px"}}>
               <thead>
@@ -1281,4 +1281,4 @@ const PendientesAEvaluar = () => {
   );
 };
 
-export default PendientesAEvaluar;
+export default PendientesAAtender;

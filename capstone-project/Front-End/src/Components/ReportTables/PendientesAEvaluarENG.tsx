@@ -206,27 +206,29 @@ const PendientesAEvaluar = () => {
 
           for(let key in allTickets){
             for (let i = 0; i<allTickets[key].length; i++){
-              const serviceCategoryName = getSection(allTickets[key][i].service_category_id[0]);
-              const serviceName = getService(allTickets[key][i].service_id[0]);
-              const buildingName = getBuilding(allTickets[key][i].building_id[0]);
-              tempAllTicket.push({
-                ticketID: allTickets[key][i].ticket_id[0],
-                seccion: serviceCategoryName,
-                servicio: serviceName,
-                prioridad: allTickets[key][i].ticket_priority[0],
-                edificio: buildingName,
-                numerDeOficina: allTickets[key][i].office_number[0],
-                descripcion: allTickets[key][i].job_description[0],
-                decanato: { value: allTickets[key][i].dean[0], label: allTickets[key][i].dean[0]},
-                departamento: allTickets[key][i].department[0],
-                telefono: allTickets[key][i].ticket_phone_number[0],
-                nombreActividad: allTickets[key][i].ticket_activity_name[0],
-                fechaActividad: allTickets[key][i].ticket_activity_date[0],
-                horaActividad: allTickets[key][i].ticket_activity_time[0],
-                status: allTickets[key][i].ticket_status,
-                ticketCreationDate: allTickets[key][i].ticket_creation_date[0],
-                userID: allTickets[key][i].user_id[0]
-              })
+              if(allTickets[key][i].ticket_status == "open"){
+                const serviceCategoryName = getSection(allTickets[key][i].service_category_id[0]);
+                const serviceName = getService(allTickets[key][i].service_id[0]);
+                const buildingName = getBuilding(allTickets[key][i].building_id[0]);
+                tempAllTicket.push({
+                  ticketID: allTickets[key][i].ticket_id[0],
+                  seccion: serviceCategoryName,
+                  servicio: serviceName,
+                  prioridad: allTickets[key][i].ticket_priority[0],
+                  edificio: buildingName,
+                  numerDeOficina: allTickets[key][i].office_number[0],
+                  descripcion: allTickets[key][i].job_description[0],
+                  decanato: { value: allTickets[key][i].dean[0], label: allTickets[key][i].dean[0]},
+                  departamento: allTickets[key][i].department[0],
+                  telefono: allTickets[key][i].ticket_phone_number[0],
+                  nombreActividad: allTickets[key][i].ticket_activity_name[0],
+                  fechaActividad: allTickets[key][i].ticket_activity_date[0],
+                  horaActividad: allTickets[key][i].ticket_activity_time[0],
+                  status: allTickets[key][i].ticket_status,
+                  ticketCreationDate: allTickets[key][i].ticket_creation_date[0],
+                  userID: allTickets[key][i].user_id[0]
+                })
+              }
             }
           }
           setAllTickets(tempAllTicket);

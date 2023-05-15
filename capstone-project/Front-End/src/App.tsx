@@ -13,6 +13,7 @@ import PendientesAEvaluarENG from "./Components/ReportTables/PendientesAEvaluarE
 import Home from "./Components/Home/Home";
 import HomeENG from "./Components/Home/HomeENG";
 import Login from "./Components/Log In/LogIn";
+import PendientesAAtender from "./Components/ReportTables/PendientesAAtender";
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(
@@ -120,6 +121,18 @@ function App() {
                           <PendientesAEvaluar />
                         ) : (
                           <PendientesAEvaluarENG />
+                        )}
+                      </>
+                    }
+                  ></Route>
+                  <Route
+                    path="/pendientesAAtender"
+                    element={
+                      <>
+                        {language === "es" ? (
+                          <PendientesAAtender />
+                        ) : (
+                          <PendientesAAtender />
                         )}
                       </>
                     }

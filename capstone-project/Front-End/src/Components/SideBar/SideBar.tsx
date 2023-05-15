@@ -64,7 +64,7 @@ function SideBar() {
             </li>
             <li className="nav-item">
               {
-                <a className="text-white" href="/">
+                <a className="text-white" href="/pendientesAAtender">
                   <i className="bi bi-receipt me-3"></i>
                   <span>Pendientes a atender</span>
                 </a>
