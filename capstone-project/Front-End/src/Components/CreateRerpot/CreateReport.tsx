@@ -934,25 +934,25 @@ const CreateReport: React.FC<Props> = ({ user_id }) => {
                             />
                         ) : (
                           <button
-                        type="submit"
-                        className="btn btn-primary btn-lg"
-                        onClick={() => {
-                          handleSummitReport(
-                            seccion,
-                            servicio,
-                            prioridad,
-                            edificio,
-                            numeroOficina,
-                            descripcion,
-                            decanato,
-                            departamento,
-                            telefono,
-                            nombreActividad,
-                            fechaActividad,
-                            horaActividad
-                          );
-                        }}
-                        disabled={isSubmitting} // Disable the button while the report is being submitted
+                              type="submit"
+                              className="btn btn-primary btn-lg"
+                              onClick={() => {
+                                handleSummitReport(
+                                    seccion,
+                                    servicio,
+                                    prioridad,
+                                    edificio,
+                                    numeroOficina,
+                                    descripcion,
+                                    decanato,
+                                    departamento,
+                                    telefono,
+                                    nombreActividad,
+                                    fechaActividad,
+                                    horaActividad
+                                );
+                              }}
+                              disabled={isSubmitting} // Disable the button while the report is being submitted
                       >
                         "Someter Reporte"
                       </button>

@@ -3,7 +3,7 @@ import { Table, Pagination, Button } from "react-bootstrap";
 import { InputActionMeta, SingleValue } from "react-select";
 import TimeAndDate from "../TimeAndDate/TimeAndDate";
 import Select from "react-select";
-//import BeatLoader from "react-spinners/BeatLoader";
+import BeatLoader from "react-spinners/BeatLoader";
 import axios, {all} from "axios";
 
 interface ticketObject {
@@ -61,7 +61,9 @@ const PendientesAEvaluar = () => {
   const service15Array: Array<{value: number, label: string}> = [];
   const [service15, setService15] = useState<Array<{value: number, label: string}>>([]);
 
-
+  const [userEmail, setUserEmail] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [updatingReportLoading, setUpdatingReportLoading] = useState(false);
   const [getAllDBTickets, setGetAllDBTickets] = useState(false);
   const [getAllDBInfo, setGetAllDBInfo] = useState(true);
   const [allTicket, setAllTickets] = useState<ticketObject[]>([]);
@@ -79,6 +81,7 @@ const PendientesAEvaluar = () => {
           label: building.building_name[0]
         }));
         setBuildingDB(buildingValues);
+        setLoading(true);
       });
 
     fetch('http://127.0.0.1:5000/service_categories')
@@ -89,6 +92,7 @@ const PendientesAEvaluar = () => {
           label: category.category_name
         }));
         setSectionDB(serviceCategories);
+        setLoading(true);
       });
 
     fetch('http://127.0.0.1:5000/services')
@@ -162,6 +166,7 @@ const PendientesAEvaluar = () => {
         setService15(service15Array);
         setGetAllDBInfo(false);
         setGetAllDBTickets(true);
+        setLoading(true);
       });
 
   }
@@ -231,14 +236,25 @@ const PendientesAEvaluar = () => {
           }
           setAllTickets(tempAllTicket);
           setGetAllDBTickets(false);
+          setLoading(false);
         })
         .catch((error) => {
           console.log("Failed to load all tickets", error);
           setGetAllDBTickets(false);
+          setLoading(false);
         });
 
   }
 
+
+  function getUserEmail(userID: number){
+    setUserEmail("");
+    fetch(`http://127.0.0.1:5000/users/${userID}`)
+      .then(response => response.json())
+      .then(data => {
+        setUserEmail(data.email);
+      })
+  }
 
   const [currentPage, setCurrentPage] = useState(1);
   const [dataPerPage] = useState(12);
@@ -506,16 +522,22 @@ const PendientesAEvaluar = () => {
 
 
   function updateTicket(ticketID: number, updateValueJSON: any){
+    setUpdatingReportLoading(true);
     axios.put(`http://127.0.0.1:5000/tickets/${ticketID}`, updateValueJSON)
         .then(response =>{
           console.log(response);
+
         })
         .catch(error => {
           console.log(error);
+          setUpdatingReportLoading(false)
+          setReportError("Occurio un error al actualizar el reporte. Intentelo de nuevo mas tarde");
+          setSuccessUpdate("");
         })
   }
 
   const [reportError, setReportError] = useState("");
+  const [successUpdate, setSuccessUpdate] = useState("")
 
   function handelSaveReport(
     section: SingleValue<{ value: number; label: string } | null>,
@@ -593,6 +615,7 @@ const PendientesAEvaluar = () => {
       setReportError(errorString);
     }
     else {
+      setUpdatingReportLoading(true);
       setReportError("");
       if(section.label !== seccionOriginal?.label){
         for(let i = 0; i<sectionDB.length; i++){
@@ -661,558 +684,597 @@ const PendientesAEvaluar = () => {
         const json = {ticket_status: status.value};
         updateTicket(ticketID, json);
       }
+
+      setTimeout(() => {
+        setUpdatingReportLoading(false);
+        setSuccessUpdate("Su reporte a sido actualizado correctamente");
+        setGetAllDBTickets(true);
+        setTimeout(() => {
+          setSuccessUpdate("");
+          },7000)
+      },5000);
     }
   }
 
 
   return (
     <>
-      <div className="mt-1 mb-2 p-2">
-        <div className="fs-3 fw-bolder text-decoration-underline">
-          <span>Tables de Reportes - Pendientes a Evaluar</span>
-        </div>
-        <Table striped bordered hover style={{ fontSize: "13px" }}>
-          <thead>
-            <tr>
-              <th>Report ID</th>
-              <th>
-                Seccion:
-                <input
-                  type="text"
-                  name="seccion"
-                  value={filters.seccion}
-                  onChange={handleFilterChange}
-                />
-              </th>
-              <th>
-                Servicio:
-                <input
-                  type="text"
-                  name="servicio"
-                  value={filters.servicio}
-                  onChange={handleFilterChange}
-                />
-              </th>
-              <th>
-                Prioridad:
-                <input
-                  type="text"
-                  name="prioridad"
-                  value={filters.prioridad}
-                  onChange={handleFilterChange}
-                />
-              </th>
-              <th>
-                Edificio:
-                <input
-                  type="text"
-                  name="edificio"
-                  value={filters.edificio}
-                  onChange={handleFilterChange}
-                />
-              </th>
-              <th>
-                Descripcion:
-                <input
-                  type="text"
-                  name="descripcion"
-                  value={filters.descripcion}
-                  onChange={handleFilterChange}
-                />
-              </th>
-              <th>
-                Status:
-                <input
-                  type="text"
-                  name="status"
-                  value={filters.status}
-                  onChange={handleFilterChange}
-                />
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {currentData.map((item) => (
-              <tr key={item.ticketID}>
-                <td>
-                  <button
-                    type="button"
-                    className="btn btn-link"
-                    data-bs-toggle="modal"
-                    data-bs-target={`#exampleModal${item.ticketID}`}
-                    onClick={() => {
-                      handelReportInfo(
-                        item.seccion,
-                        item.servicio,
-                        item.prioridad,
-                        item.edificio,
-                        item.numerDeOficina,
-                        item.descripcion,
-                        item.decanato,
-                        item.departamento,
-                        item.telefono,
-                        item.nombreActividad,
-                        item.fechaActividad,
-                        item.horaActividad,
-                        item.status
-                      );
-                    }}
-                  >
-                    {item.ticketID}
-                  </button>
-                  <div
-                    className="modal"
-                    tabIndex={-1}
-                    id={`exampleModal${item.ticketID}`}
-                  >
-                    <div className="modal-dialog modal-fullscreen">
-                      <div className="modal-content">
-                        <div className="modal-header">
-                          <h1
-                            className="modal-title fs-5"
-                            id="staticBackdropLabel"
-                          >
-                            Reporte - {item.ticketID}
-                          </h1>
-                          <button
-                            type="button"
-                            className="btn-close"
-                            data-bs-dismiss="modal"
-                            aria-label="Close"
-                          ></button>
-                        </div>
-                        <div className="modal-body">
-                          <div className="container-fluid mt-1 mb-2 p-0">
-                            <div className="row justify-content-start mb-3">
-                              <div className="col-sm-2">
-                                <div className="fs-6 badge bg-primary text-wrap">
-                                  {item.ticketCreationDate}
+      {loading ?
+          <div className="d-flex col justify-content-center align-items-center text-center vh-100">
+            <BeatLoader
+                loading={loading}
+                color="#016b28"
+                size={50}
+                aria-label="Loading Spinner"
+                data-testid="loader"
+                className="mx-auto"
+            />
+          </div>
+
+          :
+          <div className="mt-1 mb-2 p-2">
+            <div className="fs-3 fw-bolder text-decoration-underline">
+              <span>Tables de Reportes - Pendientes a Evaluar</span>
+            </div>
+            <Table striped bordered hover style={{fontSize: "13px"}}>
+              <thead>
+              <tr>
+                <th>Report ID</th>
+                <th>
+                  Seccion:
+                  <input
+                      type="text"
+                      name="seccion"
+                      value={filters.seccion}
+                      onChange={handleFilterChange}
+                  />
+                </th>
+                <th>
+                  Servicio:
+                  <input
+                      type="text"
+                      name="servicio"
+                      value={filters.servicio}
+                      onChange={handleFilterChange}
+                  />
+                </th>
+                <th>
+                  Prioridad:
+                  <input
+                      type="text"
+                      name="prioridad"
+                      value={filters.prioridad}
+                      onChange={handleFilterChange}
+                  />
+                </th>
+                <th>
+                  Edificio:
+                  <input
+                      type="text"
+                      name="edificio"
+                      value={filters.edificio}
+                      onChange={handleFilterChange}
+                  />
+                </th>
+                <th>
+                  Descripcion:
+                  <input
+                      type="text"
+                      name="descripcion"
+                      value={filters.descripcion}
+                      onChange={handleFilterChange}
+                  />
+                </th>
+                <th>
+                  Status:
+                  <input
+                      type="text"
+                      name="status"
+                      value={filters.status}
+                      onChange={handleFilterChange}
+                  />
+                </th>
+              </tr>
+              </thead>
+              <tbody>
+              {currentData.map((item) => (
+                  <tr key={item.ticketID}>
+                    <td>
+                      <button
+                          type="button"
+                          className="btn btn-link"
+                          data-bs-toggle="modal"
+                          data-bs-target={`#exampleModal${item.ticketID}`}
+                          onClick={() => {
+                            getUserEmail(item.userID);
+                            handelReportInfo(
+                                item.seccion,
+                                item.servicio,
+                                item.prioridad,
+                                item.edificio,
+                                item.numerDeOficina,
+                                item.descripcion,
+                                item.decanato,
+                                item.departamento,
+                                item.telefono,
+                                item.nombreActividad,
+                                item.fechaActividad,
+                                item.horaActividad,
+                                item.status
+                            );
+                          }}
+                      >
+                        {item.ticketID}
+                      </button>
+                      <div
+                          className="modal"
+                          tabIndex={-1}
+                          id={`exampleModal${item.ticketID}`}
+                      >
+                        <div className="modal-dialog modal-fullscreen">
+                          <div className="modal-content">
+                            <div className="modal-header">
+                              <h1
+                                  className="modal-title fs-5"
+                                  id="staticBackdropLabel"
+                              >
+                                Reporte - {item.ticketID}
+                              </h1>
+                              <button
+                                  type="button"
+                                  className="btn-close"
+                                  data-bs-dismiss="modal"
+                                  aria-label="Close"
+                              ></button>
+                            </div>
+                            <div className="modal-body">
+                              <div className="container-fluid mt-1 mb-2 p-0">
+                                <div className="row justify-content-start mb-3">
+                                  <div className="col-sm-2">
+                                    <div className="fs-6 badge bg-primary text-wrap">
+                                      {item.ticketCreationDate}
+                                    </div>
+                                  </div>
+                                  <div className="col-sm-3">
+                                    <div className="me-5 fs-6 badge bg-primary text-wrap">
+                                      {userEmail}
+                                    </div>
+                                  </div>
+                                  <div className="col-sm-1">
+                                    <label
+                                        htmlFor="selectbox"
+                                        className="col-form-label fs-6 badge bg-success text-wrap"
+                                    >
+                                      <span className="text-danger me-2">*</span>
+                                      <span>Status:</span>
+                                    </label>
+                                  </div>
+                                  <div className="col-sm-2 d-flex align-items-center">
+                                    <Select
+                                        value={status}
+                                        onChange={setStatus}
+                                        options={Status}
+                                        isClearable
+                                        isSearchable
+                                        styles={{
+                                          container: (provided) => ({
+                                            ...provided,
+                                            width: 170,
+                                          }),
+                                        }}
+                                    />
+                                  </div>
                                 </div>
-                              </div>
-                              <div className="col-sm-3">
-                                <div className="me-5 fs-6 badge bg-primary text-wrap">
-                                  {item.userID.toString()}
+                                <div className="row mb-2">
+                                  <div className="col-sm-1">
+                                    <label
+                                        htmlFor="selectbox"
+                                        className="col-form-label fs-6 badge bg-success text-wrap"
+                                    >
+                                      <span className="text-danger me-2">*</span>
+                                      <span>Seccion:</span>
+                                    </label>
+                                  </div>
+
+                                  <div className="col-sm-3 d-flex align-items-center">
+                                    <Select
+                                        value={seccion}
+                                        onChange={setSeccion}
+                                        options={sectionDB}
+                                        isClearable
+                                        isSearchable
+                                        styles={{
+                                          container: (provided) => ({
+                                            ...provided,
+                                            width: 400,
+                                          }),
+                                        }}
+                                    />
+                                  </div>
                                 </div>
-                              </div>
-                              <div className="col-sm-1">
-                                <label
-                                  htmlFor="selectbox"
-                                  className="col-form-label fs-6 badge bg-success text-wrap"
-                                >
-                                  <span className="text-danger me-2">*</span>
-                                  <span>Status:</span>
-                                </label>
-                              </div>
-                              <div className="col-sm-2 d-flex align-items-center">
-                                <Select
-                                  value={status}
-                                  onChange={setStatus}
-                                  options={Status}
-                                  isClearable
-                                  isSearchable
-                                  styles={{
-                                    container: (provided) => ({
-                                      ...provided,
-                                      width: 170,
-                                    }),
-                                  }}
-                                />
-                              </div>
-                            </div>
-                            <div className="row mb-2">
-                              <div className="col-sm-1">
-                                <label
-                                  htmlFor="selectbox"
-                                  className="col-form-label fs-6 badge bg-success text-wrap"
-                                >
-                                  <span className="text-danger me-2">*</span>
-                                  <span>Seccion:</span>
-                                </label>
-                              </div>
 
-                              <div className="col-sm-3 d-flex align-items-center">
-                                <Select
-                                  value={seccion}
-                                  onChange={setSeccion}
-                                  options={sectionDB}
-                                  isClearable
-                                  isSearchable
-                                  styles={{
-                                    container: (provided) => ({
-                                      ...provided,
-                                      width: 400,
-                                    }),
-                                  }}
-                                />
-                              </div>
-                            </div>
+                                <div className="row mt-3">
+                                  <div className="col-sm-1">
+                                    <label
+                                        htmlFor="selectbox"
+                                        className="col-form-label fs-6 badge bg-success text-wrap"
+                                    >
+                                      <span className="text-danger me-2">*</span>
+                                      <span>Servicio:</span>
+                                    </label>
+                                  </div>
 
-                            <div className="row mt-3">
-                              <div className="col-sm-1">
-                                <label
-                                  htmlFor="selectbox"
-                                  className="col-form-label fs-6 badge bg-success text-wrap"
-                                >
-                                  <span className="text-danger me-2">*</span>
-                                  <span>Servicio:</span>
-                                </label>
-                              </div>
+                                  <div className="col-sm-3 d-flex align-items-center">
+                                    <Select
+                                        value={servicio}
+                                        onChange={setServicio}
+                                        options={serviceOptions(seccion)}
+                                        isClearable
+                                        isSearchable
+                                        styles={{
+                                          container: (provided) => ({
+                                            ...provided,
+                                            width: 400,
+                                          }),
+                                        }}
+                                    />
+                                  </div>
+                                </div>
 
-                              <div className="col-sm-3 d-flex align-items-center">
-                                <Select
-                                  value={servicio}
-                                  onChange={setServicio}
-                                  options={serviceOptions(seccion)}
-                                  isClearable
-                                  isSearchable
-                                  styles={{
-                                    container: (provided) => ({
-                                      ...provided,
-                                      width: 400,
-                                    }),
-                                  }}
-                                />
-                              </div>
-                            </div>
+                                <div className="row mt-3">
+                                  <div className="col-sm-1">
+                                    <label
+                                        htmlFor="selectbox"
+                                        className="col-form-label fs-6 badge bg-success text-wrap"
+                                    >
+                                      <span className="text-danger me-2">*</span>
+                                      <span>Prioridad:</span>
+                                    </label>
+                                  </div>
 
-                            <div className="row mt-3">
-                              <div className="col-sm-1">
-                                <label
-                                  htmlFor="selectbox"
-                                  className="col-form-label fs-6 badge bg-success text-wrap"
-                                >
-                                  <span className="text-danger me-2">*</span>
-                                  <span>Prioridad:</span>
-                                </label>
-                              </div>
+                                  <div className="col-sm-3 d-flex align-items-center">
+                                    <Select
+                                        value={prioridad}
+                                        onChange={setPrioridad}
+                                        options={Prioridad}
+                                        isClearable
+                                        isSearchable
+                                        styles={{
+                                          container: (provided) => ({
+                                            ...provided,
+                                            width: 400,
+                                          }),
+                                        }}
+                                    />
+                                  </div>
+                                </div>
 
-                              <div className="col-sm-3 d-flex align-items-center">
-                                <Select
-                                  value={prioridad}
-                                  onChange={setPrioridad}
-                                  options={Prioridad}
-                                  isClearable
-                                  isSearchable
-                                  styles={{
-                                    container: (provided) => ({
-                                      ...provided,
-                                      width: 400,
-                                    }),
-                                  }}
-                                />
-                              </div>
-                            </div>
+                                <div className="row mb-2 mt-3">
+                                  <div className="col-sm-1">
+                                    <label
+                                        htmlFor="selectbox"
+                                        className="col-form-label fs-6 badge bg-success text-wrap"
+                                    >
+                                      <span className="text-danger me-2">*</span>
+                                      <span>Edificio:</span>
+                                    </label>
+                                  </div>
+                                  <div className="col-sm-3 d-flex align-items-center">
+                                    <Select
+                                        value={edificio}
+                                        onChange={setEdificio}
+                                        options={buildingDB}
+                                        isClearable
+                                        isSearchable
+                                        styles={{
+                                          container: (provided) => ({
+                                            ...provided,
+                                            width: 500,
+                                          }),
+                                        }}
+                                    />
+                                  </div>
+                                </div>
 
-                            <div className="row mb-2 mt-3">
-                              <div className="col-sm-1">
-                                <label
-                                  htmlFor="selectbox"
-                                  className="col-form-label fs-6 badge bg-success text-wrap"
-                                >
-                                  <span className="text-danger me-2">*</span>
-                                  <span>Edificio:</span>
-                                </label>
-                              </div>
-                              <div className="col-sm-3 d-flex align-items-center">
-                                <Select
-                                  value={edificio}
-                                  onChange={setEdificio}
-                                  options={buildingDB}
-                                  isClearable
-                                  isSearchable
-                                  styles={{
-                                    container: (provided) => ({
-                                      ...provided,
-                                      width: 500,
-                                    }),
-                                  }}
-                                />
-                              </div>
-                            </div>
-
-                            <div className="row mb-2 mt-3">
-                              <div className="col-sm-3">
-                                <label
-                                  htmlFor="selectbox"
-                                  className="col-form-label fs-6 badge bg-success text-wrap"
-                                >
-                                  <span className="text-danger me-2">*</span>
-                                  <span>
+                                <div className="row mb-2 mt-3">
+                                  <div className="col-sm-3">
+                                    <label
+                                        htmlFor="selectbox"
+                                        className="col-form-label fs-6 badge bg-success text-wrap"
+                                    >
+                                      <span className="text-danger me-2">*</span>
+                                      <span>
                                     Numero de Oficina, Cuarto o Salon:
                                   </span>
-                                </label>
-                              </div>
-                              <div className="col-sm-2 d-flex align-items-center">
-                                <div className="form-group">
+                                    </label>
+                                  </div>
+                                  <div className="col-sm-2 d-flex align-items-center">
+                                    <div className="form-group">
                                   <textarea
-                                    className="form-control"
-                                    id="numeroDeOficina"
-                                    name="numeroDeOficina"
-                                    rows={1}
-                                    value={numeroOficina}
-                                    onChange={handleNumeroOficinaChange}
+                                      className="form-control"
+                                      id="numeroDeOficina"
+                                      name="numeroDeOficina"
+                                      rows={1}
+                                      value={numeroOficina}
+                                      onChange={handleNumeroOficinaChange}
                                   ></textarea>
+                                    </div>
+                                  </div>
                                 </div>
-                              </div>
-                            </div>
 
-                            <div className="row mb-2 mt-3">
-                              <div className="col-sm-2">
-                                <label
-                                  htmlFor="selectbox"
-                                  className="col-form-label fs-6 badge bg-success text-wrap"
-                                >
-                                  <span className="text-danger me-2">*</span>
-                                  <span>Descripcion Del Trabajo:</span>
-                                </label>
-                              </div>
-                              <div className="col-sm-2 d-flex align-items-center">
-                                <div className="form-group">
+                                <div className="row mb-2 mt-3">
+                                  <div className="col-sm-2">
+                                    <label
+                                        htmlFor="selectbox"
+                                        className="col-form-label fs-6 badge bg-success text-wrap"
+                                    >
+                                      <span className="text-danger me-2">*</span>
+                                      <span>Descripcion Del Trabajo:</span>
+                                    </label>
+                                  </div>
+                                  <div className="col-sm-2 d-flex align-items-center">
+                                    <div className="form-group">
                                   <textarea
-                                    className="form-control"
-                                    id="descripcionTrabajo"
-                                    name="descripcionTrabajo"
-                                    rows={2}
-                                    value={descripcion}
-                                    onChange={handleDescripcionChange}
-                                    style={{ width: "700px" }}
+                                      className="form-control"
+                                      id="descripcionTrabajo"
+                                      name="descripcionTrabajo"
+                                      rows={2}
+                                      value={descripcion}
+                                      onChange={handleDescripcionChange}
+                                      style={{width: "700px"}}
                                   ></textarea>
+                                    </div>
+                                  </div>
                                 </div>
-                              </div>
-                            </div>
 
-                            <hr className="border border-success border-2 opacity-100 mt-3" />
+                                <hr className="border border-success border-2 opacity-100 mt-3"/>
 
-                            <div className="row mb-2">
-                              <div className="col-sm-1">
-                                <label
-                                  htmlFor="selectbox"
-                                  className="col-form-label fs-6 badge bg-success text-wrap"
-                                >
-                                  <span className="text-danger me-2">*</span>
-                                  <span>Decanato:</span>
-                                </label>
-                              </div>
-                              <div className="col-sm-3 d-flex align-items-center">
-                                <Select
-                                  value={decanato}
-                                  onChange={setDecanato}
-                                  options={Decanato}
-                                  isClearable
-                                  isSearchable
-                                  styles={{
-                                    container: (provided) => ({
-                                      ...provided,
-                                      width: 400,
-                                    }),
-                                  }}
-                                />
-                              </div>
-                            </div>
+                                <div className="row mb-2">
+                                  <div className="col-sm-1">
+                                    <label
+                                        htmlFor="selectbox"
+                                        className="col-form-label fs-6 badge bg-success text-wrap"
+                                    >
+                                      <span className="text-danger me-2">*</span>
+                                      <span>Decanato:</span>
+                                    </label>
+                                  </div>
+                                  <div className="col-sm-3 d-flex align-items-center">
+                                    <Select
+                                        value={decanato}
+                                        onChange={setDecanato}
+                                        options={Decanato}
+                                        isClearable
+                                        isSearchable
+                                        styles={{
+                                          container: (provided) => ({
+                                            ...provided,
+                                            width: 400,
+                                          }),
+                                        }}
+                                    />
+                                  </div>
+                                </div>
 
-                            <div className="row mb-2 mt-3">
-                              <div className="col-sm-2">
-                                <label
-                                  htmlFor="selectbox"
-                                  className="col-form-label fs-6 badge bg-success text-wrap"
-                                >
-                                  <span className="text-danger me-2">*</span>
-                                  <span>Departamento u Oficina:</span>
-                                </label>
-                              </div>
-                              <div className="col-sm-3 d-flex align-items-center">
-                                <div className="form-group">
+                                <div className="row mb-2 mt-3">
+                                  <div className="col-sm-2">
+                                    <label
+                                        htmlFor="selectbox"
+                                        className="col-form-label fs-6 badge bg-success text-wrap"
+                                    >
+                                      <span className="text-danger me-2">*</span>
+                                      <span>Departamento u Oficina:</span>
+                                    </label>
+                                  </div>
+                                  <div className="col-sm-3 d-flex align-items-center">
+                                    <div className="form-group">
                                   <textarea
-                                    className="form-control"
-                                    id="departamento"
-                                    name="departamento"
-                                    rows={1}
-                                    value={departamento}
-                                    onChange={handleDepartamentoChange}
-                                    style={{ width: "500px" }}
+                                      className="form-control"
+                                      id="departamento"
+                                      name="departamento"
+                                      rows={1}
+                                      value={departamento}
+                                      onChange={handleDepartamentoChange}
+                                      style={{width: "500px"}}
                                   ></textarea>
+                                    </div>
+                                  </div>
                                 </div>
-                              </div>
-                            </div>
 
-                            <div className="row mb-2 mt-3">
-                              <div className="col-sm-2">
-                                <label
-                                  htmlFor="selectbox"
-                                  className="col-form-label fs-6 badge bg-success text-wrap"
-                                >
-                                  <span className="text-danger me-2">*</span>
-                                  <span>Extension o Telefono:</span>
-                                </label>
-                              </div>
-                              <div className="col-sm-2 d-flex align-items-center">
-                                <div className="form-group">
+                                <div className="row mb-2 mt-3">
+                                  <div className="col-sm-2">
+                                    <label
+                                        htmlFor="selectbox"
+                                        className="col-form-label fs-6 badge bg-success text-wrap"
+                                    >
+                                      <span className="text-danger me-2">*</span>
+                                      <span>Extension o Telefono:</span>
+                                    </label>
+                                  </div>
+                                  <div className="col-sm-2 d-flex align-items-center">
+                                    <div className="form-group">
                                   <textarea
-                                    className="form-control"
-                                    id="telefono"
-                                    name="telefono"
-                                    rows={1}
-                                    value={telefono}
-                                    onChange={handleTelefonoChange}
-                                    style={{ width: "250px" }}
+                                      className="form-control"
+                                      id="telefono"
+                                      name="telefono"
+                                      rows={1}
+                                      value={telefono}
+                                      onChange={handleTelefonoChange}
+                                      style={{width: "250px"}}
                                   ></textarea>
+                                    </div>
+                                  </div>
                                 </div>
-                              </div>
-                            </div>
 
-                            <hr className="border border-success border-2 opacity-100 mt-4" />
-                            <p className="fs-6 fw-bolder text-decoration-underline">
-                              <i className="bi bi-info-circle-fill me-2"></i>
-                              Si el Trabajo esta relacionado a una actividad,
-                              entre los siguientes datos:
-                            </p>
+                                <hr className="border border-success border-2 opacity-100 mt-4"/>
+                                <p className="fs-6 fw-bolder text-decoration-underline">
+                                  <i className="bi bi-info-circle-fill me-2"></i>
+                                  Si el Trabajo esta relacionado a una actividad,
+                                  entre los siguientes datos:
+                                </p>
 
-                            <div className="row mb-2 mt-3">
-                              <div className="col-sm-2">
-                                <label
-                                  htmlFor="selectbox"
-                                  className="col-form-label fs-6 badge bg-success text-wrap"
-                                >
-                                  <span className="text-danger me-2">*</span>
-                                  <span>Nombre de la Actividad:</span>
-                                </label>
-                              </div>
-                              <div className="col-sm-3 d-flex align-items-center">
-                                <div className="form-group">
+                                <div className="row mb-2 mt-3">
+                                  <div className="col-sm-2">
+                                    <label
+                                        htmlFor="selectbox"
+                                        className="col-form-label fs-6 badge bg-success text-wrap"
+                                    >
+                                      <span className="text-danger me-2">*</span>
+                                      <span>Nombre de la Actividad:</span>
+                                    </label>
+                                  </div>
+                                  <div className="col-sm-3 d-flex align-items-center">
+                                    <div className="form-group">
                                   <textarea
-                                    className="form-control"
-                                    id="nombreActividad"
-                                    name="nombreActividad"
-                                    rows={1}
-                                    value={nombreActividad}
-                                    onChange={handleNombreActividadChange}
-                                    style={{ width: "600px" }}
+                                      className="form-control"
+                                      id="nombreActividad"
+                                      name="nombreActividad"
+                                      rows={1}
+                                      value={nombreActividad}
+                                      onChange={handleNombreActividadChange}
+                                      style={{width: "600px"}}
                                   ></textarea>
+                                    </div>
+                                  </div>
                                 </div>
-                              </div>
-                            </div>
 
-                            <div className="row mb-2 mt-3">
-                              <div className="col-sm-1">
-                                <label
-                                  htmlFor="selectbox"
-                                  className="col-form-label fs-6 badge bg-success text-wrap"
-                                >
-                                  <span className="text-danger me-2">*</span>
-                                  <span>Fecha:</span>
-                                </label>
-                              </div>
-                              <div className="col-sm-3 d-flex align-items-center">
-                                <div className="form-group">
+                                <div className="row mb-2 mt-3">
+                                  <div className="col-sm-1">
+                                    <label
+                                        htmlFor="selectbox"
+                                        className="col-form-label fs-6 badge bg-success text-wrap"
+                                    >
+                                      <span className="text-danger me-2">*</span>
+                                      <span>Fecha:</span>
+                                    </label>
+                                  </div>
+                                  <div className="col-sm-3 d-flex align-items-center">
+                                    <div className="form-group">
                                   <textarea
-                                    className="form-control"
-                                    id="fechaActividad"
-                                    name="fechaActividad"
-                                    rows={1}
-                                    value={fechaActividad}
-                                    onChange={handleFechaActividadChange}
-                                    style={{ width: "150px" }}
-                                    placeholder="MM/DD/YYYY"
+                                      className="form-control"
+                                      id="fechaActividad"
+                                      name="fechaActividad"
+                                      rows={1}
+                                      value={fechaActividad}
+                                      onChange={handleFechaActividadChange}
+                                      style={{width: "150px"}}
+                                      placeholder="MM/DD/YYYY"
                                   ></textarea>
+                                    </div>
+                                  </div>
                                 </div>
-                              </div>
-                            </div>
 
-                            <div className="row mb-2 mt-3">
-                              <div className="col-sm-1">
-                                <label
-                                  htmlFor="selectbox"
-                                  className="col-form-label fs-6 badge bg-success text-wrap"
-                                >
-                                  <span className="text-danger me-2">*</span>
-                                  <span>Hora de Inicio:</span>
-                                </label>
-                              </div>
-                              <div className="col-sm-3 d-flex align-items-center">
-                                <div className="form-group">
+                                <div className="row mb-2 mt-3">
+                                  <div className="col-sm-1">
+                                    <label
+                                        htmlFor="selectbox"
+                                        className="col-form-label fs-6 badge bg-success text-wrap"
+                                    >
+                                      <span className="text-danger me-2">*</span>
+                                      <span>Hora de Inicio:</span>
+                                    </label>
+                                  </div>
+                                  <div className="col-sm-3 d-flex align-items-center">
+                                    <div className="form-group">
                                   <textarea
-                                    className="form-control"
-                                    id="horaActividad"
-                                    name="horaActividad"
-                                    rows={1}
-                                    value={horaActividad}
-                                    onChange={handleHoraActividadChange}
-                                    style={{ width: "150px" }}
-                                    placeholder="HH:MM AM/PM"
+                                      className="form-control"
+                                      id="horaActividad"
+                                      name="horaActividad"
+                                      rows={1}
+                                      value={horaActividad}
+                                      onChange={handleHoraActividadChange}
+                                      style={{width: "150px"}}
+                                      placeholder="HH:MM AM/PM"
                                   ></textarea>
-                                </div>
-                              </div>
+                                    </div>
+                                  </div>
 
-                              <div className="col-sm-2">
-                                <div className="d-flex justify-content-center">
-                                  <button
-                                    type="button"
-                                    className="btn btn-secondary me-1"
-                                    data-bs-dismiss="modal"
-                                    onClick={() => setReportError("")}
-                                  >
-                                    Close
-                                  </button>
-                                  <button
-                                    type="button"
-                                    className="btn btn-primary ms-1"
-                                    onClick={() =>
-                                      handelSaveReport(
-                                        seccion,
-                                        servicio,
-                                        prioridad,
-                                        edificio,
-                                        numeroOficina,
-                                        descripcion,
-                                        decanato,
-                                        departamento,
-                                        telefono,
-                                        nombreActividad,
-                                        fechaActividad,
-                                        horaActividad,
-                                        status,
-                                        item.ticketID
-                                      )
-                                    }
-                                  >
-                                    Save changes
-                                  </button>
+                                  <div className="col-sm-2">
+                                    <div className="d-flex justify-content-center">
+                                      {updatingReportLoading ? (
+                                        <BeatLoader
+                                          loading={updatingReportLoading}
+                                          color="#016b28"
+                                          size={25}
+                                          aria-label="Loading Spinner"
+                                          data-testid="loader"
+                                        />
+                                      ) : (
+                                        <>
+                                          <button
+                                            type="button"
+                                            className="btn btn-secondary me-1"
+                                            data-bs-dismiss="modal"
+                                            onClick={() => setReportError("")}
+                                          >
+                                            Close
+                                          </button>
+                                          <button
+                                            type="button"
+                                            className="btn btn-primary ms-1"
+                                            onClick={() =>
+                                              handelSaveReport(
+                                                seccion,
+                                                servicio,
+                                                prioridad,
+                                                edificio,
+                                                numeroOficina,
+                                                descripcion,
+                                                decanato,
+                                                departamento,
+                                                telefono,
+                                                nombreActividad,
+                                                fechaActividad,
+                                                horaActividad,
+                                                status,
+                                                item.ticketID
+                                              )
+                                            }
+                                            disabled={updatingReportLoading}
+                                          >
+                                            Save changes
+                                          </button>
+                                        </>
+                                      )}
+                                    </div>
+                                  </div>
+                                  <div className="col-sm-5">
+                                    {reportError && <div className="fs-6 badge bg-danger text-wrap">{reportError}</div>}
+                                    {successUpdate && <div className="fs-6 badge bg-success text-wrap">{successUpdate}</div>}
+                                  </div>
                                 </div>
-                              </div>
-                              <div className="fs-6 col-sm-5 badge bg-danger text-wrap">
-                                {reportError}
                               </div>
                             </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  </div>
-                </td>
-                <td>{item.seccion.label}</td>
-                <td>{item.servicio.label}</td>
-                <td>{item.prioridad}</td>
-                <td>{item.edificio.label}</td>
-                <td>{item.descripcion}</td>
-                <td>{item.status}</td>
-              </tr>
-            ))}
-          </tbody>
-        </Table>
-        <Pagination>
-          {Array(Math.ceil(allTicket.length / dataPerPage))
-            .fill(null)
-            .map((_, index) => (
-              <Pagination.Item
-                key={index}
-                active={index + 1 === currentPage}
-                onClick={() => paginate(index + 1)}
-              >
-                {index + 1}
-              </Pagination.Item>
-            ))}
-        </Pagination>
-      </div>
+                    </td>
+                    <td>{item.seccion.label}</td>
+                    <td>{item.servicio.label}</td>
+                    <td>{item.prioridad}</td>
+                    <td>{item.edificio.label}</td>
+                    <td>{item.descripcion}</td>
+                    <td>{item.status}</td>
+                  </tr>
+              ))}
+              </tbody>
+
+            </Table>
+            <Pagination>
+              {Array(Math.ceil(allTicket.length / dataPerPage))
+                  .fill(null)
+                  .map((_, index) => (
+                      <Pagination.Item
+                          key={index}
+                          active={index + 1 === currentPage}
+                          onClick={() => paginate(index + 1)}
+                      >
+                        {index + 1}
+                      </Pagination.Item>
+                  ))}
+            </Pagination>
+          </div>
+      }
     </>
   );
 };
