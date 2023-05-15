@@ -72,3 +72,12 @@ class ServicesDAO:
         self.conn.commit()
         cursor.close()
         return service_id
+    def get_service_name_by_id(self, service_id):
+        cursor = self.conn.cursor()
+        cursor.execute("SELECT service_name FROM services WHERE service_id=%s", (service_id,))
+        row = cursor.fetchone()
+        cursor.close()
+        if row:
+            return row[0]
+        else:
+            return None

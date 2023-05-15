@@ -1,8 +1,6 @@
 from datetime import datetime
-
 from flask import Flask, jsonify, request
 from flask_cors import CORS
-
 from backend.dao.SCS import SCSDao
 from backend.dao.Tickets import TicketsDAO
 from backend.dao.Users import UserDAO
@@ -16,7 +14,6 @@ from backend.handler.Tickets import TicketsHandler
 from backend.handler.Users import UserHandler
 from backend.handler.Building import BuildingHandler
 from backend.convertion.ReportConvert import JSONtoCSV
-
 import mysql.connector
 
 app = Flask(__name__)
@@ -531,7 +528,40 @@ def get_tickets_by_status(ticket_status):
     except:
         return jsonify(message="Failed to retrieve tickets by status"), 500
 
+@app.route('/building/<int:building_id>', methods=['GET'])
+def get_building_name_by_id(building_id):
+    building_name = BuildingHandler().get_building_name_by_id(building_id)
+    if building_name is None:
+        return jsonify({'error': 'Building not found'}), 404
+    return jsonify({'building_name': building_name}), 200
+@app.route('/service_category/<int:category_id>', methods=['GET'])
+def get_category_name_by_id(category_id):
+    category_name = ServiceCategoryHandler().get_category_name_by_id(category_id)
+    if category_name is None:
+        return jsonify({'error': 'Category not found'}), 404
+    return jsonify({'category_name': category_name}), 200
+@app.route('/servicesname/<int:service_id>', methods=['GET'])
+def get_service_name_by_id(service_id):
+    service_name = ServicesDAO().get_service_name_by_id(service_id)
+    if service_name is None:
+        return jsonify({'error': 'Service not found'}), 404
+    return jsonify({'service_name': service_name}), 200
+@app.route('/user/<int:user_id>/email', methods=['GET'])
+def get_email_by_user_id(user_id):
+    email = UserHandler().get_email_by_id(user_id)
+    return jsonify({'email': email}), 200 if email is not None else 404
 
+#These 2 approute under this commment can be used to display the names instead of ids of the tickets.
+@app.route('/tickets/display_name', methods=['GET'])
+def get_all_tickets_display_name():
+    handler = TicketsHandler()
+    tickets = handler.get_all_tickets_display_name()
+    return jsonify(tickets)
+@app.route('/tickets/display_name/<string:status>', methods=['GET'])
+def get_all_tickets_display_name_by_status(status):
+    handler = TicketsHandler()
+    tickets = handler.get_all_tickets_display_name_by_status(status)
+    return jsonify(tickets)
 
 
 # TICKET STATISTICS UNDER THIS COMMENT

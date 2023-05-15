@@ -53,6 +53,9 @@ class BuildingHandler:
         except:
             return jsonify(Error="Failed to update building"), 500
 
+    def get_building_name_by_id(self, building_id):
+        return self.building_dao.get_building_name_by_id(building_id)
+
     def delete_building(self, building_id):
         dao = BuildingDAO()
         if not dao.get_building_by_id(building_id):

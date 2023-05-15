@@ -61,3 +61,5 @@ class ServiceCategoryHandler:
         else:
             dao.delete_service_category(service_category_id)
             return jsonify(DeleteStatus = "OK"), 200
+    def get_category_name_by_id(self, category_id):
+        return self.service_category_DAO.get_category_name_by_id(category_id)

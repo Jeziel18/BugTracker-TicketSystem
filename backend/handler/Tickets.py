@@ -1,8 +1,15 @@
+from collections import OrderedDict
+
 from flask import Flask, jsonify, request, session
 from backend.dao.Building import BuildingDAO
 from backend.dao.Service_Category import ServiceCategoryDAO
+from backend.dao.Services import ServicesDAO
 from backend.dao.Tickets import TicketsDAO
-from datetime import datetime, time, date
+from datetime import datetime, time, date, timedelta
+from backend.handler.Users import UserHandler
+
+from backend.dao.Users import UserDAO
+
 
 class TicketsHandler:
     def __init__(self):
@@ -44,6 +51,54 @@ class TicketsHandler:
             "service_id": service_id,
             "ticket_priority": ticket_priority,
             "building_id": building_id,
+            "office_number": office_number,
+            "job_description": job_description,
+            "dean": dean,
+            "department": department,
+            "ticket_phone_number": ticket_phone_number,
+            "ticket_activity_name": ticket_activity_name,
+            "ticket_activity_date": ticket_activity_date,
+            "ticket_activity_time": ticket_activity_time,
+            "ticket_assigned_to": ticket_assigned_to,
+            "ticket_creation_date": ticket_creation_date,
+            "ticket_update_date": ticket_update_date,
+            "ticket_status": ticket_status
+        }
+        return ticket
+
+    def build_tickets_name_dict(self, row):
+        result = OrderedDict()
+        result['ticket_id'] = row[0],
+        result['email'] = row[1],
+        result['category_name'] = row[2],
+        result['service_name'] = row[3],
+        result['ticket_priority'] = row[4],
+        result['building_name'] = row[5],
+        result['office_number'] = row[6],
+        result['job_description'] = row[7],
+        result['dean'] = row[8],
+        result['department'] = row[9],
+        result['ticket_phone_number'] = row[10],
+        result['ticket_activity_name'] = row[11],
+        result['ticket_activity_date'] = row[12],
+        result['ticket_activity_time'] = str(row[13]),  # convert timedelta to string
+        result['ticket_assigned_to'] = row[14],
+        result['ticket_creation_date'] = row[15],
+        result['ticket_update_date'] = row[16],
+        result['ticket_status'] = row[17]
+        return result
+    def build_tickets_name_attributes(self, ticket_id, email, category_name, service_name, ticket_priority,
+                                 building_name,
+                                 office_number, job_description, dean, department, ticket_phone_number,
+                                 ticket_activity_name, ticket_activity_date, ticket_activity_time, ticket_assigned_to,
+                                 ticket_creation_date, ticket_update_date, ticket_status):
+        ticket = {
+            "ticket_id": ticket_id,
+            "email": email,
+            "category_name": category_name,
+            "service_name": service_name,
+            "ticket_priority": ticket_priority,
+            "building_name": building_name,
             "office_number": office_number,
             "job_description": job_description,
             "dean": dean,
@@ -130,7 +185,46 @@ class TicketsHandler:
             print("Error while fetching data from database")
         return tickets
 
-#Statistics
+    # def get_all_tickets_display_name(self):
+    #     tickets = self.Tickets_DAO.get_all_tickets_display_name()
+    #     result = []
+    #     for row in tickets:
+    #         ticket = (
+    #             row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9],
+    #             row[10], row[11], row[12], str(row[13]), row[14], row[15], row[16], row[17]
+    #         )
+    #         result.append(ticket)
+    #     # Define the desired order of the keys
+    #     order = [
+    #         "ticket_id", "email", "category_name", "service_name", "ticket_priority",
+    #         "building_name", "office_number", "job_description", "dean", "department",
+    #         "ticket_phone_number", "ticket_activity_name", "ticket_activity_date", "ticket_activity_time",
+    #         "ticket_assigned_to", "ticket_creation_date", "ticket_update_date", "ticket_status"
+    #     ]
+    #     # Sort the result list based on the order of the keys
+    #     sorted_result = [dict(zip(order, t)) for t in result]
+    #     return sorted_result
+    def get_all_tickets_display_name(self):
+        tickets = self.Tickets_DAO.get_all_tickets_display_name()
+        result = []
+        for row in tickets:
+            ticket = self.build_tickets_name_dict(row)
+            result.append(ticket)
+        # Sort the list of dictionaries based on the ticket_id key
+        sorted_result = sorted(result, key=lambda k: k['ticket_id'])
+        return sorted_result
+
+    def get_all_tickets_display_name_by_status(self, status):
+        tickets = self.Tickets_DAO.get_all_tickets_display_name_by_status(status)
+        result = []
+        for row in tickets:
+            ticket = self.build_tickets_name_dict(row)
+            result.append(ticket)
+        # Sort the list of dictionaries based on the ticket_id key
+        sorted_result = sorted(result, key=lambda k: k['ticket_id'])
+        return sorted_result
+
+    #Statistics
     def count_total_tickets(self):
         total_tickets_created = self.Tickets_DAO.count_total_tickets()
         return jsonify(total_tickets_created)

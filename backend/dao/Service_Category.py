@@ -65,3 +65,11 @@ class ServiceCategoryDAO:
         if not category:
             return None
         return category[0]
+
+    def get_category_name_by_id(self, category_id):
+        cursor = self.conn.cursor()
+        query = "SELECT category_name FROM service_category WHERE service_category_id = %s"
+        cursor.execute(query, (category_id,))
+        row = cursor.fetchone()
+        if row is not None:
+            return row[0]

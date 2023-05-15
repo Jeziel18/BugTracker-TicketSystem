@@ -60,3 +60,6 @@ class ServicesHandler:
         else:
             dao.delete_service(service_id)
             return jsonify(DeleteStatus = "OK"), 200
+
+    def get_service_name_by_id(self, service_id):
+        return self.services_dao.get_service_name_by_id(service_id)

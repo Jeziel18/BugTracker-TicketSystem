@@ -121,3 +121,7 @@ class UserHandler:
             return jsonify(Message = "Login Successful"), 200, validation[1], validation[2]
         else:
             return jsonify(Error = "Failed to Login"), 500
+
+    def get_email_by_id(self, user_id):
+        email = self.user_dao.get_email_by_id(user_id)
+        return email if email is not None else 'User not found'

@@ -83,3 +83,11 @@ class UserDAO:
         login = cursor.fetchone()
         self.conn.connect()
         return login
+
+    def get_email_by_id(self, user_id):
+        cursor = self.conn.cursor()
+        cursor.execute("SELECT email FROM users WHERE user_id = %s", (user_id,))
+        email = cursor.fetchone()
+        if email is not None:
+            return email[0]
+        return None

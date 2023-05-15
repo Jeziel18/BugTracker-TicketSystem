@@ -63,6 +63,16 @@ class BuildingDAO:
         self.conn.commit()
         cursor.close()
         return building_id
+    def get_building_name_by_id(self, building_id):
+        cursor = self.conn.cursor()
+        query = "SELECT building_name FROM buildings WHERE building_id = %s"
+        cursor.execute(query, (building_id,))
+        result = cursor.fetchone()
+        cursor.close()
+        if result:
+            return result[0]
+        else:
+            return None
 
 # Method below is used for statistics for the Tickets
     def get_building_name(self, building_id):

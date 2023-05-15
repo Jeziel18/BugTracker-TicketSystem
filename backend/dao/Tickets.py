@@ -2,6 +2,10 @@ from datetime import datetime
 from flask import jsonify
 import mysql.connector
 
+from backend.dao.Building import BuildingDAO
+from backend.dao.Service_Category import ServiceCategoryDAO
+from backend.dao.Services import ServicesDAO
+from backend.dao.Users import UserDAO
 class TicketsDAO:
     def __init__(self):
         self.conn = mysql.connector.connect(
@@ -75,6 +79,39 @@ class TicketsDAO:
         cursor.execute(query, (ticket_status,))
         result = cursor.fetchall()
         return result
+
+    def get_all_tickets_display_name(self):
+        cursor = self.conn.cursor()
+        query = '''SELECT t.ticket_id, u.email as user_email, sc.category_name, s.service_name, t.ticket_priority,
+            b.building_name, t.office_number, t.job_description, t.dean, t.department, t.ticket_phone_number,
+            t.ticket_activity_name, t.ticket_activity_date, t.ticket_activity_time, t.ticket_assigned_to,
+            t.ticket_creation_date, t.ticket_update_date, t.ticket_status
+            FROM tickets t
+            JOIN users u ON t.user_id = u.user_id
+            JOIN service_category sc ON t.service_category_id = sc.service_category_id
+            JOIN services s ON t.service_id = s.service_id
+            JOIN buildings b ON t.building_id = b.building_id;
+        '''
+        cursor.execute(query)
+        results = cursor.fetchall()
+        return results
+
+    def get_all_tickets_display_name_by_status(self, status):
+        cursor = self.conn.cursor()
+        query = '''SELECT t.ticket_id, u.email as user_email, sc.category_name, s.service_name, t.ticket_priority,
+                    b.building_name, t.office_number, t.job_description, t.dean, t.department, t.ticket_phone_number,
+                    t.ticket_activity_name, t.ticket_activity_date, t.ticket_activity_time, t.ticket_assigned_to,
+                    t.ticket_creation_date, t.ticket_update_date, t.ticket_status
+                    FROM tickets t
+                    JOIN users u ON t.user_id = u.user_id
+                    JOIN service_category sc ON t.service_category_id = sc.service_category_id
+                    JOIN services s ON t.service_id = s.service_id
+                    JOIN buildings b ON t.building_id = b.building_id
+                    WHERE t.ticket_status = %s;
+                '''
+        cursor.execute(query, (status,))
+        results = cursor.fetchall()
+        return results
 
     # Statistics Down
     def count_total_tickets(self):
