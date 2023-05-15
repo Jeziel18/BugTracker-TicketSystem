@@ -58,7 +58,7 @@ function SideBar() {
               {
                 <a className="text-white" href="/pendientesAEvaluar">
                   <i className="bi bi-receipt me-3"></i>
-                  <span>Pendientes a evaluar</span>
+                  <span>Solicitudes Abiertas</span>
                 </a>
               }
             </li>
@@ -66,29 +66,21 @@ function SideBar() {
               {
                 <a className="text-white" href="/pendientesAAtender">
                   <i className="bi bi-receipt me-3"></i>
-                  <span>Pendientes a atender</span>
+                  <span>Solicitudes Pendientes</span>
                 </a>
               }
             </li>
             <li className="nav-item">
               {
-                <a className="text-white" href="/">
+                <a className="text-white" href="/solicitudesCerradas">
                   <i className="bi bi-receipt me-3"></i>
-                  <span>Solicitudes Atendidas</span>
+                  <span>Solicitudes Cerradas</span>
                 </a>
               }
             </li>
             <li className="nav-item">
               {
-                <a className="text-white" href="/">
-                  <i className="bi bi-receipt me-3"></i>
-                  <span>Solicitudes no Atendidas</span>
-                </a>
-              }
-            </li>
-            <li className="nav-item">
-              {
-                <a className="text-white" href="/">
+                <a className="text-white" href="/todosLosReportes">
                   <i className="bi bi-receipt me-3"></i>
                   <span>Todas las solicitudes</span>
                 </a>

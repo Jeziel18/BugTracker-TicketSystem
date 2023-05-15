@@ -24,7 +24,7 @@ interface ticketObject {
   userID: number;
 }
 
-const PendientesAEvaluarENG = () => {
+const PendientesAEvaluar = () => {
 
 
   const allServicesArray: Array<{value: number, label: string}> = [];
@@ -210,7 +210,7 @@ const PendientesAEvaluarENG = () => {
 
           for(let key in allTickets){
             for (let i = 0; i<allTickets[key].length; i++){
-              if(allTickets[key][i].ticket_status == "open"){
+              if(allTickets[key][i].ticket_status == "closed"){
                 const serviceCategoryName = getSection(allTickets[key][i].service_category_id[0]);
                 const serviceName = getService(allTickets[key][i].service_id[0]);
                 const buildingName = getBuilding(allTickets[key][i].building_id[0]);
@@ -715,7 +715,7 @@ const PendientesAEvaluarENG = () => {
           :
           <div className="mt-1 mb-2 p-2">
             <div className="fs-3 fw-bolder text-decoration-underline">
-              <span>Tickets Tables - Open Tickets</span>
+              <span>Tablas de Reportes - Solicitudes Cerradas</span>
             </div>
             <Table striped bordered hover style={{fontSize: "13px"}}>
               <thead>
@@ -1120,6 +1120,7 @@ const PendientesAEvaluarENG = () => {
                                         htmlFor="selectbox"
                                         className="col-form-label fs-6 badge bg-success text-wrap"
                                     >
+                                      <span className="text-danger me-2">*</span>
                                       <span>Nombre de la Actividad:</span>
                                     </label>
                                   </div>
@@ -1144,6 +1145,7 @@ const PendientesAEvaluarENG = () => {
                                         htmlFor="selectbox"
                                         className="col-form-label fs-6 badge bg-success text-wrap"
                                     >
+                                      <span className="text-danger me-2">*</span>
                                       <span>Fecha:</span>
                                     </label>
                                   </div>
@@ -1169,6 +1171,7 @@ const PendientesAEvaluarENG = () => {
                                         htmlFor="selectbox"
                                         className="col-form-label fs-6 badge bg-success text-wrap"
                                     >
+                                      <span className="text-danger me-2">*</span>
                                       <span>Hora de Inicio:</span>
                                     </label>
                                   </div>
@@ -1277,4 +1280,4 @@ const PendientesAEvaluarENG = () => {
   );
 };
 
-export default PendientesAEvaluarENG;
+export default PendientesAEvaluar;

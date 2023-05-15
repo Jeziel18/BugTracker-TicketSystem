@@ -58,7 +58,7 @@ function SideBarENG() {
               {
                 <a className="text-white" href="/pendientesAEvaluar">
                   <i className="bi bi-receipt me-3"></i>
-                  <span>Pending Tickets</span>
+                  <span>Open Tickets</span>
                 </a>
               }
             </li>
@@ -66,29 +66,21 @@ function SideBarENG() {
               {
                 <a className="text-white" href="/pendientesAAtender">
                   <i className="bi bi-receipt me-3"></i>
-                  <span>Active Tickets</span>
+                  <span>Pending Tickets</span>
                 </a>
               }
             </li>
             <li className="nav-item">
               {
-                <a className="text-white" href="/">
+                <a className="text-white" href="/solicitudesCerradas">
                   <i className="bi bi-receipt me-3"></i>
-                  <span>Completed Tickets</span>
+                  <span>Closed Tickets</span>
                 </a>
               }
             </li>
             <li className="nav-item">
               {
-                <a className="text-white" href="/">
-                  <i className="bi bi-receipt me-3"></i>
-                  <span>Incomplete Tickets</span>
-                </a>
-              }
-            </li>
-            <li className="nav-item">
-              {
-                <a className="text-white" href="/">
+                <a className="text-white" href="/todosLosReportes">
                   <i className="bi bi-receipt me-3"></i>
                   <span>All Tickets</span>
                 </a>

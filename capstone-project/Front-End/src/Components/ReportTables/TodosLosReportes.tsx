@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from "react";
 import { Table, Pagination, Button } from "react-bootstrap";
 import { InputActionMeta, SingleValue } from "react-select";
+import TimeAndDate from "../TimeAndDate/TimeAndDate";
 import Select from "react-select";
 import BeatLoader from "react-spinners/BeatLoader";
 import axios, {all} from "axios";
@@ -24,7 +25,7 @@ interface ticketObject {
   userID: number;
 }
 
-const PendientesAEvaluarENG = () => {
+const TodosLosReportes = () => {
 
 
   const allServicesArray: Array<{value: number, label: string}> = [];
@@ -210,29 +211,27 @@ const PendientesAEvaluarENG = () => {
 
           for(let key in allTickets){
             for (let i = 0; i<allTickets[key].length; i++){
-              if(allTickets[key][i].ticket_status == "open"){
-                const serviceCategoryName = getSection(allTickets[key][i].service_category_id[0]);
-                const serviceName = getService(allTickets[key][i].service_id[0]);
-                const buildingName = getBuilding(allTickets[key][i].building_id[0]);
-                tempAllTicket.push({
-                  ticketID: allTickets[key][i].ticket_id[0],
-                  seccion: serviceCategoryName,
-                  servicio: serviceName,
-                  prioridad: allTickets[key][i].ticket_priority[0],
-                  edificio: buildingName,
-                  numerDeOficina: allTickets[key][i].office_number[0],
-                  descripcion: allTickets[key][i].job_description[0],
-                  decanato: { value: allTickets[key][i].dean[0], label: allTickets[key][i].dean[0]},
-                  departamento: allTickets[key][i].department[0],
-                  telefono: allTickets[key][i].ticket_phone_number[0],
-                  nombreActividad: allTickets[key][i].ticket_activity_name[0],
-                  fechaActividad: allTickets[key][i].ticket_activity_date[0],
-                  horaActividad: allTickets[key][i].ticket_activity_time[0],
-                  status: allTickets[key][i].ticket_status,
-                  ticketCreationDate: allTickets[key][i].ticket_creation_date[0],
-                  userID: allTickets[key][i].user_id[0]
-                })
-              }
+              const serviceCategoryName = getSection(allTickets[key][i].service_category_id[0]);
+              const serviceName = getService(allTickets[key][i].service_id[0]);
+              const buildingName = getBuilding(allTickets[key][i].building_id[0]);
+              tempAllTicket.push({
+                ticketID: allTickets[key][i].ticket_id[0],
+                seccion: serviceCategoryName,
+                servicio: serviceName,
+                prioridad: allTickets[key][i].ticket_priority[0],
+                edificio: buildingName,
+                numerDeOficina: allTickets[key][i].office_number[0],
+                descripcion: allTickets[key][i].job_description[0],
+                decanato: { value: allTickets[key][i].dean[0], label: allTickets[key][i].dean[0]},
+                departamento: allTickets[key][i].department[0],
+                telefono: allTickets[key][i].ticket_phone_number[0],
+                nombreActividad: allTickets[key][i].ticket_activity_name[0],
+                fechaActividad: allTickets[key][i].ticket_activity_date[0],
+                horaActividad: allTickets[key][i].ticket_activity_time[0],
+                status: allTickets[key][i].ticket_status,
+                ticketCreationDate: allTickets[key][i].ticket_creation_date[0],
+                userID: allTickets[key][i].user_id[0]
+              })
             }
           }
           setAllTickets(tempAllTicket);
@@ -715,7 +714,7 @@ const PendientesAEvaluarENG = () => {
           :
           <div className="mt-1 mb-2 p-2">
             <div className="fs-3 fw-bolder text-decoration-underline">
-              <span>Tickets Tables - Open Tickets</span>
+              <span>Tablas de Reportes - Todas Las Solicitudes</span>
             </div>
             <Table striped bordered hover style={{fontSize: "13px"}}>
               <thead>
@@ -1120,6 +1119,7 @@ const PendientesAEvaluarENG = () => {
                                         htmlFor="selectbox"
                                         className="col-form-label fs-6 badge bg-success text-wrap"
                                     >
+                                      <span className="text-danger me-2">*</span>
                                       <span>Nombre de la Actividad:</span>
                                     </label>
                                   </div>
@@ -1144,6 +1144,7 @@ const PendientesAEvaluarENG = () => {
                                         htmlFor="selectbox"
                                         className="col-form-label fs-6 badge bg-success text-wrap"
                                     >
+                                      <span className="text-danger me-2">*</span>
                                       <span>Fecha:</span>
                                     </label>
                                   </div>
@@ -1169,6 +1170,7 @@ const PendientesAEvaluarENG = () => {
                                         htmlFor="selectbox"
                                         className="col-form-label fs-6 badge bg-success text-wrap"
                                     >
+                                      <span className="text-danger me-2">*</span>
                                       <span>Hora de Inicio:</span>
                                     </label>
                                   </div>
@@ -1277,4 +1279,4 @@ const PendientesAEvaluarENG = () => {
   );
 };
 
-export default PendientesAEvaluarENG;
+export default TodosLosReportes;

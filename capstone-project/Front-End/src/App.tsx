@@ -14,6 +14,11 @@ import Home from "./Components/Home/Home";
 import HomeENG from "./Components/Home/HomeENG";
 import Login from "./Components/Log In/LogIn";
 import PendientesAAtender from "./Components/ReportTables/PendientesAAtender";
+import PendientesAAtenderENG from "./Components/ReportTables/PendientesAAtenderENG";
+import SolicitudesCerradas from "./Components/ReportTables/SolicitudesCerradas";
+import SolicitudesCerradasENG from "./Components/ReportTables/SolicitudesCerradasENG";
+import TodosLosReportes from "./Components/ReportTables/TodosLosReportes";
+import TodosLosReportesENG from "./Components/ReportTables/TodosLosReportesENG";
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(
@@ -132,7 +137,31 @@ function App() {
                         {language === "es" ? (
                           <PendientesAAtender />
                         ) : (
-                          <PendientesAAtender />
+                          <PendientesAAtenderENG />
+                        )}
+                      </>
+                    }
+                  ></Route>
+                  <Route
+                    path="/solicitudesCerradas"
+                    element={
+                      <>
+                        {language === "es" ? (
+                          <SolicitudesCerradas />
+                        ) : (
+                          <SolicitudesCerradasENG />
+                        )}
+                      </>
+                    }
+                  ></Route>
+                  <Route
+                    path="/todosLosReportes"
+                    element={
+                      <>
+                        {language === "es" ? (
+                          <TodosLosReportes />
+                        ) : (
+                          <TodosLosReportesENG />
                         )}
                       </>
                     }

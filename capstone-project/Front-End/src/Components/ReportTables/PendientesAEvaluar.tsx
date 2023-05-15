@@ -716,7 +716,7 @@ const PendientesAEvaluar = () => {
           :
           <div className="mt-1 mb-2 p-2">
             <div className="fs-3 fw-bolder text-decoration-underline">
-              <span>Tables de Reportes - Pendientes a Evaluar</span>
+              <span>Tablas de Reportes - Solicitudes Abiertas</span>
             </div>
             <Table striped bordered hover style={{fontSize: "13px"}}>
               <thead>
