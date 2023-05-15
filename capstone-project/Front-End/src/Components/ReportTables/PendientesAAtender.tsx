@@ -290,9 +290,9 @@ const PendientesAAtender = () => {
   ];
 
   const Status = [
-    { value: "open", label: "open" },
-    { value: "pending", label: "pending" },
-    { value: "closed", label: "closed" },
+    { value: "open", label: "abierto" },
+    { value: "pending", label: "pendiente" },
+    { value: "closed", label: "cerado" },
   ];
 
 

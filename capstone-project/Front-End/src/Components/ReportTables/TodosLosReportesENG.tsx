@@ -268,22 +268,21 @@ const TodosLosReportesENG = () => {
   });
 
 
-  const Prioridad = [
+const Prioridad = [
     { value: "routine", label: "routine" },
     { value: "urgent", label: "urgent" },
     { value: "emergency", label: "emergency" },
   ];
 
-
-  const Decanato = [
+const Decanato = [
     {
       value: "Decanato de Administracion",
-      label: "Decanato de Administracion",
+      label: "Dean of Administration",
     },
-    { value: "Decanato de Estudiantes", label: "Decanato de Estudiantes" },
+    { value: "Decanato de Estudiantes", label: "Dean of Students" },
     {
       value: "Decanato de Asuntos Academicos",
-      label: "Decanato de Asuntos Academicos",
+      label: "Dean of the Academicians",
     },
   ];
 
@@ -687,7 +686,7 @@ const TodosLosReportesENG = () => {
 
       setTimeout(() => {
         setUpdatingReportLoading(false);
-        setSuccessUpdate("Su reporte a sido actualizado correctamente");
+        setSuccessUpdate("Your ticket has been successfully updated");
         setGetAllDBTickets(true);
         setTimeout(() => {
           setSuccessUpdate("");
@@ -719,9 +718,9 @@ const TodosLosReportesENG = () => {
             <Table striped bordered hover style={{fontSize: "13px"}}>
               <thead>
               <tr>
-                <th>Report ID</th>
+                <th>Ticket ID</th>
                 <th>
-                  Seccion:
+                  Category:
                   <input
                       type="text"
                       name="seccion"
@@ -730,7 +729,7 @@ const TodosLosReportesENG = () => {
                   />
                 </th>
                 <th>
-                  Servicio:
+                  Service:
                   <input
                       type="text"
                       name="servicio"
@@ -739,7 +738,7 @@ const TodosLosReportesENG = () => {
                   />
                 </th>
                 <th>
-                  Prioridad:
+                  Priority:
                   <input
                       type="text"
                       name="prioridad"
@@ -748,7 +747,7 @@ const TodosLosReportesENG = () => {
                   />
                 </th>
                 <th>
-                  Edificio:
+                  Building:
                   <input
                       type="text"
                       name="edificio"
@@ -757,7 +756,7 @@ const TodosLosReportesENG = () => {
                   />
                 </th>
                 <th>
-                  Descripcion:
+                  Description:
                   <input
                       type="text"
                       name="descripcion"
@@ -818,7 +817,7 @@ const TodosLosReportesENG = () => {
                                   className="modal-title fs-5"
                                   id="staticBackdropLabel"
                               >
-                                Reporte - {item.ticketID}
+                                Ticket - {item.ticketID}
                               </h1>
                               <button
                                   type="button"
@@ -872,7 +871,7 @@ const TodosLosReportesENG = () => {
                                         className="col-form-label fs-6 badge bg-success text-wrap"
                                     >
                                       <span className="text-danger me-2">*</span>
-                                      <span>Seccion:</span>
+                                      <span>Category:</span>
                                     </label>
                                   </div>
 
@@ -900,7 +899,7 @@ const TodosLosReportesENG = () => {
                                         className="col-form-label fs-6 badge bg-success text-wrap"
                                     >
                                       <span className="text-danger me-2">*</span>
-                                      <span>Servicio:</span>
+                                      <span>Service:</span>
                                     </label>
                                   </div>
 
@@ -928,7 +927,7 @@ const TodosLosReportesENG = () => {
                                         className="col-form-label fs-6 badge bg-success text-wrap"
                                     >
                                       <span className="text-danger me-2">*</span>
-                                      <span>Prioridad:</span>
+                                      <span>Priority:</span>
                                     </label>
                                   </div>
 
@@ -956,7 +955,7 @@ const TodosLosReportesENG = () => {
                                         className="col-form-label fs-6 badge bg-success text-wrap"
                                     >
                                       <span className="text-danger me-2">*</span>
-                                      <span>Edificio:</span>
+                                      <span>Building:</span>
                                     </label>
                                   </div>
                                   <div className="col-sm-3 d-flex align-items-center">
@@ -984,7 +983,7 @@ const TodosLosReportesENG = () => {
                                     >
                                       <span className="text-danger me-2">*</span>
                                       <span>
-                                    Numero de Oficina, Cuarto o Salon:
+                                    Number of Office, Room or Classroom:
                                   </span>
                                     </label>
                                   </div>
@@ -1009,7 +1008,7 @@ const TodosLosReportesENG = () => {
                                         className="col-form-label fs-6 badge bg-success text-wrap"
                                     >
                                       <span className="text-danger me-2">*</span>
-                                      <span>Descripcion Del Trabajo:</span>
+                                      <span>Job Description:</span>
                                     </label>
                                   </div>
                                   <div className="col-sm-2 d-flex align-items-center">
@@ -1036,7 +1035,7 @@ const TodosLosReportesENG = () => {
                                         className="col-form-label fs-6 badge bg-success text-wrap"
                                     >
                                       <span className="text-danger me-2">*</span>
-                                      <span>Decanato:</span>
+                                      <span>Dean:</span>
                                     </label>
                                   </div>
                                   <div className="col-sm-3 d-flex align-items-center">
@@ -1063,7 +1062,7 @@ const TodosLosReportesENG = () => {
                                         className="col-form-label fs-6 badge bg-success text-wrap"
                                     >
                                       <span className="text-danger me-2">*</span>
-                                      <span>Departamento u Oficina:</span>
+                                      <span>Department or Office:</span>
                                     </label>
                                   </div>
                                   <div className="col-sm-3 d-flex align-items-center">
@@ -1088,7 +1087,7 @@ const TodosLosReportesENG = () => {
                                         className="col-form-label fs-6 badge bg-success text-wrap"
                                     >
                                       <span className="text-danger me-2">*</span>
-                                      <span>Extension o Telefono:</span>
+                                      <span>Phone Number and/or Extension:</span>
                                     </label>
                                   </div>
                                   <div className="col-sm-2 d-flex align-items-center">
@@ -1109,8 +1108,8 @@ const TodosLosReportesENG = () => {
                                 <hr className="border border-success border-2 opacity-100 mt-4"/>
                                 <p className="fs-6 fw-bolder text-decoration-underline">
                                   <i className="bi bi-info-circle-fill me-2"></i>
-                                  Si el Trabajo esta relacionado a una actividad,
-                                  entre los siguientes datos:
+                                  If this Job is related to an activity, please fill out the following information
+                                  (This section is not obligatory):
                                 </p>
 
                                 <div className="row mb-2 mt-3">
@@ -1120,7 +1119,7 @@ const TodosLosReportesENG = () => {
                                         className="col-form-label fs-6 badge bg-success text-wrap"
                                     >
                                       <span className="text-danger me-2">*</span>
-                                      <span>Nombre de la Actividad:</span>
+                                      <span>Activity Name:</span>
                                     </label>
                                   </div>
                                   <div className="col-sm-3 d-flex align-items-center">
@@ -1145,7 +1144,7 @@ const TodosLosReportesENG = () => {
                                         className="col-form-label fs-6 badge bg-success text-wrap"
                                     >
                                       <span className="text-danger me-2">*</span>
-                                      <span>Fecha:</span>
+                                      <span>Date:</span>
                                     </label>
                                   </div>
                                   <div className="col-sm-3 d-flex align-items-center">
@@ -1171,7 +1170,7 @@ const TodosLosReportesENG = () => {
                                         className="col-form-label fs-6 badge bg-success text-wrap"
                                     >
                                       <span className="text-danger me-2">*</span>
-                                      <span>Hora de Inicio:</span>
+                                      <span>Time of Activity:</span>
                                     </label>
                                   </div>
                                   <div className="col-sm-3 d-flex align-items-center">

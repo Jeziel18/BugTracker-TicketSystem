@@ -816,7 +816,7 @@ const CreateReport: React.FC<Props> = ({ user_id }) => {
                 <p className="fs-6 fw-bolder text-decoration-underline">
                   <i className="bi bi-info-circle-fill me-2"></i>
                   If this Job is related to an activity, please fill out the following information
-                  (This section is no obligatory):
+                  (This section is not obligatory):
                 </p>
 
                 <div className="row mb-2 mt-3">

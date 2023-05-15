@@ -270,13 +270,12 @@ const PendientesAEvaluar = () => {
 
 
   const Prioridad = [
-    { value: "routine", label: "routine" },
-    { value: "urgent", label: "urgent" },
-    { value: "emergency", label: "emergency" },
+    { value: "routine", label: "rutina" },
+    { value: "urgent", label: "urgente" },
+    { value: "emergency", label: "emergencia" },
   ];
 
-
-  const Decanato = [
+const Decanato = [
     {
       value: "Decanato de Administracion",
       label: "Decanato de Administracion",
@@ -289,9 +288,9 @@ const PendientesAEvaluar = () => {
   ];
 
   const Status = [
-    { value: "open", label: "open" },
-    { value: "pending", label: "pending" },
-    { value: "closed", label: "closed" },
+    { value: "open", label: "abierto" },
+    { value: "pending", label: "pendiente" },
+    { value: "closed", label: "cerado" },
   ];
 
 
