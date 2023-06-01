@@ -5,10 +5,10 @@ import mysql.connector
 class RolesDAO:
     def __init__(self):
         self.conn = mysql.connector.connect(
-            host='v2uedk.stackhero-network.com',
-            user='root',
-            password='mqtpPGesxVvYN2SuboZZMvHzmQcPrcTj',
-            database='root',
+            host='q0h7yf5pynynaq54.cbetxkdyhwsb.us-east-1.rds.amazonaws.com',
+            user='jft56bslc0rwwcwt',
+            password='q3npybt3z33q7v3i',
+            database='i3ivmnq2iqbac8me',
             port=3306
         )
 
